@@ -9,12 +9,12 @@ A base code for the group project.
 
 Instructions to clone this GitHub project:
 
-- Pre-requsities. Follow the instructions to [install JavaFx](https://www.eclipse.org/efxclipse/install.html) to your `Eclipse IDE`
+- Follow the instructions to [install JavaFx](https://www.eclipse.org/efxclipse/install.html) to your `Eclipse IDE`
 - Restart `Eclipse IDE`
 - Select `File > Import...`
-- Select `Git > Proejcts` from Git
+- Select `Git > Projects` from Git
 - Select `Clone URI` and then click `Next >`
-- Copy and paste the URI to the textbox of `URI`
+- Copy and paste the URI to the text box of `URI`
 - Click `Next >` buttons a few times. Accept all defaults. 
 - Click `Finish` at the end
 
