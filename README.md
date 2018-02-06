@@ -22,6 +22,13 @@ After importing this GitHub repo, the Eclipse project explorer output should be 
 
 ![Eclipse Project Explorer](eclipse_project.png)
 
+Steps to run the unit test and generate the coverage report
+- Right click the project folder
+- Select `Coverage As > JUnit Test`
+- All unit tests in `testing.comp3111` should be executed 
+- A coverage report should be generated as follows 
+
+![A sample coverage report](sample_coverage.png)
 
 
 
