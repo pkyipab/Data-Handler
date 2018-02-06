@@ -1,5 +1,11 @@
 package core.comp3111;
 
+/**
+ * DataType helper class In the sample project, 3 types are supported
+ * 
+ * @author cspeter
+ *
+ */
 public class DataType {
 
 	public static final String TYPE_OBJECT = "java.lang.Object";

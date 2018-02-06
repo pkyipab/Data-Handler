@@ -2,8 +2,21 @@ package core.comp3111;
 
 import java.util.Random;
 
+/**
+ * A helper class to illustrate how to generate data and store it into a
+ * DataTable object
+ * 
+ * @author cspeter
+ *
+ */
 public class SampleDataGenerator {
 
+	/**
+	 * A sample data generation. It illustrates how to use the DataTable class
+	 * implemented in the base code
+	 * 
+	 * @return DataTable object
+	 */
 	public static DataTable generateSampleLineData() {
 
 		DataTable t = new DataTable();
@@ -34,15 +47,21 @@ public class SampleDataGenerator {
 		return t;
 	}
 
+	/**
+	 * A sample data generation. It illustrates how to use the DataTable class
+	 * implemented in the base code
+	 * 
+	 * @return DataTable object
+	 */
 	public static DataTable generateSampleLineDataV2() {
 		DataTable t = new DataTable();
 
 		final int num = 100;
-		Number[] xvalues = new Integer[num];
+		Number[] xvalues = new Integer[num]; // Integer is a subclass of Number
 		Number[] yvalues = new Integer[num];
 		Random r = new Random();
 		for (int i = 0; i < num; i++) {
-			xvalues[i] = i;
+			xvalues[i] = i; // int: 0..num-1
 			yvalues[i] = r.nextInt(500) + 100; // Random int: 100...600
 		}
 
