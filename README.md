@@ -7,6 +7,16 @@ A base code for the group project.
 - DataColumnTest - A sample JUnit test case in `testing.comp3111` (with 100% test coverage on DataColumn)
 - A sample JavaFx UI component is implemented in `ui.comp3111`
 
+Instructions to clone this GitHub project:
+
+- Pre-requsities. Follow the instructions to [install JavaFx](https://www.eclipse.org/efxclipse/install.html) to your `Eclipse IDE`
+- Restart `Eclipse IDE`
+- Select `File > Import...`
+- Select `Git > Proejcts` from Git
+- Select `Clone URI` and then click `Next >`
+- Copy and paste the URI to the textbox of `URI`
+- Click `Next >` buttons a few times. Accept all defaults. 
+- Click `Finish` at the end
 
 After importing this GitHub repo, the Eclipse project explorer output should be displayed as follows: 
 
