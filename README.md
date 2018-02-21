@@ -1,5 +1,11 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
+Quick reference links:
+
+- [Project Sign Up](https://docs.google.com/spreadsheets/d/1NKxQflvfnRKmjrX8E_HLnRCC6kr4spUST_9fcyZIgFo/edit#gid=0)
+- [Project Description](https://course.cse.ust.hk/comp3111/Project/comp3111-project-s2018.pdf)
+- [Project FAQs](faq.md)
+
 This GitHub repo hosts the base code of COMP3111 group project. The following features are provided
 
 - A Java codebase which can be imported to `Eclipse IDE`. 
