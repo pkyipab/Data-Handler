@@ -5,6 +5,9 @@ Quick reference links:
 - [Project Sign Up](https://docs.google.com/spreadsheets/d/1NKxQflvfnRKmjrX8E_HLnRCC6kr4spUST_9fcyZIgFo/edit#gid=0)
 - [Project Description](https://course.cse.ust.hk/comp3111/Project/comp3111-project-s2018.pdf)
 - [Project FAQs](faq.md)
+    - Please contact Peter (cspeter@cse.ust.hk) sent by your ITSC email account (@ust.hk)
+    - Email title format: [COMP3111 Project] <<Write your question in short>>
+    - Email messages other than the above format will not be answered
 
 This GitHub repo hosts the base code of COMP3111 group project. The following features are provided
 
