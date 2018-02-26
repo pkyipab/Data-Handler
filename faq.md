@@ -1,5 +1,17 @@
 # Frequently Asked Questions (FAQ)
 
+**Question: GitHub education account**
+
+**Tags:** `github`
+
+GitHub rejects our application due to the reason that it cannot verify our academic status. How to solve it?
+
+	You may use a personal email account to create a GitHub account.
+	If it is the case, check:
+	(1) Visit the "GitHub email settings page" and add your ITSC email
+	(2) You are expected to receive a verification email. Please click verify in that email.
+	(3) After that, you can go back to GitHub Education and re-apply.
+
 **Question: Attribute visibility**
 
 **Tags:** `act1` `uml`
@@ -17,4 +29,4 @@ Does it mean that UML class diagram(and use-case) for each member has to be diff
 
 	The UML class/use-case diagram can be the same, or can be different.
 	It won't count as plagiarism as the diagrams are agreed by the whole team.
-	In any case, assignment 1 is an individual assessment. 
+	In any case, assignment 1 is an individual assessment.
