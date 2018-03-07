@@ -1,5 +1,12 @@
 # Frequently Asked Questions (FAQ)
 
+**Question: Any format for meeting minutes and Gantt chart?**
+
+**Tags:** `act1` `minutes` `Gantt chart`
+
+> **Meeting minutes:** Any suitable format. In particular, you should list out the agenda and the discussion items.  
+> **Gantt chart:** It is flexible to use any tool (e.g. Excel, other online tools, ...) to draw a Gantt chart, which is just a variation of bar chart. Suggestion: x-axis (date), y-axis (tasks/sub-tasks), bars with 3 different colors representing 3 different team members 
+
 **Question: Animated Chart. Should we use one of the two decided charts and make it into an animation? Or should we put animated chart as a separate generalization for a chart class?**
 
 **Tags:** `act2` `feature 6`
