@@ -1,5 +1,17 @@
 # Frequently Asked Questions (FAQ)
 
+**Question: Animated Chart. Should we use one of the two decided charts and make it into an animation? Or should we put animated chart as a separate generalization for a chart class?**
+
+**Tags:** `act2` `feature 6`
+
+> There is no restriction. Teams can decide to implement multiple separated chart classes, or to create a generalized chart class with multiple subclasses, or to create a animate method to optionally animate a chart. 
+
+**Question: For Data Filtering and Transformation: Do we only need to implement 2 out of the given 4 algorithms?**
+
+**Tags:** `act2` `feature 5`
+
+> Yes. Select any 2 out of the 4 given algorithms in the table. 
+
 **Question: GitHub education account**
 
 **Tags:** `github`
