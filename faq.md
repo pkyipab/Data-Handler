@@ -4,13 +4,13 @@
 
 **Tags:** `act2` `feature 6`
 
-> There is no restriction. Teams can decide to implement multiple separated chart classes, or to create a generalized chart class with multiple subclasses, or to create a animate method to optionally animate a chart. 
+> There is no restriction. Teams can decide to implement multiple separated chart classes, or a generalized chart class with multiple subclasses, or an animate method in a chart. 
 
 **Question: For Data Filtering and Transformation: Do we only need to implement 2 out of the given 4 algorithms?**
 
 **Tags:** `act2` `feature 5`
 
-> Yes. Select any 2 out of the 4 given algorithms in the table. 
+> Yes. Select any 2 out of the 4 algorithms in the table. 
 
 **Question: GitHub education account**
 
@@ -18,13 +18,12 @@
 
 GitHub rejects our application due to the reason that it cannot verify our academic status. How to solve it?
 
-> You may use a personal email account to create a GitHub account. Check the following items:
-
-> (1) Visit the "GitHub email settings page" and add your ITSC email
-
-> (2) You are expected to receive a verification email. Please click verify in that email.
-
-> (3) After that, you can go back to GitHub Education and re-apply.
+```
+You may use a personal email account to create a GitHub account. Check the following items:
+(1) Visit the "GitHub email settings page" and add your ITSC email
+(2) You are expected to receive a verification email. Please click verify in that email.
+(3) After that, you can go back to GitHub Education and re-apply.
+```
 
 **Question: Attribute visibility**
 
@@ -32,9 +31,7 @@ GitHub rejects our application due to the reason that it cannot verify our acade
 
 For the COMP3111 Project activity 1(UML diagram), do we have to show the visibility for each attributes (i.e. +, #, - next to the attributes of classes)?
 
-> Class attributes and operations should be included.
-
-> Example in slide 15-16, UML Modeling 1 lecture
+> Class attributes and operations should be included. Example in slide 15-16, UML Modeling 1 lecture
 
 **Question: Assignment 1 submission detail**
 
