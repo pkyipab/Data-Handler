@@ -5,7 +5,7 @@
 ---
 **Question: What things and How to submit Activity 1/2?**
 
-> Tags: act1, act2
+`act1` `act2`
 
 The submission details and deadlines can be found in Canvas. In short:
 - **each student** needs to submit a **PDF** in **Activity 1**, and 
