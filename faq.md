@@ -14,7 +14,7 @@ The submission details and deadlines can be found in Canvas. In short:
 ---
 **Question: Any format for meeting minutes and Gantt chart?**
 
-> Tags: act1, minutes, Gantt chart
+`act1` `minutes` `Gantt chart`
 
 - **Meeting minutes:** Any suitable format. In particular, you should list out the agenda and the discussion items.  
 - **Gantt chart:** It is flexible to use any tool (e.g. Excel, other online tools, ...) to draw a Gantt chart, which is just a variation of bar chart. Suggestion: x-axis (date), y-axis (tasks/sub-tasks), bars with 3 different colors representing 3 different team members 
@@ -24,7 +24,7 @@ The submission details and deadlines can be found in Canvas. In short:
 
 Should we use one of the two decided charts and make it into an animation? Or should we put animated chart as a separate generalization for a chart class?
 
-> Tags: act2, feature 6
+`act2` `feature 6`
 
 There is no restriction. Teams can decide to implement multiple separated chart classes, or a generalized chart class with multiple subclasses, or an animate method in a chart. 
 
@@ -33,7 +33,7 @@ There is no restriction. Teams can decide to implement multiple separated chart 
 
 Do we only need to implement 2 out of the given 4 algorithms?
 
-> Tags: act2, feature 5
+`act2` `feature 5`
 
 Yes. Select any 2 out of the 4 algorithms in the table. 
 
@@ -42,7 +42,7 @@ Yes. Select any 2 out of the 4 algorithms in the table.
 
 GitHub rejects our application due to the reason that it cannot verify our academic status. How to solve it?
 
-> Tags: github
+`github` `git`
 
 You may use a personal email account to create a GitHub account. Check the following items:
 - Visit the "GitHub email settings page" and add your ITSC email
@@ -54,7 +54,7 @@ You may use a personal email account to create a GitHub account. Check the follo
 
 For the COMP3111 Project activity 1(UML diagram), do we have to show the visibility for each attributes (i.e. +, #, - next to the attributes of classes)?
 
-> Tags: act1, uml
+`act1` `uml` `class diagram`
 
 Class attributes and operations should be included. Example in slide 15-16, UML Modeling 1 lecture
 
@@ -63,6 +63,6 @@ Class attributes and operations should be included. Example in slide 15-16, UML 
 
 Does it mean that UML class diagram(and use-case) for each member has to be different or all the members are expected to submit the same work?
 
-> Tags: act1, uml, use-case
+`act1` `uml` `use case diagram` `class diagram`
 
 The UML class/use-case diagram can be the same, or can be different. It won't count as plagiarism as the diagrams are agreed by the whole team. In any case, assignment 1 is an individual assessment.
