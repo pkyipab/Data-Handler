@@ -21,7 +21,7 @@ The submission details and deadlines can be found in Canvas. In short:
 
 `act1` `minutes` `Gantt chart`
 
-- **Meeting minutes:** Any suitable format. In particular, you should list out the agenda and the discussion items.  
+- **Meeting minutes:** A [template](https://course.cse.ust.hk/comp3111/Project/resources/minutes-template.docx) is provided
 - **Gantt chart:** It is flexible to use any tool (e.g. Excel, other online tools, ...) to draw a Gantt chart, which is just a variation of bar chart. Suggestion: x-axis (date), y-axis (tasks/sub-tasks), bars with 3 different colors representing 3 different team members 
 
 ---
