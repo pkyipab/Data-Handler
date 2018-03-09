@@ -1,6 +1,11 @@
 # Frequently Asked Questions (FAQ)
 
-[Home page](README.md)
+[Project homepage](README.md)
+
+For project related questions:
+- Please contact Peter (cspeter@cse.ust.hk) sent by your ITSC email account (@ust.hk)
+- Email title format: [COMP3111 Project] `Write your question in short`
+- Email messages other than the above format will not be answered
 
 ---
 **Question: What things and How to submit Activity 1/2?**
