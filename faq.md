@@ -8,6 +8,20 @@ For project related questions:
 - Email messages other than the above format will not be answered
 
 ---
+**Question: What to submit for the workload distribution in activity 1?**
+
+`act1`
+
+It is just a simple table indicating how the features are assigned. In the Google Spreadsheet, I observe that not every group makes the feature assignment yet. We should finalise it in Activity 1. Once it is set in the activity 1, no further changes are allowed.
+
+---
+**Question: Why implementation classes are included in the UML Lab?**
+
+`act1` `uml` `lab4`
+
+The UML lab is designed to help students **learn the skills and tools to draw UML diagrams**, but not the correctness of the UML diagrams. Given the problem domain, the correctness and appropriateness of drawing UML diagrams was thoroughly discussed in the lecture. In other words, please **don't regard the UML lab result as the sample solution** of the Activity 1. 
+
+---
 **Question: What things and How to submit Activity 1/2?**
 
 `act1` `act2`
