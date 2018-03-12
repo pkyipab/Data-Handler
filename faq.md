@@ -8,6 +8,26 @@ For project related questions:
 - Email messages other than the above format will not be answered
 
 ---
+**Question: What is the difference between data filtering and data transformation? Do we need to pick one from each?**
+
+`act2` `feature5`
+
+*Data filtering* is the task of reducing the content of noise or errors from measured process data. *Data transformation* is the process of converting data or information from one format to another. In feature 5, the first 2 operations are data filtering techniques and the last 2 operations are data transformation techniques.
+
+ **TWO types** of Data Filtering and Transformation from the table refer to:
+
+ - Implement 1 filtering and 1 transformation OR
+ - Implement 2 filtering technqiues OR
+ - Implement 2 transformation techniques
+
+---
+**Question: How many comparison operators in feature 5 - Filtering numeric data?**
+
+`act2` `feature 5`
+
+Comparison operators are (>, >=, ==, <=, <, !=). However, if you implement one, the rest is very easy to implement. We expect teams to implement all of the above comparison operators. 
+
+---
 **Question: What to submit for the workload distribution in activity 1?**
 
 `act1`
