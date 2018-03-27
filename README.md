@@ -1,5 +1,7 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
+[This README file in a website format](https://hkpeterpeter.github.io/COMP3111-Spring2018-ProjectBaseCode/)
+
 Quick reference links:
 
 - [How to change to a new empty remote repository in Eclipse?](eclipse_change_remote.md)
