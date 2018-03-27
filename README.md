@@ -2,6 +2,7 @@
 
 Quick reference links:
 
+- [How to change to a new empty remote repository in Eclipse?](eclipse_change_remote.md)
 - [Project Sign Up](https://docs.google.com/spreadsheets/d/1NKxQflvfnRKmjrX8E_HLnRCC6kr4spUST_9fcyZIgFo/edit#gid=0)
 - [Project Description](https://course.cse.ust.hk/comp3111/Project/comp3111-project-s2018.pdf)
 - [Project FAQs](faq.md)
