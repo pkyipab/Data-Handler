@@ -1,7 +1,7 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
 
-I love eclipse
+I love eclipse x2
 
 
 [This README file in a website format](https://hkpeterpeter.github.io/COMP3111-Spring2018-ProjectBaseCode/)
