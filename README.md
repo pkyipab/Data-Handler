@@ -1,9 +1,5 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
-Enough
-why??
-try2
-
 [This README file in a website format](https://hkpeterpeter.github.io/COMP3111-Spring2018-ProjectBaseCode/)
 
 Quick reference links:
