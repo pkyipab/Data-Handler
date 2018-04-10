@@ -1,6 +1,11 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
-Hehe
+<<<<<<< HEAD
+Hehe OOOPPPP
+=======
+pkyipab 20368422
+tmtam 20368410
+>>>>>>> branch 'dev-jack' of https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench.git
 
 [This README file in a website format](https://hkpeterpeter.github.io/COMP3111-Spring2018-ProjectBaseCode/)
 
