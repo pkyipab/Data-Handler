@@ -2,6 +2,7 @@ package core.comp3111;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 2D array of data values with the following requirements: (1) There are 0 to
@@ -89,6 +90,49 @@ public class DataTable {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * Get the DataColumn object based on the give colName. Return null if the
+	 * column does not exist
+	 * 
+	 * @param n
+	 *            The order of the specific column
+	 * @return DataColumn reference or null
+	 * 
+	 * @author dev-pkyipab
+	 */
+	public DataColumn getCol(int n) {
+		int counter = 0;
+		for (Map.Entry<String, DataColumn> entry : dc.entrySet()) {
+			if(n == counter) {
+				return entry.getValue();
+			}
+			++counter;
+		}
+		return null;
+	}
+	
+	/**
+	 * Get the DataColumn object based on the give colName. Return null if the
+	 * column does not exist
+	 * 
+	 * @param order
+	 *            The order of the specific column
+	 * @return The key of the Map 
+	 * 
+	 * @author dev-pkyipab
+	 */
+	public String getColName(int order) {
+		int counter = 0;
+		for (Map.Entry<String, DataColumn> entry : dc.entrySet()) {
+			if(order == counter) {
+				return entry.getKey();
+			}
+			++counter;
+		}
+		return null;
+	}
 
 	/**
 	 * Check whether the column exists by the given column name
@@ -124,7 +168,7 @@ public class DataTable {
 		Map.Entry<String, DataColumn> entry = dc.entrySet().iterator().next();
 		return dc.get(entry.getKey()).getSize();
 	}
-
+	
 	// attribute: A java.util.Map interface
 	// KeyType: String
 	// ValueType: DataColumn
