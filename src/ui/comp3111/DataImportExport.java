@@ -114,7 +114,6 @@ public class DataImportExport {
 		
 		if(!dataSet.getSelectionModel().isEmpty()) {
 			selectedDataTable = map.get(dataSet.getSelectionModel().getSelectedItem());
-			System.out.println("[ Export DataSet Selected ] Size of DataSet: " + selectedDataTable.getNumCol());
 			FileChooser fileChooser = new FileChooser();
 			  
             //Set extension filter
@@ -128,18 +127,32 @@ public class DataImportExport {
             	try {
                     FileWriter fileWriter = new FileWriter(file);
                     
+                    System.out.println(this.selectedDataTable.getNumCol());
                     for(int sizeOfTable = 0; sizeOfTable < this.selectedDataTable.getNumCol(); sizeOfTable ++) {
-                    	fileWriter.append("" + this.selectedDataTable.getColName(sizeOfTable)).append(",");
+                    	System.out.print("" + selectedDataTable.getColName(sizeOfTable) + " ");
+                    	if(sizeOfTable == this.selectedDataTable.getNumCol() - 1) {
+                    		fileWriter.write("" + this.selectedDataTable.getColName(sizeOfTable));
+                    	} else {
+                    	fileWriter.write("" + this.selectedDataTable.getColName(sizeOfTable));
+                    	fileWriter.write(",");
+                    	}
+                    	System.out.println("");
                     }
                     
-                    fileWriter.append("\n");
+                    fileWriter.write("\n");
                     
                     for(int rowNum = 0; rowNum < selectedDataTable.getNumRow(); rowNum++) {
                     	for(int colNum = 0; colNum < selectedDataTable.getNumCol(); colNum++) {
-                    		fileWriter.append(selectedDataTable.getCol(colNum).getData()[rowNum] + "");
-                    		fileWriter.append(",");
+                    		System.out.print("" + selectedDataTable.getColName(colNum) + " ");
+                    		if(colNum == this.selectedDataTable.getNumCol() - 1) {
+                    			fileWriter.write(selectedDataTable.getCol(colNum).getData()[rowNum] + "");
+                    		} else {
+                    		fileWriter.write(selectedDataTable.getCol(colNum).getData()[rowNum] + "");
+                    		fileWriter.write(",");
+                    		}
                     	}
-                    	fileWriter.append("\n");
+                    	fileWriter.write("\n");
+                    	System.out.println("");
                     }
                     
                     fileWriter.flush();
@@ -150,6 +163,7 @@ public class DataImportExport {
                 } 
             }
 		} 
+		dataSet.getSelectionModel().clearSelection();
 		
 	}
 	
@@ -239,4 +253,7 @@ public class DataImportExport {
 		   }
 	}
 	
+	private void test(int n) {
+		
+	}
 }
