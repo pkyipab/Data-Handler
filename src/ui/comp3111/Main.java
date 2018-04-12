@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -44,13 +45,13 @@ public class Main extends Application {
 	private DataImportExport dataImportExport = new DataImportExport();
 	
 	// Attributes: Scene and Stage
-	private static final int SCENE_NUM = 2;
+	private static final int SCENE_NUM = 3;
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
 	private static final int SCENE_MUTIPLE_CHRAT = 2;
 	private static final int SCENE_SAVE_LOAD = 3;
 	private static final int SCENE_FILTER_DATA = 4;
-	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export" };
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart"};
     private Scene[] scenes = null;
     private Stage stage = null;
     
@@ -69,7 +70,14 @@ public class Main extends Application {
 	private Button btExportData;
 	private Button btBackToMenu;
 	
-	
+	//Screen 3: paneHandleMultiDataAndChart
+	private ListView<String> listViewDataSetObj;
+	private ListView<String> listViewChartObj;
+	private ObservableList<String> listViewDataSet = FXCollections.observableArrayList();
+	private ObservableList<String> listViewChart = FXCollections.observableArrayList();
+	private Button btShowChart;
+	private Button btBackToMenu2;
+	private Button btPlotChart;
 
 	/**
 	 * create all scenes in this application
@@ -78,6 +86,7 @@ public class Main extends Application {
 		scenes = new Scene[SCENE_NUM];
 		scenes[SCENE_MAIN_SCREEN] = new Scene(paneMainScreen(), 400, 500);
 		scenes[SCENE_IMPORT_EXPORT] = new Scene(paneImportExportScreen(), 800, 600);
+		scenes[SCENE_MUTIPLE_CHRAT] = new Scene(paneHandleMultiDataAndChart(), 800, 600);
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -93,6 +102,8 @@ public class Main extends Application {
 	private void initEventHandlers() {
 		initMainScreenHandlers();
 		initImportExportScreenHandlers();
+		initHandleMultiDataAndChart();
+		
 	}
 	
 	private void initImportExportScreenHandlers() {
@@ -106,6 +117,20 @@ public class Main extends Application {
 		});
 			
 		btBackToMenu.setOnAction(e -> {
+			putSceneOnStage(SCENE_MAIN_SCREEN);
+		});
+	}
+	
+	private void initHandleMultiDataAndChart() {
+		btShowChart.setOnAction(e->{
+			
+		});
+		
+		btPlotChart.setOnAction(e->{
+			
+		});		
+
+		btBackToMenu2.setOnAction(e -> {
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
 	}
@@ -191,7 +216,41 @@ public class Main extends Application {
 		return pane;
 	}
 	
-	
+	private Pane paneHandleMultiDataAndChart() {
+		Label lbDataSet = new Label("Data set");
+		Label lbChart = new Label("Chart");
+		btShowChart = new Button("Show Chart");
+		btBackToMenu2 = new Button("Back to Menu");
+		btPlotChart = new Button("Plot Chart");
+		
+		listViewDataSetObj = new ListView<String>();
+		listViewDataSetObj.setItems(listViewDataSet);
+		listViewChartObj = new ListView<String>();
+		listViewChartObj.setItems(listViewChart);
+		
+		HBox container = new HBox(20);
+		HBox bottomContainer = new HBox(20);
+
+		VBox dataSetContainer = new VBox(10);
+		VBox chartContainer = new VBox(10);
+		
+		
+		dataSetContainer.getChildren().addAll(lbDataSet, listViewDataSetObj, btPlotChart);
+		chartContainer.getChildren().addAll(lbChart, listViewChartObj, btShowChart);
+		bottomContainer.getChildren().add(btBackToMenu2);
+		bottomContainer.setAlignment(Pos.CENTER);
+		
+		container.getChildren().addAll(dataSetContainer, chartContainer);
+		container.setAlignment(Pos.CENTER);
+		
+		BorderPane pane = new BorderPane();
+		pane.setCenter(container);
+		pane.setBottom(bottomContainer);
+		
+		pane.getStyleClass().add("screen-background");		
+
+		return pane;
+	}
 	
 	
 	/**
