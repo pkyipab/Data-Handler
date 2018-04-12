@@ -71,10 +71,9 @@ public class Main extends Application {
 	private Button btBackToMenu;
 	
 	//Screen 3: paneHandleMultiDataAndChart
-	private ListView<String> listViewDataSetObj;
-	private ListView<String> listViewChartObj;
-	private ObservableList<String> listViewDataSet = FXCollections.observableArrayList();
-	private ObservableList<String> listViewChart = FXCollections.observableArrayList();
+	private ListView<VBox> listViewDataSetObj;
+	private ListView<VBox> listViewChartObj;
+	private ObservableList<VBox> listViewChart = FXCollections.observableArrayList();
 	private Button btShowChart;
 	private Button btBackToMenu2;
 	private Button btPlotChart;
@@ -136,6 +135,7 @@ public class Main extends Application {
 		});
 		
 		btPlotChart.setOnAction(e->{
+			//TODO jack
 			
 		});		
 
@@ -232,10 +232,12 @@ public class Main extends Application {
 		btBackToMenu2 = new Button("Back to Menu");
 		btPlotChart = new Button("Plot Chart");
 		
-		listViewDataSetObj = new ListView<String>();
-		listViewDataSetObj.setItems(listViewDataSet);
-		listViewChartObj = new ListView<String>();
+		listViewDataSetObj = new ListView<VBox>();
+		listViewDataSetObj.setItems(viewDataSet);
+		listViewChartObj = new ListView<VBox>();
 		listViewChartObj.setItems(listViewChart);
+		
+		
 		
 		HBox container = new HBox(20);
 		HBox bottomContainer = new HBox(20);
