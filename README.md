@@ -5,7 +5,6 @@
 I love eclipse x3
 
 
-
 [This README file in a website format](https://hkpeterpeter.github.io/COMP3111-Spring2018-ProjectBaseCode/)
 
 Quick reference links:

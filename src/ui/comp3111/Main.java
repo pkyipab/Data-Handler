@@ -122,6 +122,15 @@ public class Main extends Application {
 	}
 	
 	private void initHandleMultiDataAndChart() {
+		//TODO 
+		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
+			
+		});
+		
+		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
+			
+		});
+		
 		btShowChart.setOnAction(e->{
 			
 		});
