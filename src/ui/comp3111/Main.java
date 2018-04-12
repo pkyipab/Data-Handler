@@ -1,23 +1,31 @@
 package ui.comp3111;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
 import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
+import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 import core.comp3111.SampleDataGenerator;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 
 /**
  * The Main class of this GUI application
@@ -32,29 +40,36 @@ public class Main extends Application {
 	// You need to extend it to handle multiple data tables
 	// Hint: Use java.util.List interface and its implementation classes (e.g.
 	// java.util.ArrayList)
-	private DataTable sampleDataTable = null;
-
+	static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
+	private DataImportExport dataIO = new DataImportExport();
+	
 	// Attributes: Scene and Stage
 	private static final int SCENE_NUM = 2;
 	private static final int SCENE_MAIN_SCREEN = 0;
-	private static final int SCENE_LINE_CHART = 1;
-	private static final String[] SCENE_TITLES = { "COMP3111 Chart - [Team Name]", "Sample Line Chart Screen" };
-	private Stage stage = null;
-	private Scene[] scenes = null;
-
+	private static final int SCENE_IMPORT_EXPORT = 1;
+	private static final int SCENE_MUTIPLE_CHRAT = 2;
+	private static final int SCENE_SAVE_LOAD = 3;
+	private static final int SCENE_FILTER_DATA = 4;
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export" };
+    private Scene[] scenes = null;
+    private Stage stage = null;
+    
 	// To keep this application more structural,
 	// The following UI components are used to keep references after invoking
 	// createScene()
 
 	// Screen 1: paneMainScreen
-	private Button btSampleLineChartData, btSampleLineChartDataV2, btSampleLineChart;
-	private Label lbSampleDataTable, lbMainScreenTitle;
-
-	// Screen 2: paneSampleLineChartScreen
-	private LineChart<Number, Number> lineChart = null;
-	private NumberAxis xAxis = null;
-	private NumberAxis yAxis = null;
-	private Button btLineChartBackMain = null;
+	private Button btImportExport, btMutipleChart, btSavingLoading, btDataFiltering;
+	private Label lbMainScreenTitle;
+	
+	//Screen 2: paneImportExportScreen
+    private ObservableList<VBox> viewDataSet = FXCollections.observableArrayList();
+    private ListView<VBox> dataSet = new ListView<VBox>();
+	private Button btImportData;
+	private Button btExportData;
+	private Button btBackToMenu;
+	
+	
 
 	/**
 	 * create all scenes in this application
@@ -62,7 +77,7 @@ public class Main extends Application {
 	private void initScenes() {
 		scenes = new Scene[SCENE_NUM];
 		scenes[SCENE_MAIN_SCREEN] = new Scene(paneMainScreen(), 400, 500);
-		scenes[SCENE_LINE_CHART] = new Scene(paneLineChartScreen(), 800, 600);
+		scenes[SCENE_IMPORT_EXPORT] = new Scene(IOScreen(), 800, 600);
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -77,129 +92,45 @@ public class Main extends Application {
 	 */
 	private void initEventHandlers() {
 		initMainScreenHandlers();
-		initLineChartScreenHandlers();
+		initIOScreenHandlers();
 	}
-
-	/**
-	 * Initialize event handlers of the line chart screen
-	 */
-	private void initLineChartScreenHandlers() {
-
-		// click handler
-		btLineChartBackMain.setOnAction(e -> {
+	
+	private void initIOScreenHandlers() {
+			
+		btImportData.setOnAction(e -> {
+			dataIO.importData(stage, viewDataSet);
+		});
+			
+		btExportData.setOnAction(e -> {
+			dataIO.exportData(stage, dataSet);
+		});
+			
+		btBackToMenu.setOnAction(e -> {
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
-	}
-
-	/**
-	 * Populate sample data table values to the chart view
-	 */
-	private void populateSampleDataTableValuesToChart(String seriesName) {
-
-		// Get 2 columns
-		DataColumn xCol = sampleDataTable.getCol("X");
-		DataColumn yCol = sampleDataTable.getCol("Y");
-
-		// Ensure both columns exist and the type is number
-		if (xCol != null && yCol != null && xCol.getTypeName().equals(DataType.TYPE_NUMBER)
-				&& yCol.getTypeName().equals(DataType.TYPE_NUMBER)) {
-
-			lineChart.setTitle("Sample Line Chart");
-			xAxis.setLabel("X");
-			yAxis.setLabel("Y");
-
-			// defining a series
-			XYChart.Series series = new XYChart.Series();
-
-			series.setName(seriesName);
-
-			// populating the series with data
-			// As we have checked the type, it is safe to downcast to Number[]
-			Number[] xValues = (Number[]) xCol.getData();
-			Number[] yValues = (Number[]) yCol.getData();
-
-			// In DataTable structure, both length must be the same
-			int len = xValues.length;
-
-			for (int i = 0; i < len; i++) {
-				series.getData().add(new XYChart.Data(xValues[i], yValues[i]));
-			}
-
-			// clear all previous series
-			lineChart.getData().clear();
-
-			// add the new series as the only one series for this line chart
-			lineChart.getData().add(series);
-
-		}
-
 	}
 
 	/**
 	 * Initialize event handlers of the main screen
 	 */
 	private void initMainScreenHandlers() {
-
-		// click handler
-		btSampleLineChartData.setOnAction(e -> {
-
-			// In this example, we invoke SampleDataGenerator to generate sample data
-			sampleDataTable = SampleDataGenerator.generateSampleLineData();
-			lbSampleDataTable.setText(String.format("SampleDataTable: %d rows, %d columns", sampleDataTable.getNumRow(),
-					sampleDataTable.getNumCol()));
-
-			populateSampleDataTableValuesToChart("Sample 1");
-
+		
+		btImportExport.setOnAction(e -> {
+			putSceneOnStage(SCENE_IMPORT_EXPORT);
+		});
+		
+		btMutipleChart.setOnAction(e -> {
+			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+		});
+		
+		btSavingLoading.setOnAction(e -> {
+			putSceneOnStage(SCENE_SAVE_LOAD);
+		});
+		
+		btDataFiltering.setOnAction(e -> {
+			putSceneOnStage(SCENE_FILTER_DATA);
 		});
 
-		// click handler
-		btSampleLineChartDataV2.setOnAction(e -> {
-
-			// In this example, we invoke SampleDataGenerator to generate sample data
-			sampleDataTable = SampleDataGenerator.generateSampleLineDataV2();
-			lbSampleDataTable.setText(String.format("SampleDataTable: %d rows, %d columns", sampleDataTable.getNumRow(),
-					sampleDataTable.getNumCol()));
-
-			populateSampleDataTableValuesToChart("Sample 2");
-
-		});
-
-		// click handler
-		btSampleLineChart.setOnAction(e -> {
-			putSceneOnStage(SCENE_LINE_CHART);
-		});
-
-	}
-
-	/**
-	 * Create the line chart screen and layout its UI components
-	 * 
-	 * @return a Pane component to be displayed on a scene
-	 */
-	private Pane paneLineChartScreen() {
-
-		xAxis = new NumberAxis();
-		yAxis = new NumberAxis();
-		lineChart = new LineChart<Number, Number>(xAxis, yAxis);
-
-		btLineChartBackMain = new Button("Back");
-
-		xAxis.setLabel("undefined");
-		yAxis.setLabel("undefined");
-		lineChart.setTitle("An empty line chart");
-
-		// Layout the UI components
-		VBox container = new VBox(20);
-		container.getChildren().addAll(lineChart, btLineChartBackMain);
-		container.setAlignment(Pos.CENTER);
-
-		BorderPane pane = new BorderPane();
-		pane.setCenter(container);
-
-		// Apply CSS to style the GUI components
-		pane.getStyleClass().add("screen-background");
-
-		return pane;
 	}
 
 	/**
@@ -209,33 +140,55 @@ public class Main extends Application {
 	 */
 	private Pane paneMainScreen() {
 
-		lbMainScreenTitle = new Label("COMP3111 Chart");
-		btSampleLineChartData = new Button("Sample 1");
-		btSampleLineChartDataV2 = new Button("Sample 2");
-		btSampleLineChart = new Button("Sample Line Chart");
-		lbSampleDataTable = new Label("DataTable: empty");
-
-		// Layout the UI components
-
-		HBox hc = new HBox(20);
-		hc.setAlignment(Pos.CENTER);
-		hc.getChildren().addAll(btSampleLineChartData, btSampleLineChartDataV2);
-
+		lbMainScreenTitle = new Label("COMP3111");
+		btImportExport = new Button("Import & Export (by victor)");
+		btMutipleChart = new Button("Mutiple Datasets & Charts");
+		btSavingLoading = new Button("Save / Load");
+		btDataFiltering = new Button("Filter Data");
+		
 		VBox container = new VBox(20);
-		container.getChildren().addAll(lbMainScreenTitle, hc, lbSampleDataTable, new Separator(), btSampleLineChart);
+		container.getChildren().addAll(lbMainScreenTitle, btImportExport, this.btMutipleChart, this.btSavingLoading, this.btDataFiltering);
 		container.setAlignment(Pos.CENTER);
 
 		BorderPane pane = new BorderPane();
 		pane.setCenter(container);
 
 		// Apply style to the GUI components
-		btSampleLineChart.getStyleClass().add("menu-button");
+		btImportExport.getStyleClass().add("menu-button");
+		btMutipleChart.getStyleClass().add("menu-button");
+		btSavingLoading.getStyleClass().add("menu-button");
+		btDataFiltering.getStyleClass().add("menu-button");
 		lbMainScreenTitle.getStyleClass().add("menu-title");
 		pane.getStyleClass().add("screen-background");
 
 		return pane;
 	}
 
+	private Pane IOScreen() {
+		Label label = new Label("Current DataSet :");
+		btImportData = new Button("Import Data");
+		btExportData = new Button("Export Data");
+		btBackToMenu = new Button("Back To Menu");
+        
+		VBox container = new VBox(20);
+		dataSet.setItems(viewDataSet);
+		dataSet.setPrefSize(50, 150);
+	
+		
+		container.getChildren().addAll(label, dataSet, btImportData, this.btExportData, this.btBackToMenu);
+		container.setAlignment(Pos.CENTER);
+
+		BorderPane pane = new BorderPane();
+		pane.setCenter(container);
+
+		pane.getStyleClass().add("screen-background");
+
+		return pane;
+	}
+	
+	
+	
+	
 	/**
 	 * This method is used to pick anyone of the scene on the stage. It handles the
 	 * hide and show order. In this application, only one active scene should be
