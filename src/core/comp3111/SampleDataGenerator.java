@@ -67,7 +67,8 @@ public class SampleDataGenerator {
 
 		DataColumn xvaluesCol = new DataColumn(DataType.TYPE_NUMBER, xvalues);
 		DataColumn yvaluesCol = new DataColumn(DataType.TYPE_NUMBER, yvalues);
-
+		
+		System.out.println(xvaluesCol.getTypeName());
 		try {
 
 			t.addCol("X", xvaluesCol);

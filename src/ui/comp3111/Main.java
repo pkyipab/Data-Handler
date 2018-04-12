@@ -41,7 +41,7 @@ public class Main extends Application {
 	// Hint: Use java.util.List interface and its implementation classes (e.g.
 	// java.util.ArrayList)
 	static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
-	private DataImportExport dataIO = new DataImportExport();
+	private DataImportExport dataImportExport = new DataImportExport();
 	
 	// Attributes: Scene and Stage
 	private static final int SCENE_NUM = 2;
@@ -62,7 +62,7 @@ public class Main extends Application {
 	private Button btImportExport, btMutipleChart, btSavingLoading, btDataFiltering;
 	private Label lbMainScreenTitle;
 	
-	//Screen 2: paneImportExportScreen
+	//Screen 2: paneImportExportScreen (**Need**)
     private ObservableList<VBox> viewDataSet = FXCollections.observableArrayList();
     private ListView<VBox> dataSet = new ListView<VBox>();
 	private Button btImportData;
@@ -77,7 +77,7 @@ public class Main extends Application {
 	private void initScenes() {
 		scenes = new Scene[SCENE_NUM];
 		scenes[SCENE_MAIN_SCREEN] = new Scene(paneMainScreen(), 400, 500);
-		scenes[SCENE_IMPORT_EXPORT] = new Scene(IOScreen(), 800, 600);
+		scenes[SCENE_IMPORT_EXPORT] = new Scene(paneImportExportScreen(), 800, 600);
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -92,17 +92,17 @@ public class Main extends Application {
 	 */
 	private void initEventHandlers() {
 		initMainScreenHandlers();
-		initIOScreenHandlers();
+		initImportExportScreenHandlers();
 	}
 	
-	private void initIOScreenHandlers() {
+	private void initImportExportScreenHandlers() {
 			
 		btImportData.setOnAction(e -> {
-			dataIO.importData(stage, viewDataSet);
+			dataImportExport.importData(stage, viewDataSet);
 		});
 			
 		btExportData.setOnAction(e -> {
-			dataIO.exportData(stage, dataSet);
+			dataImportExport.exportData(stage, dataSet);
 		});
 			
 		btBackToMenu.setOnAction(e -> {
@@ -163,8 +163,13 @@ public class Main extends Application {
 
 		return pane;
 	}
-
-	private Pane IOScreen() {
+	
+	/**
+	 * Creates the Import & Export screen and layout its UI components
+	 * 
+	 * @return a Pane component to be displayed on a scene
+	 */
+	private Pane paneImportExportScreen() {
 		Label label = new Label("Current DataSet :");
 		btImportData = new Button("Import Data");
 		btExportData = new Button("Export Data");
