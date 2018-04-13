@@ -24,14 +24,17 @@ import javafx.stage.Stage;
 
 public class DataImportExport {
 	
-	public void importData(Stage s, ObservableList<VBox> viewDataSet, Map<VBox, DataTable> map) {
+	public void importData(Stage s, ObservableList<VBox> viewDataSet, ObservableList<VBox> dataSetHandle, Map<VBox, DataTable> map) {
 			FileChooser fc;
 			BufferedReader br = null;
 			String line = "";
 			ArrayList<String[]> row = new ArrayList<String[]>();
 			
 			DataTable dataTable = new DataTable();
+
 			VBox dataVBox = new VBox();
+			VBox dataVBoxHandle = new VBox();
+
 			
 			 try {
 				 	fc = new FileChooser();
@@ -97,10 +100,14 @@ public class DataImportExport {
 			            }
 			           
 			            Main.allDataSet.add(dataTable);
+
 			            map.put(dataVBox, dataTable);
 			            
 			            dataVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
 			            viewDataSet.add(dataVBox);
+
+			            dataVBoxHandle.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
+			            dataSetHandle.add(dataVBoxHandle);
 			            
 			            System.out.println("[ Import Success ]");
 					}
