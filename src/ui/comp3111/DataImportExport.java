@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import core.comp3111.DataColumn;
@@ -23,10 +24,7 @@ import javafx.stage.Stage;
 
 public class DataImportExport {
 	
-	private Map<VBox, DataTable> map;
-	private DataTable selectedDataTable; 
-	
-	public void importData(Stage s, ObservableList<VBox> viewDataSet) {
+	public void importData(Stage s, ObservableList<VBox> viewDataSet, Map<VBox, DataTable> map) {
 			FileChooser fc;
 			BufferedReader br = null;
 			String line = "";
@@ -34,7 +32,6 @@ public class DataImportExport {
 			
 			DataTable dataTable = new DataTable();
 			VBox dataVBox = new VBox();
-			map = new HashMap<VBox, DataTable>();
 			
 			 try {
 				 	fc = new FileChooser();
@@ -101,8 +98,10 @@ public class DataImportExport {
 			           
 			            Main.allDataSet.add(dataTable);
 			            map.put(dataVBox, dataTable);
+			            
 			            dataVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
 			            viewDataSet.add(dataVBox);
+			            
 			            System.out.println("[ Import Success ]");
 					}
 		        }  catch (IOException ex) {
@@ -120,10 +119,11 @@ public class DataImportExport {
 		       }
 	}
 	
-	public void exportData(Stage stage, ListView<VBox> dataSet ) {
+	public void exportData(Stage stage, ListView<VBox> dataSet, Map<VBox, DataTable> map) {
 		
 		if(!dataSet.getSelectionModel().isEmpty()) {
-			selectedDataTable = map.get(dataSet.getSelectionModel().getSelectedItem());
+			
+			DataTable selectedDataTable = map.get(dataSet.getSelectionModel().getSelectedItem());
 			FileChooser fileChooser = new FileChooser();
 			  
             //Set extension filter
@@ -133,16 +133,16 @@ public class DataImportExport {
             //Show save file dialog
             File file = fileChooser.showSaveDialog(stage);
             
-            if(file != null){
+            if(selectedDataTable != null && file != null){
             	try {
                     FileWriter fileWriter = new FileWriter(file);
                     
-                    for(int sizeOfTable = 0; sizeOfTable < this.selectedDataTable.getNumCol(); sizeOfTable ++) {
+                    for(int sizeOfTable = 0; sizeOfTable < selectedDataTable.getNumCol(); sizeOfTable ++) {
                     
-                    	if(sizeOfTable == this.selectedDataTable.getNumCol() - 1) {
-                    		fileWriter.write("" + this.selectedDataTable.getColName(sizeOfTable));
+                    	if(sizeOfTable == selectedDataTable.getNumCol() - 1) {
+                    		fileWriter.write("" + selectedDataTable.getColName(sizeOfTable));
                     	} else {
-                    	fileWriter.write("" + this.selectedDataTable.getColName(sizeOfTable));
+                    	fileWriter.write("" + selectedDataTable.getColName(sizeOfTable));
                     	fileWriter.write(",");
                     	}
                     
@@ -153,7 +153,7 @@ public class DataImportExport {
                     for(int rowNum = 0; rowNum < selectedDataTable.getNumRow(); rowNum++) {
                     	for(int colNum = 0; colNum < selectedDataTable.getNumCol(); colNum++) {
                     		
-                    		if(colNum == this.selectedDataTable.getNumCol() - 1) {
+                    		if(colNum == selectedDataTable.getNumCol() - 1) {
                     			fileWriter.write(selectedDataTable.getColByNum(colNum).getData()[rowNum] + "");
                     		} else {
                     		fileWriter.write(selectedDataTable.getColByNum(colNum).getData()[rowNum] + "");
@@ -170,10 +170,8 @@ public class DataImportExport {
                 } catch (IOException ex) {
                     ex.printStackTrace();;
                 } 
-            }
+            } 
 		} 
-		dataSet.getSelectionModel().clearSelection();
-		
 	}
 	
 	private ArrayList<Double> strToDouble(ArrayList<String> arrList) {

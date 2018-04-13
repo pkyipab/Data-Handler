@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import core.comp3111.DataColumn;
@@ -30,6 +31,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
+
+
 /**
  * The Main class of this GUI application
  * 
@@ -43,7 +46,7 @@ public class Main extends Application {
 	// You need to extend it to handle multiple data tables
 	// Hint: Use java.util.List interface and its implementation classes (e.g.
 	// java.util.ArrayList)
-	static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
+	public static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
 	private DataImportExport dataImportExport = new DataImportExport();
 	
 	// Attributes: Scene and Stage
@@ -71,6 +74,7 @@ public class Main extends Application {
 	private Button btImportData;
 	private Button btExportData;
 	private Button btBackToMenu;
+	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();;
 	
 	
 	//Screen 3: paneHandleMultiDataAndChart
@@ -113,14 +117,14 @@ public class Main extends Application {
 		btExportData.setDisable(true);
 		
 		btImportData.setOnAction(e -> {
-			dataImportExport.importData(stage, viewDataSet);
+			dataImportExport.importData(stage, viewDataSet, map);
 			if(allDataSet.size() > 0) {
 				btExportData.setDisable(false);
 			}
 		});
 			
 		btExportData.setOnAction(e -> {
-			dataImportExport.exportData(stage, dataSet);
+			dataImportExport.exportData(stage, dataSet, map);
 		});
 			
 		btBackToMenu.setOnAction(e -> {
@@ -190,7 +194,7 @@ public class Main extends Application {
 		btDataFiltering = new Button("Filter Data");
 		
 		VBox container = new VBox(20);
-		container.getChildren().addAll(lbMainScreenTitle, btImportExport, this.btMutipleChart, this.btSavingLoading, this.btDataFiltering);
+		container.getChildren().addAll(lbMainScreenTitle, btImportExport, btMutipleChart, btSavingLoading, btDataFiltering);
 		container.setAlignment(Pos.CENTER);
 
 		BorderPane pane = new BorderPane();

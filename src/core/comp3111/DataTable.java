@@ -107,7 +107,6 @@ public class DataTable {
 		if(n < dc.size()) {
 			for (Object key : dc.keySet()) {
 				if(counter == n) {
-					System.out.println(key + " : " + dc.get(key).getData().toString());
 					return getCol((String)key);
 				}
 				++counter;
