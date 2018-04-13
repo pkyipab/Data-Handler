@@ -46,10 +46,17 @@ public class DataImportExport {
 					if(file != null) {
 					 		
 			            br = new BufferedReader(new FileReader(file));
+			         
 			            
 			           //Split the file row by row
+			            String[] title = br.readLine().split(",");
+			            row.add(title);
+			            
 			            while ((line = br.readLine()) != null) {
 			                String[] dataRow = line.split(",");
+			                if(dataRow.length > row.get(0).length) {
+			                	throw new DataTableException(" Missing The Column Title ! ");
+			                } 
 			                row.add(dataRow);
 			            }
 			            
@@ -62,7 +69,11 @@ public class DataImportExport {
 			            	String type = "";
 			            	
 			            	for(int rowNum = 1; rowNum < row.size(); rowNum ++) {
-			            		strData.add(row.get(rowNum)[colNum]);
+			            		if(row.get(rowNum).length <= colNum) {
+			            			strData.add("");
+			            		} else {
+			            			strData.add(row.get(rowNum)[colNum]);
+			            		}
 			            	}
 			            	
 			            	type = dataChecking(strData);
@@ -90,15 +101,14 @@ public class DataImportExport {
 			           
 			            Main.allDataSet.add(dataTable);
 			            map.put(dataVBox, dataTable);
-			            dataVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) + ""));
+			            dataVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
 			            viewDataSet.add(dataVBox);
 			            System.out.println("[ Import Success ]");
 					}
 		        }  catch (IOException ex) {
 		            ex.printStackTrace();
 		        } catch (DataTableException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Main.alertUser("Error", "DataTable Exception", e1.getLocalizedMessage());
 				} finally {
 		            if (br != null) {
 		                try {
@@ -127,32 +137,31 @@ public class DataImportExport {
             	try {
                     FileWriter fileWriter = new FileWriter(file);
                     
-                    System.out.println(this.selectedDataTable.getNumCol());
                     for(int sizeOfTable = 0; sizeOfTable < this.selectedDataTable.getNumCol(); sizeOfTable ++) {
-                    	System.out.print("" + selectedDataTable.getColName(sizeOfTable) + " ");
+                    
                     	if(sizeOfTable == this.selectedDataTable.getNumCol() - 1) {
                     		fileWriter.write("" + this.selectedDataTable.getColName(sizeOfTable));
                     	} else {
                     	fileWriter.write("" + this.selectedDataTable.getColName(sizeOfTable));
                     	fileWriter.write(",");
                     	}
-                    	System.out.println("");
+                    
                     }
                     
                     fileWriter.write("\n");
                     
                     for(int rowNum = 0; rowNum < selectedDataTable.getNumRow(); rowNum++) {
                     	for(int colNum = 0; colNum < selectedDataTable.getNumCol(); colNum++) {
-                    		System.out.print("" + selectedDataTable.getColName(colNum) + " ");
+                    		
                     		if(colNum == this.selectedDataTable.getNumCol() - 1) {
-                    			fileWriter.write(selectedDataTable.getCol(colNum).getData()[rowNum] + "");
+                    			fileWriter.write(selectedDataTable.getColByNum(colNum).getData()[rowNum] + "");
                     		} else {
-                    		fileWriter.write(selectedDataTable.getCol(colNum).getData()[rowNum] + "");
+                    		fileWriter.write(selectedDataTable.getColByNum(colNum).getData()[rowNum] + "");
                     		fileWriter.write(",");
                     		}
                     	}
                     	fileWriter.write("\n");
-                    	System.out.println("");
+                    	
                     }
                     
                     fileWriter.flush();
@@ -196,7 +205,7 @@ public class DataImportExport {
 		return intList;
 	}
 	
-	private String dataChecking(ArrayList<String> arrList) throws IOException{
+	private String dataChecking(ArrayList<String> arrList) throws DataTableException{
 		String type = "null";
 		
 		for(int i = 0; i < arrList.size(); i++) {
@@ -205,7 +214,7 @@ public class DataImportExport {
 			}
 			else if (!arrList.get(i).isEmpty() && type != "null") {
 				if(typeChecking(arrList.get(i)) != type) {
-					throw new IOException("Warning: Unmatch Datatype");
+					throw new DataTableException(" Unmatch Datatype !");
 				}
 			}
 		}
@@ -253,7 +262,4 @@ public class DataImportExport {
 		   }
 	}
 	
-	private void test(int n) {
-		
-	}
 }
