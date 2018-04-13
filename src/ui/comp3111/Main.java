@@ -76,6 +76,7 @@ public class Main extends Application {
 	//Screen 3: paneHandleMultiDataAndChart
 	private ListView<VBox> listViewDataSetObj;
 	private ListView<VBox> listViewChartObj;
+	private ObservableList<VBox> listViewDataSet = FXCollections.observableArrayList();
 	private ObservableList<VBox> listViewChart = FXCollections.observableArrayList();
 	private Button btShowChart;
 	private Button btBackToMenu2;
@@ -113,7 +114,7 @@ public class Main extends Application {
 		btExportData.setDisable(true);
 		
 		btImportData.setOnAction(e -> {
-			dataImportExport.importData(stage, viewDataSet);
+			dataImportExport.importData(stage, viewDataSet, listViewDataSet);
 			if(allDataSet.size() > 0) {
 				btExportData.setDisable(false);
 			}
@@ -129,7 +130,7 @@ public class Main extends Application {
 		
 	}
 	
-	private void initHandleMultiDataAndChart() {
+	private void initHandleMultiDataAndChart() {		
 		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			
@@ -145,7 +146,6 @@ public class Main extends Application {
 		
 		btPlotChart.setOnAction(e->{
 			//TODO jack
-			
 		});		
 
 		btBackToMenu2.setOnAction(e -> {
@@ -240,13 +240,11 @@ public class Main extends Application {
 		btShowChart = new Button("Show Chart");
 		btBackToMenu2 = new Button("Back to Menu");
 		btPlotChart = new Button("Plot Chart");
-		
+
 		listViewDataSetObj = new ListView<VBox>();
-		listViewDataSetObj.setItems(viewDataSet);
+		listViewDataSetObj.setItems(listViewDataSet);
 		listViewChartObj = new ListView<VBox>();
 		listViewChartObj.setItems(listViewChart);
-		
-		
 		
 		HBox container = new HBox(20);
 		HBox bottomContainer = new HBox(20);
