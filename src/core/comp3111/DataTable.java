@@ -1,8 +1,7 @@
 package core.comp3111;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * 2D array of data values with the following requirements: (1) There are 0 to
@@ -23,7 +22,7 @@ public class DataTable {
 
 		// In this application, we use HashMap data structure defined in
 		// java.util.HashMap
-		dc = new HashMap<String, DataColumn>();
+		dc = new LinkedHashMap<String, DataColumn>();
 	}
 
 	/**
@@ -102,13 +101,17 @@ public class DataTable {
 	 * 
 	 * @author dev-pkyipab
 	 */
-	public DataColumn getCol(int n) {
+	public DataColumn getColByNum(int n) {
 		int counter = 0;
-		for (Map.Entry<String, DataColumn> entry : dc.entrySet()) {
-			if(n == counter) {
-				return entry.getValue();
-			}
-			++counter;
+		
+		if(n < dc.size()) {
+			for (Object key : dc.keySet()) {
+				if(counter == n) {
+					System.out.println(key + " : " + dc.get(key).getData().toString());
+					return getCol((String)key);
+				}
+				++counter;
+	        }
 		}
 		return null;
 	}
