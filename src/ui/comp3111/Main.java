@@ -75,7 +75,9 @@ public class Main extends Application {
 	 * TODO PieChart (will be using similar method as Line Chart)
 	 * private static final int SCENE_PLOT_PIE_CHART = 6;
 	 */
+
 	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",  "Save And Load", "Data Filtering","Plot Line Chart"};
+
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -111,6 +113,7 @@ public class Main extends Application {
 	private Button loadButton;
 	private Button saveButton;
 	private Button btBackToMenu3;
+
 	
 	//Screen 5: paneSaveAndLoad
 	private ObservableList<VBox> dataFilterDataSet = FXCollections.observableArrayList();
@@ -194,6 +197,7 @@ public class Main extends Application {
 		btDataFiltering.setOnAction(e -> {
 			putSceneOnStage(SCENE_FILTER_DATA);
 		});
+
 
 	}
 	
@@ -555,6 +559,7 @@ public class Main extends Application {
 		return pane;
 	}
 	
+
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
 	private Pane paneHandlePlotPieChart() {
