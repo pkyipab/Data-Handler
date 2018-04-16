@@ -17,6 +17,7 @@ import core.comp3111.SampleDataGenerator;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -24,10 +25,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
@@ -48,15 +52,18 @@ public class Main extends Application {
 	// java.util.ArrayList)
 	public static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
 	private DataImportExport dataImportExport = new DataImportExport();
+	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
+
 	
 	// Attributes: Scene and Stage
-	private static final int SCENE_NUM = 3;
+	private static final int SCENE_NUM = 4;
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
 	private static final int SCENE_MUTIPLE_CHRAT = 2;
 	private static final int SCENE_SAVE_LOAD = 3;
 	private static final int SCENE_FILTER_DATA = 4;
-	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart"};
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",
+			"HandleMultiDataAndChart", "Save And Load"};
     private Scene[] scenes = null;
     private Stage stage = null;
     
@@ -85,6 +92,12 @@ public class Main extends Application {
 	private Button btShowChart;
 	private Button btBackToMenu2;
 	private Button btPlotChart;
+	
+	//Screen 4: paneSaveAndLoad
+	private Button loadButton;
+	private Button saveButton;
+	private Button btBackToMenu3;
+
 
 	/**
 	 * create all scenes in this application
@@ -94,6 +107,8 @@ public class Main extends Application {
 		scenes[SCENE_MAIN_SCREEN] = new Scene(paneMainScreen(), 400, 500);
 		scenes[SCENE_IMPORT_EXPORT] = new Scene(paneImportExportScreen(), 800, 600);
 		scenes[SCENE_MUTIPLE_CHRAT] = new Scene(paneHandleMultiDataAndChart(), 800, 600);
+		scenes[SCENE_SAVE_LOAD] = new Scene(paneSaveAndLoad(), 400, 500);
+		
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -110,6 +125,7 @@ public class Main extends Application {
 		initMainScreenHandlers();
 		initImportExportScreenHandlers();
 		initHandleMultiDataAndChart();
+		initSaveAndLoad();
 		
 	}
 	
@@ -155,6 +171,33 @@ public class Main extends Application {
 		btBackToMenu2.setOnAction(e -> {
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
+	}
+	
+	private void initSaveAndLoad() {
+		loadButton.setOnAction(e->{
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Load .Comp3111");
+			fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Comp3111 files", "*.comp3111"));
+
+			File file = fileChooser.showOpenDialog(stage);
+			if(file != null)
+				dataSaveAndLoad.loadData(file);
+		});
+		
+		saveButton.setOnAction(e->{
+
+	        FileChooser fs = new FileChooser();
+	        fs.setTitle("Spiel speichern");
+
+	        fs.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Comp3111", ".comp3111"));
+			File file = fs.showSaveDialog(stage);
+			dataSaveAndLoad.saveData(file);
+		});
+		
+		btBackToMenu3.setOnAction(e->{
+			putSceneOnStage(SCENE_MAIN_SCREEN);
+		});
+		
 	}
 
 	/**
@@ -271,6 +314,30 @@ public class Main extends Application {
 		
 		pane.getStyleClass().add("screen-background");		
 
+		return pane;
+	}	
+
+	public Pane paneSaveAndLoad() {
+		loadButton = new Button("Load");
+		saveButton = new Button("Save");
+		btBackToMenu3 = new Button("Back to menu");
+		
+		dataSaveAndLoad = new DataSaveAndLoad();
+		
+		Separator separator = new Separator();
+		separator.setPadding(new Insets(20, 20, 20, 20));
+
+		Separator separator2 = new Separator();
+		separator2.setPadding(new Insets(20, 20, 20, 20));
+		
+		VBox vBox = new VBox();
+		
+		vBox.getChildren().addAll(loadButton, separator, saveButton, separator2, btBackToMenu3);
+		vBox.setAlignment(Pos.CENTER);
+		
+		BorderPane pane = new BorderPane();
+		pane.setCenter(vBox);
+		
 		return pane;
 	}
 	
