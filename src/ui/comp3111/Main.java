@@ -58,7 +58,7 @@ public class Main extends Application {
 	private static final int SCENE_FILTER_DATA = 4;
 	private static final int SCENE_PLOT_LINE_CHART = 5;
 	/*
-	 * TODO PieChart
+	 * TODO PieChart (will be using similar method as Line Chart)
 	 * private static final int SCENE_PLOT_PIE_CHART = 6;
 	 */
 	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart", "", "", "Plot Line Chart"};
@@ -94,6 +94,14 @@ public class Main extends Application {
 	//Screen 5: paneHandlePlotLineChart
 	private Button btPlotLine;
 	private Button btReturn;
+	
+	/*
+	 * TODO PieChart (will be using similar method as Line Chart)
+	//Screen 6: paneHandlePlotPieChart
+	private Button btPlotPie;
+	private Button btReturn_alt;
+	 *
+	 */
 
 	/**
 	 * create all scenes in this application
@@ -105,7 +113,7 @@ public class Main extends Application {
 		scenes[SCENE_MUTIPLE_CHRAT] = new Scene(paneHandleMultiDataAndChart(), 800, 600);
 		scenes[SCENE_PLOT_LINE_CHART] = new Scene(paneHandlePlotLineChart(), 800, 600);
 		/*
-		 * TODO PieChart
+		 * TODO PieChart (will be using similar method as Line Chart)
 		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotChart(), 800, 600);
 		 */
 		for (Scene s : scenes) {
@@ -175,13 +183,29 @@ public class Main extends Application {
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the Chart Class function to create a new chart
+			//TODO call the Chart Class function to create a new chart and save in Datatable Class
 		});
 		
 		btReturn.setOnAction(e->{
 			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 		});		
 	}
+	
+	/*
+	 * 
+	 * TODO PieChart (will be using similar method as Line Chart)
+	 * private void initHandlePlotPieChart() {		
+		
+		btPlotLine.setOnAction(e->{
+			//TODO call the Chart Class function to create a new chart and save in Datatable Class
+		});
+		
+		btReturn.setOnAction(e->{
+			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+		});		
+	}
+	 * 
+	 */
 	
 	/**
 	 * Initialize event handlers of the main screen
@@ -313,10 +337,16 @@ public class Main extends Application {
 		VBox selectX = new VBox(20);
 		VBox selectY = new VBox(20);
 		HBox bottomContainer = new HBox(20);
-		
+		/*
+		 * TODO
+		 * Still learning to use Combo box Class (use Combo box is the Requirement of the Project)
+		 */
 		topContainer.getChildren().add(Hints);
+		topContainer.setAlignment(Pos.CENTER);
 		comboBox.getChildren().addAll(selectX, selectY);
+		comboBox.setAlignment(Pos.CENTER);
 		bottomContainer.getChildren().addAll(btPlotLine, btReturn);
+		bottomContainer.setAlignment(Pos.CENTER);
 		
 		BorderPane pane = new BorderPane();
 		pane.setTop(topContainer);
@@ -327,10 +357,33 @@ public class Main extends Application {
 	}
 	
 	/*
-	 * TODO PieChart
+	 * TODO PieChart (will be using similar method as Line Chart)
 	private Pane paneHandlePlotPieChart() {
+		Label Hints = new Label("Select ONE Text and ONE Numeric Column");
+		Label lbXaxis = new Label("Selected X-axis");
+		Label lbYaxis = new Label("Selected Y-axis");
+		
+		btPlotPie = new Button("Plot");
+		btReturn_alt = new Button("Return");
+		
+		HBox topContainer = new HBox(20);
+		HBox comboBox = new HBox(20);
+		VBox selectX = new VBox(20);
+		VBox selectY = new VBox(20);
+		HBox bottomContainer = new HBox(20);
+		
+		TODO
+		Still learning to use Combo box Class (use Combo box is the Requirement of the Project)	
 			
+		topContainer.getChildren().add(Hints);
+		comboBox.getChildren().addAll(selectX, selectY);
+		bottomContainer.getChildren().addAll(btPlotPie, btReturn_alt);
+		
 		BorderPane pane = new BorderPane();
+		pane.setTop(topContainer);
+		pane.setCenter(comboBox);
+		pane.setBottom(bottomContainer);
+		pane.getStyleClass().add("screen-background");		
 		return pane;
 	}
 	*/
