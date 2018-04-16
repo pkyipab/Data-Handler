@@ -14,3 +14,14 @@
 .screen-background {
 	-fx-background-color: white;
 }
+
+.tab-pane {
+	-fx-border-color: #C0C0C0;
+	-fx-border-width: 1 1 1 1;
+	-fx-border-style: dashed inside;
+
+}
+
+.tab-header-background {
+    -fx-background-color: white;
+}

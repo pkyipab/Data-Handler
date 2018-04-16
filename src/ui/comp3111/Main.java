@@ -75,9 +75,7 @@ public class Main extends Application {
 	 * TODO PieChart (will be using similar method as Line Chart)
 	 * private static final int SCENE_PLOT_PIE_CHART = 6;
 	 */
-
 	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",  "Save And Load", "Data Filtering","Plot Line Chart"};
-
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -113,7 +111,6 @@ public class Main extends Application {
 	private Button loadButton;
 	private Button saveButton;
 	private Button btBackToMenu3;
-
 	
 	//Screen 5: paneSaveAndLoad
 	private ObservableList<VBox> dataFilterDataSet = FXCollections.observableArrayList();
@@ -197,7 +194,6 @@ public class Main extends Application {
 		btDataFiltering.setOnAction(e -> {
 			putSceneOnStage(SCENE_FILTER_DATA);
 		});
-
 
 	}
 	
@@ -463,6 +459,7 @@ public class Main extends Application {
 		
 		HBox exit = new HBox();
 		exit.getChildren().add(btDataFilter_BackToMenu);
+		exit.setPadding(new Insets(10, 0, 0, 0));
 		exit.setAlignment(Pos.CENTER);
 		
 		StackPane root = new StackPane();
@@ -483,7 +480,7 @@ public class Main extends Application {
 		Label colTitle = new Label(" The Columns of Current Dataset : ");
 		colTitle.setPadding(new Insets(10, 0, 10, 0));
 		columnBox.getChildren().addAll(colTitle, dataColumnList);
-		columnBox.setPadding(new Insets(0, 35, 20, 0));
+		columnBox.setPadding(new Insets(0, 25, 20, 10));
 		
 		
 		VBox textVBox = new VBox();
@@ -504,7 +501,7 @@ public class Main extends Application {
 		tabPane.getSelectionModel().select(1);
         tabPane.getTabs().addAll(textTab, randomTab);
         
-        tabPane.setTabMinWidth(231);
+        tabPane.setTabMinWidth(228);
         tabPane.setTabMinHeight(30);
         
         
@@ -522,6 +519,8 @@ public class Main extends Application {
 		btTextPaneConfirm.getStyleClass().add("menu-button");
 		btRandomPaneConfirm.getStyleClass().add("menu-button");
 		btDataFilter_BackToMenu.getStyleClass().add("menu-button");
+		tabPane.getStyleClass().add("tab-pane");
+		root.getStyleClass().add("tab-header-background");
 		pane.getStyleClass().add("screen-background");
 		
 		return pane;
@@ -559,7 +558,6 @@ public class Main extends Application {
 		return pane;
 	}
 	
-
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
 	private Pane paneHandlePlotPieChart() {
