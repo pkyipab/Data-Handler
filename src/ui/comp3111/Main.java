@@ -174,11 +174,10 @@ public class Main extends Application {
 	}
 	
 	private void initSaveAndLoad() {
-
 		loadButton.setOnAction(e->{
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Load .Comp3111");
-			fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Comp3111 files", "*.Comp3111"));
+			fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Comp3111 files", "*.comp3111"));
 
 			File file = fileChooser.showOpenDialog(stage);
 			if(file != null)
@@ -186,12 +185,13 @@ public class Main extends Application {
 		});
 		
 		saveButton.setOnAction(e->{
-			DirectoryChooser  directoryChooser = new DirectoryChooser ();
-			directoryChooser.setTitle("Save .Comp3111");
 
-			File file = directoryChooser.showDialog(stage);
-			if(file != null)
-				dataSaveAndLoad.saveData(file);
+	        FileChooser fs = new FileChooser();
+	        fs.setTitle("Spiel speichern");
+
+	        fs.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Comp3111", ".comp3111"));
+			File file = fs.showSaveDialog(stage);
+			dataSaveAndLoad.saveData(file);
 		});
 		
 		btBackToMenu3.setOnAction(e->{
