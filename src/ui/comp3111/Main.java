@@ -61,7 +61,7 @@ public class Main extends Application {
 	 * TODO PieChart
 	 * private static final int SCENE_PLOT_PIE_CHART = 6;
 	 */
-	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart", "Plot Line Chart"};
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart", "", "", "Plot Line Chart"};
     private Scene[] scenes = null;
     private Stage stage = null;
     
