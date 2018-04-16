@@ -14,6 +14,7 @@ import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 import core.comp3111.SampleDataGenerator;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,10 +26,15 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -69,7 +75,9 @@ public class Main extends Application {
 	 * TODO PieChart (will be using similar method as Line Chart)
 	 * private static final int SCENE_PLOT_PIE_CHART = 6;
 	 */
-	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart", "HandleMultiDataAndChart", "Save And Load", "Data Filtering","Plot Line Chart"};
+
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",  "Save And Load", "Data Filtering","Plot Line Chart"};
+
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -87,7 +95,7 @@ public class Main extends Application {
     private ListView<VBox> dataSet = new ListView<VBox>();
 	private Button btImportData;
 	private Button btExportData;
-	private Button btBackToMenu;
+	private Button btImportExport_BackToMenu;
 	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();;
 	
 	
@@ -106,7 +114,22 @@ public class Main extends Application {
 	private Button saveButton;
 	private Button btBackToMenu3;
 
-	//Screen 5: paneHandlePlotLineChart
+	
+	//Screen 5: paneSaveAndLoad
+	private ObservableList<VBox> dataFilterDataSet = FXCollections.observableArrayList();
+	private ListView<VBox> dataFilterData;
+	private ListView<VBox> dataColumnList;
+	private final ToggleGroup groupRandom = new ToggleGroup();
+	private final ToggleGroup groupText = new ToggleGroup();
+	private RadioButton replaceRandom;
+	private RadioButton createNewRandom;
+	private RadioButton replaceText;
+	private RadioButton createNewText;
+	private Button btRandomPaneConfirm;
+	private Button btTextPaneConfirm;
+	private Button btDataFilter_BackToMenu;
+
+	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
 	private Button btReturn;
 	
@@ -126,8 +149,8 @@ public class Main extends Application {
 		scenes[SCENE_MAIN_SCREEN] = new Scene(paneMainScreen(), 400, 500);
 		scenes[SCENE_IMPORT_EXPORT] = new Scene(paneImportExportScreen(), 800, 600);
 		scenes[SCENE_MUTIPLE_CHRAT] = new Scene(paneHandleMultiDataAndChart(), 800, 600);
-    scenes[SCENE_SAVE_LOAD] = new Scene(paneSaveAndLoad(), 400, 500);
-
+		scenes[SCENE_SAVE_LOAD] = new Scene(paneSaveAndLoad(), 400, 500);
+		scenes[SCENE_FILTER_DATA] = new Scene(paneDataFiltering(), 800, 600);
 		scenes[SCENE_PLOT_LINE_CHART] = new Scene(paneHandlePlotLineChart(), 800, 600);
 		/*
 		 * TODO PieChart (will be using similar method as Line Chart)
@@ -149,8 +172,33 @@ public class Main extends Application {
 		initMainScreenHandlers();
 		initImportExportScreenHandlers();
 		initHandleMultiDataAndChart();
-    initSaveAndLoad();
+		initSaveAndLoad();
+		initDataFiltering();
 		initHandlePlotLineChart();
+	}
+	
+	/**
+	 * Initialize event handlers of the main screen
+	 */
+	private void initMainScreenHandlers() {
+		
+		btImportExport.setOnAction(e -> {
+			putSceneOnStage(SCENE_IMPORT_EXPORT);
+		});
+		
+		btMutipleChart.setOnAction(e -> {
+			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+		});
+		
+		btSavingLoading.setOnAction(e -> {
+			putSceneOnStage(SCENE_SAVE_LOAD);
+		});
+		
+		btDataFiltering.setOnAction(e -> {
+			putSceneOnStage(SCENE_FILTER_DATA);
+		});
+
+
 	}
 	
 	private void initImportExportScreenHandlers() {
@@ -158,7 +206,7 @@ public class Main extends Application {
 		btExportData.setDisable(true);
 		
 		btImportData.setOnAction(e -> {
-			dataImportExport.importData(stage, viewDataSet, listViewDataSet, map);
+			dataImportExport.importData(stage, viewDataSet, listViewDataSet, dataFilterDataSet, map);
 			if(allDataSet.size() > 0) {
 				btExportData.setDisable(false);
 			}
@@ -168,7 +216,7 @@ public class Main extends Application {
 			dataImportExport.exportData(stage, dataSet, map);
 		});
 			
-		btBackToMenu.setOnAction(e -> {
+		btImportExport_BackToMenu.setOnAction(e -> {
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
 		
@@ -223,6 +271,13 @@ public class Main extends Application {
 		});
 		
 	}
+	
+	private void initDataFiltering() {		
+		
+		btDataFilter_BackToMenu.setOnAction(e->{
+			putSceneOnStage(SCENE_MAIN_SCREEN);
+		});		
+	}
 
 	private void initHandlePlotLineChart() {		
 		
@@ -250,29 +305,6 @@ public class Main extends Application {
 	}
 	 * 
 	 */
-	
-	/**
-	 * Initialize event handlers of the main screen
-	 */
-	private void initMainScreenHandlers() {
-		
-		btImportExport.setOnAction(e -> {
-			putSceneOnStage(SCENE_IMPORT_EXPORT);
-		});
-		
-		btMutipleChart.setOnAction(e -> {
-			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
-		});
-		
-		btSavingLoading.setOnAction(e -> {
-			putSceneOnStage(SCENE_SAVE_LOAD);
-		});
-		
-		btDataFiltering.setOnAction(e -> {
-			putSceneOnStage(SCENE_FILTER_DATA);
-		});
-
-	}
 
 	/**
 	 * Creates the main screen and layout its UI components
@@ -282,7 +314,7 @@ public class Main extends Application {
 	private Pane paneMainScreen() {
 
 		lbMainScreenTitle = new Label("COMP3111");
-		btImportExport = new Button("Import & Export (by victor)");
+		btImportExport = new Button("Import & Export");
 		btMutipleChart = new Button("Mutiple Datasets & Charts");
 		btSavingLoading = new Button("Save / Load");
 		btDataFiltering = new Button("Filter Data");
@@ -314,19 +346,22 @@ public class Main extends Application {
 		Label label = new Label("Current DataSet :");
 		btImportData = new Button("Import Data");
 		btExportData = new Button("Export Data");
-		btBackToMenu = new Button("Back To Menu");
+		btImportExport_BackToMenu = new Button("Back To Menu");
         
 		VBox container = new VBox(20);
 		dataSet.setItems(viewDataSet);
 		dataSet.setPrefSize(50, 150);
 	
 		
-		container.getChildren().addAll(label, dataSet, btImportData, btExportData, btBackToMenu);
+		container.getChildren().addAll(label, dataSet, btImportData, btExportData, btImportExport_BackToMenu);
 		container.setAlignment(Pos.CENTER);
 
 		BorderPane pane = new BorderPane();
 		pane.setCenter(container);
-
+		
+		btImportData.getStyleClass().add("menu-button");
+		btExportData.getStyleClass().add("menu-button");
+		btImportExport_BackToMenu.getStyleClass().add("menu-button");
 		pane.getStyleClass().add("screen-background");
 
 		return pane;
@@ -392,6 +427,106 @@ public class Main extends Application {
 		return pane;
 	}
 	
+	public Pane paneDataFiltering() {
+		replaceRandom = new RadioButton(" Replace Current DataSet ");
+		replaceRandom.setToggleGroup(groupRandom);
+		createNewRandom = new RadioButton(" Create New DataSet ");
+		createNewRandom.setToggleGroup(groupRandom);
+		btRandomPaneConfirm = new Button("Confirm");
+		
+		replaceText = new RadioButton(" Replace Current DataSet ");
+		replaceText.setToggleGroup(groupText);
+		createNewText = new RadioButton(" Create New DataSet ");
+		createNewText.setToggleGroup(groupText);
+		btTextPaneConfirm = new Button("Confirm");
+		
+		btDataFilter_BackToMenu = new Button("Back to menu");
+		dataFilterData = new ListView<VBox>();
+		dataFilterData.setItems(dataFilterDataSet);
+		dataColumnList = new ListView<VBox>();
+		
+		
+		
+		Label title = new Label("Data Filtering");
+		title.setPadding(new Insets(0, 0, 5, 0));
+		
+		VBox titleVBox = new VBox();
+		titleVBox.getChildren().addAll(title, new Separator());
+		titleVBox.setAlignment(Pos.CENTER);
+		titleVBox.setPadding(new Insets(20, 20, 20, 20));
+		
+		VBox data = new VBox();
+		Label dataTitle = new Label(" Current Datasets :");
+		dataTitle.setPadding(new Insets(0, 0, 5, 0));
+		data.getChildren().addAll(dataTitle, dataFilterData);
+		data.setAlignment(Pos.CENTER);
+		
+		HBox exit = new HBox();
+		exit.getChildren().add(btDataFilter_BackToMenu);
+		exit.setAlignment(Pos.CENTER);
+		
+		StackPane root = new StackPane();
+		
+		VBox randomVbox = new VBox();
+		randomVbox.getChildren().addAll(new Label("Please Select a SINGLE Dataset and choose following : "), replaceRandom, createNewRandom, btRandomPaneConfirm);
+		replaceRandom.setPadding(new Insets(20, 0, 0, 0));
+		createNewRandom.setPadding(new Insets(20, 0, 50, 0));
+		randomVbox.setAlignment(Pos.CENTER);
+
+		
+		Tab randomTab = new Tab();
+		randomTab.setText("Random Filter");
+		randomTab.setContent(randomVbox);
+		randomTab.closableProperty().setValue(false);
+		
+		VBox columnBox = new VBox();
+		Label colTitle = new Label(" The Columns of Current Dataset : ");
+		colTitle.setPadding(new Insets(10, 0, 10, 0));
+		columnBox.getChildren().addAll(colTitle, dataColumnList);
+		columnBox.setPadding(new Insets(0, 35, 20, 0));
+		
+		
+		VBox textVBox = new VBox();
+		textVBox.getChildren().addAll(new Label("Please choose following : "), replaceText, createNewText, btTextPaneConfirm);
+		replaceText.setPadding(new Insets(20, 0, 0, 0));
+		createNewText.setPadding(new Insets(20, 0, 50, 0));
+		textVBox.setAlignment(Pos.CENTER);
+		
+		HBox textHBox = new HBox();
+		textHBox.getChildren().addAll(columnBox, textVBox);
+		
+		Tab textTab = new Tab();
+		textTab.setText("Text Filter");
+		textTab.setContent(textHBox);
+		textTab.closableProperty().setValue(false);
+		
+		TabPane tabPane = new TabPane();
+		tabPane.getSelectionModel().select(1);
+        tabPane.getTabs().addAll(textTab, randomTab);
+        
+        tabPane.setTabMinWidth(231);
+        tabPane.setTabMinHeight(30);
+        
+        
+        root.getChildren().add(tabPane);
+        root.setPadding(new Insets(0, 0, 0, 10));
+
+		BorderPane pane = new BorderPane();
+		pane.setTop(titleVBox);
+		pane.setLeft(data);
+		pane.setBottom(exit);
+		pane.setCenter(root);
+		pane.setPadding(new Insets(20, 20, 20, 20));
+		
+		
+		btTextPaneConfirm.getStyleClass().add("menu-button");
+		btRandomPaneConfirm.getStyleClass().add("menu-button");
+		btDataFilter_BackToMenu.getStyleClass().add("menu-button");
+		pane.getStyleClass().add("screen-background");
+		
+		return pane;
+	}
+	
 	private Pane paneHandlePlotLineChart() {
 		Label Hints = new Label("ONLY Numeric Columns will DISPLAYED");
 		Label lbXaxis = new Label("Selected X-axis");
@@ -424,6 +559,7 @@ public class Main extends Application {
 		return pane;
 	}
 	
+
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
 	private Pane paneHandlePlotPieChart() {

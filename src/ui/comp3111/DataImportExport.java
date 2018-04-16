@@ -22,9 +22,28 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+
+/* TODO 
+ * 
+ * 
+ *  1) Add pop-up window for user to choose fill in mean / zero / median
+ * 	
+ * 
+ * 
+ * 
+ * 
+ *  2) Mix Integer and Double Type -> NUMBER
+ * 
+ * 
+ * 
+ * 
+ */
+
+
+
 public class DataImportExport {
 	
-	public void importData(Stage s, ObservableList<VBox> viewDataSet, ObservableList<VBox> dataSetHandle, Map<VBox, DataTable> map) {
+	public void importData(Stage s, ObservableList<VBox> viewDataSet, ObservableList<VBox> dataSetHandle, ObservableList<VBox> dataFilterDataSet, Map<VBox, DataTable> map) {
 			FileChooser fc;
 			BufferedReader br = null;
 			String line = "";
@@ -34,6 +53,7 @@ public class DataImportExport {
 
 			VBox dataVBox = new VBox();
 			VBox dataVBoxHandle = new VBox();
+			VBox dataFilterVBox = new VBox();
 
 			
 			 try {
@@ -108,6 +128,9 @@ public class DataImportExport {
 
 			            dataVBoxHandle.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
 			            dataSetHandle.add(dataVBoxHandle);
+			            
+			            dataFilterVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
+			            dataFilterDataSet.add(dataFilterVBox);
 			            
 			            System.out.println("[ Import Success ]");
 					}
