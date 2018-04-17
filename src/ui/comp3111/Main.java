@@ -13,8 +13,10 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
+
 import core.comp3111.SampleDataGenerator;
 import core.comp3111.ChartTable;
+
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -205,10 +207,11 @@ public class Main extends Application {
 		btExportData.setDisable(true);
 		
 		btImportData.setOnAction(e -> {
-			dataImportExport.importData(stage, viewDataSet, listViewDataSet, dataFilterDataSet, map);
+			dataImportExport.importData(stage);
 			if(allDataSet.size() > 0) {
 				btExportData.setDisable(false);
 			}
+			updateListView();
 		});
 			
 		btExportData.setOnAction(e -> {
@@ -253,12 +256,12 @@ public class Main extends Application {
 			File file = fileChooser.showOpenDialog(stage);
 			if(file != null)
 				dataSaveAndLoad.loadData(file);
+			updateListView();
 		});
 		
 		saveButton.setOnAction(e->{
-
 	        FileChooser fs = new FileChooser();
-	        fs.setTitle("Spiel speichern");
+	        fs.setTitle("Save .Comp3111");
 
 	        fs.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Comp3111", ".comp3111"));
 			File file = fs.showSaveDialog(stage);
@@ -642,6 +645,35 @@ public class Main extends Application {
 		launch(args);
 	}
 	
+	public void updateListView() {
+
+		viewDataSet.clear();
+		listViewDataSet.clear();
+		dataFilterDataSet.clear();
+		map.clear();
+		for(int i = 0; i < allDataSet.size(); i++) {
+			
+			VBox dataVBox = new VBox();
+			VBox dataVBoxHandle = new VBox();
+			VBox dataFilterVBox = new VBox();
+			
+            map.put(dataVBox, allDataSet.get(i));
+
+			
+            dataVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
+            		" : " + allDataSet.get(i).getFileName() +  ""));
+            viewDataSet.add(dataVBox);
+
+            dataVBoxHandle.getChildren().addAll(new Label("DataSet " + (i + 1) +
+            		" : " + allDataSet.get(i).getFileName() +  ""));
+            listViewDataSet.add(dataVBoxHandle);
+            
+            dataFilterVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
+            		" : " + allDataSet.get(i).getFileName() +  ""));
+            dataFilterDataSet.add(dataFilterVBox);
+		}
+	}
+	
 	/**
 	 *  Alert Method - only use when Exception caught
 	 * 
@@ -658,4 +690,6 @@ public class Main extends Application {
 		alert.setContentText(content);
 		alert.showAndWait();
 	}
+	
+	
 }

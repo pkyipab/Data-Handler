@@ -43,18 +43,13 @@ import javafx.stage.Stage;
 
 public class DataImportExport {
 	
-	public void importData(Stage s, ObservableList<VBox> viewDataSet, ObservableList<VBox> dataSetHandle, ObservableList<VBox> dataFilterDataSet, Map<VBox, DataTable> map) {
+	public void importData(Stage s) {
 			FileChooser fc;
 			BufferedReader br = null;
 			String line = "";
 			ArrayList<String[]> row = new ArrayList<String[]>();
 			
-			DataTable dataTable = new DataTable();
-
-			VBox dataVBox = new VBox();
-			VBox dataVBoxHandle = new VBox();
-			VBox dataFilterVBox = new VBox();
-
+			DataTable dataTable;
 			
 			 try {
 				 	fc = new FileChooser();
@@ -66,7 +61,7 @@ public class DataImportExport {
 					if(file != null) {
 					 		
 			            br = new BufferedReader(new FileReader(file));
-			         
+			         dataTable = new DataTable(file.getName());
 			            
 			           //Split the file row by row
 			            String[] title = br.readLine().split(",");
@@ -120,7 +115,7 @@ public class DataImportExport {
 			            }
 			           
 			            Main.allDataSet.add(dataTable);
-
+/*
 			            map.put(dataVBox, dataTable);
 			            
 			            dataVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
@@ -132,6 +127,8 @@ public class DataImportExport {
 			            dataFilterVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
 			            dataFilterDataSet.add(dataFilterVBox);
 			            
+			            
+			            */
 			            System.out.println("[ Import Success ]");
 					}
 		        }  catch (IOException ex) {
