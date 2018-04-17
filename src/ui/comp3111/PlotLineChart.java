@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 
 public class PlotLineChart {
@@ -15,20 +16,16 @@ public class PlotLineChart {
 	private NumberAxis xAxis = new NumberAxis();
     private NumberAxis yAxis = new NumberAxis();
     int chartCount;
-    String chartTitle = "Chart" + chartCount;
-    LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
-    XYChart.Series<Number, Number> series = new Series<Number, Number>();
-    
-    public PlotLineChart(ChartTable o) {
-    	chartCount = o.ct.size() + 1; //First Chart will called Chart 1, then Chart 2, then Chart 3...etc
-    }
     
     public void createLineChart(ChartTable exist, DataColumn x, DataColumn y) {
-    	//chartTitle = ...Think later
-    }
-    
-    public void addChart(ChartTable target) {
-    	target.ct.put(chartTitle, lineChart);
+    	chartCount = exist.ct.size();
+    	String cTitle = "Chart " + chartCount;	//First Chart will called Chart 1, then Chart 2, then Chart 3...etc
+    	LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+    	XYChart.Series<Number, Number> series = new Series<Number, Number>();
+    	for(int i = 0; i < x.getSize(); i++) {
+    		series.getData().add(new Data<Number, Number>(1, 23));
+    	}
+    	exist.ct.put(cTitle, lineChart);
     }
     
     /*
