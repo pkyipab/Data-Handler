@@ -22,7 +22,7 @@ public class PlotLineChart {
     	XYChart.Series<Number, Number> series = new Series<Number, Number>();
     	for(int i = 0; i < x.getSize(); i++) {
     		series.getData().add(new Data<Number, Number>((Number)x.getData()[i], (Number)y.getData()[i]));
-    		System.out.println("Added the " + i + " row data: X-axis index = " + (Number)x.getData()[i] + ", Y-axis index = " +(Number)y.getData()[i]);
+    		System.out.println("Added the " + i + " row data: X-axis index = " + (Number)x.getData()[i] + ", Y-axis index = " + (Number)y.getData()[i]);
     	}
     	lineChart.getData().add(series);
     	exist.ct.put(cTitle, lineChart);
