@@ -1,5 +1,6 @@
 package core.comp3111;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,16 +14,18 @@ import java.util.Map;
  * @author cspeter
  *
  */
-public class DataTable {
+public class DataTable implements Serializable {
 
 	/**
 	 * Construct - Create an empty DataTable
 	 */
-	public DataTable() {
+	public DataTable(String fileName) {
 
 		// In this application, we use HashMap data structure defined in
 		// java.util.HashMap
 		dc = new LinkedHashMap<String, DataColumn>();
+		this.fileName = fileName;
+		
 	}
 
 	/**
@@ -171,9 +174,15 @@ public class DataTable {
 		return dc.get(entry.getKey()).getSize();
 	}
 	
+	public String getFileName() {
+		return fileName;
+	}
+	
 	// attribute: A java.util.Map interface
 	// KeyType: String
 	// ValueType: DataColumn
 	private Map<String, DataColumn> dc;
+	
+	private String fileName;
 
 }
