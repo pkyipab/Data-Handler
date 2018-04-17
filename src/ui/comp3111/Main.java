@@ -14,6 +14,7 @@ import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 import core.comp3111.SampleDataGenerator;
+import core.comp3111.ChartTable;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -59,6 +60,7 @@ public class Main extends Application {
 	public static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
+	private ChartTable storedChart = new ChartTable();
 
 	
 	// Attributes: Scene and Stage
