@@ -61,6 +61,7 @@ public class Main extends Application {
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
 	private ChartTable storedChart = new ChartTable();
+	private PlotLineChart plotlinechart = new PlotLineChart(storedChart);
 
 	
 	// Attributes: Scene and Stage
