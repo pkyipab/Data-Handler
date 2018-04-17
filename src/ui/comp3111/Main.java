@@ -280,7 +280,7 @@ public class Main extends Application {
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the Chart Class function to create a new chart and save in Datatable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
 		});
 		
 		btReturn.setOnAction(e->{
@@ -294,7 +294,7 @@ public class Main extends Application {
 	 * private void initHandlePlotPieChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the Chart Class function to create a new chart and save in Datatable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
 		});
 		
 		btReturn.setOnAction(e->{
