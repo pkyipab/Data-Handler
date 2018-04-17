@@ -14,6 +14,10 @@ import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 
+import core.comp3111.SampleDataGenerator;
+import core.comp3111.ChartTable;
+
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,6 +62,8 @@ public class Main extends Application {
 	public static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
+	private ChartTable storedChart = new ChartTable();
+	private PlotLineChart plotlinechart = new PlotLineChart();
 
 	
 	// Attributes: Scene and Stage
@@ -278,7 +284,7 @@ public class Main extends Application {
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the Chart Class function to create a new chart and save in Datatable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
 		});
 		
 		btReturn.setOnAction(e->{
@@ -292,7 +298,7 @@ public class Main extends Application {
 	 * private void initHandlePlotPieChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the Chart Class function to create a new chart and save in Datatable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
 		});
 		
 		btReturn.setOnAction(e->{
