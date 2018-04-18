@@ -15,8 +15,6 @@ import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 
 import core.comp3111.SampleDataGenerator;
-import core.comp3111.ChartTable;
-
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -24,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.Chart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -62,7 +61,8 @@ public class Main extends Application {
 	public static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
-	private ChartTable storedChart = new ChartTable();
+	public static ArrayList<Chart> storedChart = new ArrayList<Chart>();
+	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
 	private PlotLineChart plotlinechart = new PlotLineChart();
 
 	
@@ -284,7 +284,7 @@ public class Main extends Application {
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
 		});
 		
 		btReturn.setOnAction(e->{
@@ -298,7 +298,7 @@ public class Main extends Application {
 	 * private void initHandlePlotPieChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
 		});
 		
 		btReturn.setOnAction(e->{
