@@ -1,6 +1,7 @@
 package ui.comp3111;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import core.comp3111.DataColumn;
@@ -20,7 +21,7 @@ public class PlotLineChart {
 	private NumberAxis xAxis = new NumberAxis();
     private NumberAxis yAxis = new NumberAxis();
     private DataTable recieved;
-    private Map<String ,DataColumn> filtedSet;
+    private LinkedHashMap<String ,DataColumn> filtedSet;
     int chartCount;
     
     public PlotLineChart(DataTable dataTable) {
@@ -41,7 +42,7 @@ public class PlotLineChart {
     	}
     }
     
-    public Map<String ,DataColumn> getFiltedSet(){
+    public LinkedHashMap<String ,DataColumn> getFiltedSet(){
     	return this.filtedSet;
     }
     
