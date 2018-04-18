@@ -35,7 +35,7 @@ import javafx.stage.Stage;
  *  2) Mix Integer and Double Type -> NUMBER
  * 
  * 
- * 
+ * 	3) Name checking
  * 
  */
 
@@ -61,8 +61,14 @@ public class DataImportExport {
 					if(file != null) {
 					 		
 			            br = new BufferedReader(new FileReader(file));
-			         dataTable = new DataTable(file.getName());
-			            
+
+			            String fileName[] = file.getName().split("\\.");
+			            if(Main.isValidFileName(fileName[0]) > 0) {
+			            	dataTable = new DataTable(fileName[0] + "_" + Main.isValidFileName(fileName[0]));
+			            } else {
+			            	dataTable = new DataTable(fileName[0]);
+			            }
+
 			           //Split the file row by row
 			            String[] title = br.readLine().split(",");
 			            row.add(title);
@@ -115,20 +121,7 @@ public class DataImportExport {
 			            }
 			           
 			            Main.allDataSet.add(dataTable);
-/*
-			            map.put(dataVBox, dataTable);
-			            
-			            dataVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
-			            viewDataSet.add(dataVBox);
 
-			            dataVBoxHandle.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
-			            dataSetHandle.add(dataVBoxHandle);
-			            
-			            dataFilterVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
-			            dataFilterDataSet.add(dataFilterVBox);
-			            
-			            
-			            */
 			            System.out.println("[ Import Success ]");
 					}
 		        }  catch (IOException ex) {
