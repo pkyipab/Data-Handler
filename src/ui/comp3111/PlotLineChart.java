@@ -21,12 +21,12 @@ public class PlotLineChart {
 	private NumberAxis xAxis = new NumberAxis();
     private NumberAxis yAxis = new NumberAxis();
     private DataTable recieved;
-    private LinkedHashMap<String ,DataColumn> filtedSet;
+    private LinkedHashMap<String ,DataColumn> filtedSet = new LinkedHashMap<String ,DataColumn>();
     int chartCount;
     
     public PlotLineChart(DataTable dataTable) {
     	this.recieved = dataTable;
-    	//filtrateColumn(recieved);    <----this function need to fix bug
+    	filtrateColumn(recieved);
     }
     
     public void filtrateColumn(DataTable source) {
@@ -38,6 +38,7 @@ public class PlotLineChart {
     		name = source.getColName(i);
     		if(temp.getTypeName() == DataType.TYPE_NUMBER) {
     			filtedSet.put(name, temp);
+    			System.out.println("Data had put in filtedSet: Name: " + name);
     		}
     	}
     }
