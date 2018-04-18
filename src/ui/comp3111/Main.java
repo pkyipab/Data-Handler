@@ -24,6 +24,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.Chart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -64,9 +65,11 @@ public class Main extends Application {
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
 	private DataFilter dataFilter = new DataFilter();
-	private ChartTable storedChart = new ChartTable();
-	private PlotLineChart plotlinechart = new PlotLineChart();
 
+	public static ArrayList<Chart> storedChart = new ArrayList<Chart>();
+	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
+
+	private PlotLineChart plotlinechart = new PlotLineChart();
 	
 	// Attributes: Scene and Stage
 
@@ -306,7 +309,9 @@ public class Main extends Application {
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
+
+			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
+
 		});
 		
 		btReturn.setOnAction(e->{
@@ -320,7 +325,9 @@ public class Main extends Application {
 	 * private void initHandlePlotPieChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
+
+			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
+
 		});
 		
 		btReturn.setOnAction(e->{
@@ -676,6 +683,7 @@ public class Main extends Application {
 		map.clear();
 		mapDataFilter.clear();
 		
+
 		for(int i = 0; i < allDataSet.size(); i++) {
 			
 			VBox dataVBox = new VBox();
@@ -683,7 +691,9 @@ public class Main extends Application {
 			VBox dataFilterVBox = new VBox();
 			
             map.put(dataVBox, allDataSet.get(i));
+
             mapDataFilter.put(dataFilterVBox,allDataSet.get(i));
+
 			
             dataVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
             		" : " + allDataSet.get(i).getFileName() +  ""));
@@ -699,6 +709,7 @@ public class Main extends Application {
 		}
 	}
 	
+
 	private void updateDataColumnListView(DataTable data) {
 		dataColumnDataSet.clear();
 		
@@ -758,6 +769,7 @@ public class Main extends Application {
 		}
 	}
 	
+
 	/**
 	 *  Alert Method - only use when Exception caught
 	 * 

@@ -19,7 +19,7 @@ public class SampleDataGenerator {
 	 */
 	public static DataTable generateSampleLineData() {
 
-		DataTable t = new DataTable();
+		DataTable t = new DataTable("Sample 1");
 
 		// Sample: An array of integer
 		Number[] xvalues = new Integer[] { 1, 2, 3, 4, 5 };
@@ -54,7 +54,7 @@ public class SampleDataGenerator {
 	 * @return DataTable object
 	 */
 	public static DataTable generateSampleLineDataV2() {
-		DataTable t = new DataTable();
+		DataTable t = new DataTable("Sample 2");
 
 		final int num = 100;
 		Number[] xvalues = new Integer[num]; // Integer is a subclass of Number

@@ -61,12 +61,14 @@ public class DataImportExport {
 					if(file != null) {
 					 		
 			            br = new BufferedReader(new FileReader(file));
+
 			            String fileName[] = file.getName().split("\\.");
 			            if(Main.isValidFileName(fileName[0]) > 0) {
 			            	dataTable = new DataTable(fileName[0] + "_" + Main.isValidFileName(fileName[0]));
 			            } else {
 			            	dataTable = new DataTable(fileName[0]);
 			            }
+
 			           //Split the file row by row
 			            String[] title = br.readLine().split(",");
 			            row.add(title);
@@ -119,6 +121,7 @@ public class DataImportExport {
 			            }
 			           
 			            Main.allDataSet.add(dataTable);
+
 			            System.out.println("[ Import Success ]");
 					}
 		        }  catch (IOException ex) {
