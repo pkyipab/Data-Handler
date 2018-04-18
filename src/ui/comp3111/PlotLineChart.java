@@ -20,7 +20,7 @@ public class PlotLineChart {
 	private NumberAxis xAxis = new NumberAxis();
     private NumberAxis yAxis = new NumberAxis();
     private DataTable recieved;
-    private ArrayList<DataColumn> filtedSet;
+    private Map<String ,DataColumn> filtedSet;
     int chartCount;
     
     public PlotLineChart(DataTable dataTable) {
@@ -30,13 +30,19 @@ public class PlotLineChart {
     
     public void filtrateColumn(DataTable source) {
     	DataColumn temp;
+    	String name;
     	int size = source.getNumCol();
     	for(int i = 0; i < size; i++) {
-    		temp = source.getColByNum(size);
+    		temp = source.getColByNum(i);
+    		name = source.getColName(i);
     		if(temp.getTypeName() == DataType.TYPE_NUMBER) {
-    			filtedSet.add(temp);
+    			filtedSet.put(name, temp);
     		}
     	}
+    }
+    
+    public Map<String ,DataColumn> getFiltedSet(){
+    	return this.filtedSet;
     }
     
     /*
