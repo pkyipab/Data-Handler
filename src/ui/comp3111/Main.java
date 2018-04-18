@@ -242,9 +242,11 @@ public class Main extends Application {
 		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btPlotChart.setOnAction(o->{
-				DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
-				plotlinechart = new PlotLineChart(selectedDataTable);
-				putSceneOnStage(SCENE_PLOT_LINE_CHART);
+				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
+					DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+					plotlinechart = new PlotLineChart(selectedDataTable);
+					putSceneOnStage(SCENE_PLOT_LINE_CHART);
+				}
 			});
 		});
 		
@@ -574,12 +576,18 @@ public class Main extends Application {
 		VBox selectX = new VBox(20);
 		VBox selectY = new VBox(20);
 		HBox bottomContainer = new HBox(20);
-		/*
-		 * TODO
-		 * Still learning to use Combo box Class (use Combo box is the Requirement of the Project)
-		 */
+		
+		xCombo = new ComboBox<String>();
+		xCombo.setPrefSize(200, 20);
+		yCombo = new ComboBox<String>();
+		yCombo.setPrefSize(200, 20);
+		
 		topContainer.getChildren().add(Hints);
-		topContainer.setAlignment(Pos.CENTER);
+		topContainer.setAlignment(Pos.CENTER);	
+		selectX.getChildren().addAll(lbXaxis, xCombo);
+		selectY.getChildren().addAll(lbYaxis, yCombo);
+		selectX.setAlignment(Pos.CENTER);
+		selectY.setAlignment(Pos.CENTER);
 		comboBox.getChildren().addAll(selectX, selectY);
 		comboBox.setAlignment(Pos.CENTER);
 		bottomContainer.getChildren().addAll(btPlotLine, btReturn);

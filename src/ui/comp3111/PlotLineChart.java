@@ -26,7 +26,7 @@ public class PlotLineChart {
     
     public PlotLineChart(DataTable dataTable) {
     	this.recieved = dataTable;
-    	filtrateColumn(recieved);
+    	//filtrateColumn(recieved);    <----this function need to fix bug
     }
     
     public void filtrateColumn(DataTable source) {
