@@ -1,5 +1,6 @@
 package ui.comp3111;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +16,7 @@ import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 
 import core.comp3111.SampleDataGenerator;
-import core.comp3111.ChartTable;
+
 
 
 import javafx.application.Application;
