@@ -1,7 +1,6 @@
 package ui.comp3111;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import core.comp3111.DataColumn;
@@ -26,6 +25,8 @@ public class PlotLineChart {
     public PlotLineChart(DataTable dataTable) {
     	this.recieved = dataTable;
     }
+    
+    
     
     /*
      * Filtered all the dataColumn from the receive one
