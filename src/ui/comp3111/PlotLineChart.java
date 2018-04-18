@@ -26,6 +26,7 @@ public class PlotLineChart {
     	}
     	lineChart.getData().add(series);
     	exist.ct.put(cTitle, lineChart);
+    	System.out.println("Chart : " + cTitle + " created.");
     }
     
     /*
