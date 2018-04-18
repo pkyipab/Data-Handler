@@ -13,7 +13,10 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
+
 import core.comp3111.SampleDataGenerator;
+import core.comp3111.ChartTable;
+
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -24,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -59,6 +63,9 @@ public class Main extends Application {
 	public static ArrayList<DataTable> allDataSet = new ArrayList<DataTable>();
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
+	private DataFilter dataFilter = new DataFilter();
+	private ChartTable storedChart = new ChartTable();
+	private PlotLineChart plotlinechart = new PlotLineChart();
 
 	
 	// Attributes: Scene and Stage
@@ -114,8 +121,9 @@ public class Main extends Application {
 	
 	//Screen 5: paneSaveAndLoad
 	private ObservableList<VBox> dataFilterDataSet = FXCollections.observableArrayList();
+	private ObservableList<HBox> dataColumnDataSet = FXCollections.observableArrayList();
 	private ListView<VBox> dataFilterData;
-	private ListView<VBox> dataColumnList;
+	private ListView<HBox> dataColumnList;
 	private final ToggleGroup groupRandom = new ToggleGroup();
 	private final ToggleGroup groupText = new ToggleGroup();
 	private RadioButton replaceRandom;
@@ -125,6 +133,8 @@ public class Main extends Application {
 	private Button btRandomPaneConfirm;
 	private Button btTextPaneConfirm;
 	private Button btDataFilter_BackToMenu;
+	private Map<VBox, DataTable> mapDataFilter = new LinkedHashMap<VBox, DataTable>();
+	private Map<CheckBox, DataColumn> dataFilterColumns = new LinkedHashMap<CheckBox, DataColumn>();
 
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
@@ -137,7 +147,7 @@ public class Main extends Application {
 	private Button btReturn_alt;
 	 *
 	 */
-
+	public static int numOfConlict = 0;
 	/**
 	 * create all scenes in this application
 	 */
@@ -202,10 +212,11 @@ public class Main extends Application {
 		btExportData.setDisable(true);
 		
 		btImportData.setOnAction(e -> {
-			dataImportExport.importData(stage, viewDataSet, listViewDataSet, dataFilterDataSet, map);
+			dataImportExport.importData(stage);
 			if(allDataSet.size() > 0) {
 				btExportData.setDisable(false);
 			}
+			updateListView();
 		});
 			
 		btExportData.setOnAction(e -> {
@@ -250,12 +261,12 @@ public class Main extends Application {
 			File file = fileChooser.showOpenDialog(stage);
 			if(file != null)
 				dataSaveAndLoad.loadData(file);
+			updateListView();
 		});
 		
 		saveButton.setOnAction(e->{
-
 	        FileChooser fs = new FileChooser();
-	        fs.setTitle("Spiel speichern");
+	        fs.setTitle("Save .Comp3111");
 
 	        fs.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Comp3111", ".comp3111"));
 			File file = fs.showSaveDialog(stage);
@@ -268,17 +279,34 @@ public class Main extends Application {
 		
 	}
 	
-	private void initDataFiltering() {		
+	private void initDataFiltering() {	
+		
+		dataFilterData.getSelectionModel().selectedItemProperty().addListener(e->{
+			DataTable selectedDataTable = mapDataFilter.get(dataFilterData.getSelectionModel().getSelectedItem());
+			
+			if( selectedDataTable != null) {
+				btRandomPaneConfirm.setOnAction(e2 -> {
+					if(replaceRandom.isSelected()) {
+						dataFilter.RandomSplit("Replace", selectedDataTable.getFileName());
+					} else if (createNewRandom.isSelected()) {
+						dataFilter.RandomSplit("Create New", selectedDataTable.getFileName());
+					}
+					updateListView();
+				});
+			
+				updateDataColumnListView(selectedDataTable);
+			}
+		});
 		
 		btDataFilter_BackToMenu.setOnAction(e->{
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});		
 	}
-
+	
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the Chart Class function to create a new chart and save in Datatable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
 		});
 		
 		btReturn.setOnAction(e->{
@@ -292,7 +320,7 @@ public class Main extends Application {
 	 * private void initHandlePlotPieChart() {		
 		
 		btPlotLine.setOnAction(e->{
-			//TODO call the Chart Class function to create a new chart and save in Datatable Class
+			//TODO call the PlotLineChart Class function to create a new chart and save in ChartTable Class
 		});
 		
 		btReturn.setOnAction(e->{
@@ -439,8 +467,8 @@ public class Main extends Application {
 		btDataFilter_BackToMenu = new Button("Back to menu");
 		dataFilterData = new ListView<VBox>();
 		dataFilterData.setItems(dataFilterDataSet);
-		dataColumnList = new ListView<VBox>();
-		
+		dataColumnList = new ListView<HBox>();
+		dataColumnList.setItems(dataColumnDataSet);
 		
 		
 		Label title = new Label("Data Filtering");
@@ -639,6 +667,97 @@ public class Main extends Application {
 		launch(args);
 	}
 	
+	public void updateListView() {
+
+		viewDataSet.clear();
+		listViewDataSet.clear();
+		dataFilterDataSet.clear();
+		
+		map.clear();
+		mapDataFilter.clear();
+		
+		for(int i = 0; i < allDataSet.size(); i++) {
+			
+			VBox dataVBox = new VBox();
+			VBox dataVBoxHandle = new VBox();
+			VBox dataFilterVBox = new VBox();
+			
+            map.put(dataVBox, allDataSet.get(i));
+            mapDataFilter.put(dataFilterVBox,allDataSet.get(i));
+			
+            dataVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
+            		" : " + allDataSet.get(i).getFileName() +  ""));
+            viewDataSet.add(dataVBox);
+
+            dataVBoxHandle.getChildren().addAll(new Label("DataSet " + (i + 1) +
+            		" : " + allDataSet.get(i).getFileName() +  ""));
+            listViewDataSet.add(dataVBoxHandle);
+            
+            dataFilterVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
+            		" : " + allDataSet.get(i).getFileName() +  ""));
+            dataFilterDataSet.add(dataFilterVBox);
+		}
+	}
+	
+	private void updateDataColumnListView(DataTable data) {
+		dataColumnDataSet.clear();
+		
+		for(int i = 0; i < data.getNumCol(); i++) {
+			HBox dataHBox = new HBox();
+			CheckBox checkBox = new CheckBox();
+		
+			dataFilterColumns.put(checkBox, data.getColByNum(i));
+			
+			dataHBox.getChildren().addAll(checkBox,new Label(data.getColName(i)));
+			dataColumnDataSet.add(dataHBox);
+		}
+	}
+	
+	public static int isValidFileName(String name) {
+		Boolean conflict = false;
+		for(DataTable data : allDataSet) {
+			if(data.getFileName().equals(name)) {
+				conflict = true;
+				break;
+			} 
+		}
+		if(conflict) {
+				return 1 + checkNameHelper(name + "_1");
+			}
+		 else {
+			return 0;
+		}
+	}
+	
+	public static int checkNameHelper(String name) {
+		Boolean conflict = false;
+		for(DataTable data : allDataSet) {
+			if(data.getFileName().equals(name)) {
+				conflict = true;
+				break;
+			} 
+		}
+		
+		if(conflict) {
+			String[] check = name.split("_");
+			int num = Integer.parseInt(check[check.length - 1]) + 1;
+			String next = "";
+			for(int i = 0; i < check.length - 1; i++) {
+				if(check.length == 1) {
+					next += (check[i]);
+				} else if (check.length > 1) {
+					next += (check[i] + "_");
+				}
+			}
+			
+			System.out.println(next  + Integer.toString(num));
+			return 1 + checkNameHelper(next  + Integer.toString(num));
+				
+		} else {
+			return 0;
+		}
+	}
+	
 	/**
 	 *  Alert Method - only use when Exception caught
 	 * 
@@ -655,4 +774,6 @@ public class Main extends Application {
 		alert.setContentText(content);
 		alert.showAndWait();
 	}
+	
+	
 }

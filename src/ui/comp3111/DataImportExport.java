@@ -35,7 +35,7 @@ import javafx.stage.Stage;
  *  2) Mix Integer and Double Type -> NUMBER
  * 
  * 
- * 
+ * 	3) Name checking
  * 
  */
 
@@ -43,18 +43,13 @@ import javafx.stage.Stage;
 
 public class DataImportExport {
 	
-	public void importData(Stage s, ObservableList<VBox> viewDataSet, ObservableList<VBox> dataSetHandle, ObservableList<VBox> dataFilterDataSet, Map<VBox, DataTable> map) {
+	public void importData(Stage s) {
 			FileChooser fc;
 			BufferedReader br = null;
 			String line = "";
 			ArrayList<String[]> row = new ArrayList<String[]>();
 			
-			DataTable dataTable = new DataTable();
-
-			VBox dataVBox = new VBox();
-			VBox dataVBoxHandle = new VBox();
-			VBox dataFilterVBox = new VBox();
-
+			DataTable dataTable;
 			
 			 try {
 				 	fc = new FileChooser();
@@ -66,8 +61,12 @@ public class DataImportExport {
 					if(file != null) {
 					 		
 			            br = new BufferedReader(new FileReader(file));
-			         
-			            
+			            String fileName[] = file.getName().split("\\.");
+			            if(Main.isValidFileName(fileName[0]) > 0) {
+			            	dataTable = new DataTable(fileName[0] + "_" + Main.isValidFileName(fileName[0]));
+			            } else {
+			            	dataTable = new DataTable(fileName[0]);
+			            }
 			           //Split the file row by row
 			            String[] title = br.readLine().split(",");
 			            row.add(title);
@@ -120,18 +119,6 @@ public class DataImportExport {
 			            }
 			           
 			            Main.allDataSet.add(dataTable);
-
-			            map.put(dataVBox, dataTable);
-			            
-			            dataVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
-			            viewDataSet.add(dataVBox);
-
-			            dataVBoxHandle.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
-			            dataSetHandle.add(dataVBoxHandle);
-			            
-			            dataFilterVBox.getChildren().addAll(new Label("DataSet " + (Main.allDataSet.size()) +  " : " + file.getName() +  ""));
-			            dataFilterDataSet.add(dataFilterVBox);
-			            
 			            System.out.println("[ Import Success ]");
 					}
 		        }  catch (IOException ex) {
