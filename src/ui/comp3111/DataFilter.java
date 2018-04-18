@@ -25,28 +25,49 @@ import javafx.util.Pair;
 
 public class DataFilter {
 
-	private Random rand;
 	private String firstDataSet = "";
 	private String secondDataSet = "";
-	private Boolean cancelAlert ;
+	private Boolean cancelAlert;
+	
 	
 	public void RandomSplit(String type, String name) {
-		
 		DataTable data1;
 		DataTable data2;
-		int randomNum;
-		rand = new Random();
+		
+		int randomNum = 0;
+		int order = 0;
+
 		cancelAlert = false;
 		
-		int order = 0;
+		/*Searching DataTable by Name*/
+		for(int i = 0; i < Main.allDataSet.size(); i++) {
+			if(name == Main.allDataSet.get(i).getFileName()) {
+				break;
+			}
+			order++;
+		}
 		
+		DataTable selected = Main.allDataSet.get(order);
+		
+		/*Determine the validity of DataTable, if size is <= 1, cannot be split into two*/
+		if(selected.getNumCol() <= 1) {
+			Main.alertUser("Invalid Dataset size", "Invalid Dataset size", "Unable To Split Into Two DataSets");
+			return;
+		}
+		
+		
+		/*Ask user to input the DataName, which cannot be Empty and Duplicate*/
 		while(true) {
 			alertEnterName();
-			if(!firstDataSet.isEmpty() && !secondDataSet.isEmpty()) {
-				break;
-			} else if (firstDataSet.equals(secondDataSet)) {
+			
+			if (firstDataSet.equals(secondDataSet) && !firstDataSet.isEmpty()) {
+				firstDataSet = "";
+				secondDataSet = "";
 				Main.alertUser("Duplicate DataSet Name", "DataSet Names are overlapped", "");
 			}
+			else if(!firstDataSet.isEmpty() && !secondDataSet.isEmpty()) {
+				break;
+			} 
 			else if (cancelAlert == true) {
 				return;
 			}
@@ -55,7 +76,7 @@ public class DataFilter {
 			}
 		}
 		
-        
+        /*If there exits the same file name, make the different*/
 		if(Main.isValidFileName(firstDataSet) > 0) {
         	data1 = new DataTable(firstDataSet + "_" + Main.isValidFileName(firstDataSet));
         } else {
@@ -69,21 +90,14 @@ public class DataFilter {
         	data2 = new DataTable(secondDataSet);
         }
         
-		firstDataSet = "";
-		secondDataSet = "";
+    	firstDataSet = "";
+		secondDataSet = "";	
 		
-		for(int i = 0; i < Main.allDataSet.size(); i++) {
-			if(name == Main.allDataSet.get(i).getFileName()) {
-				break;
-			}
-			order++;
-		}
-		
-		DataTable selected = Main.allDataSet.get(order);
-		randomNum = Math.abs(rand.nextInt() % (selected.getNumCol()-1));
+		/* Start splitting randomly*/
+		randomNum = Math.abs((int)System.currentTimeMillis() % (selected.getNumCol() - 1));
 		if(randomNum == 0) {
 			randomNum++;
-		} 
+		}
 
 		for(int i = 0; i < selected.getNumCol(); i++) {
 			try {
@@ -113,6 +127,11 @@ public class DataFilter {
 		}
 	}
 	
+	
+	/*
+	 * Create a pop up window for user to input the name of DataSets
+	 * 
+	 */
 	private void alertEnterName() {
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
 		dialog.setTitle("New DataSets");
