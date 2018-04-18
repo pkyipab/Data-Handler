@@ -68,9 +68,8 @@ public class Main extends Application {
 	private DataFilter dataFilter = new DataFilter();
 
 	public static ArrayList<Chart> storedChart = new ArrayList<Chart>();
-	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
 
-	private PlotLineChart plotlinechart = new PlotLineChart();
+	private PlotLineChart plotlinechart;
 	
 	// Attributes: Scene and Stage
 
@@ -105,7 +104,7 @@ public class Main extends Application {
 	private Button btImportData;
 	private Button btExportData;
 	private Button btImportExport_BackToMenu;
-	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();;
+	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();
 	
 	
 	//Screen 3: paneHandleMultiDataAndChart
@@ -116,7 +115,8 @@ public class Main extends Application {
 	private Button btShowChart;
 	private Button btBackToMenu2;
 	private Button btPlotChart;
-	
+	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
+	private Map<VBox, DataTable> dataTableMap = new LinkedHashMap<VBox, DataTable>();
 
 	//Screen 4: paneSaveAndLoad
 	private Button loadButton;
@@ -146,7 +146,7 @@ public class Main extends Application {
 	
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
-	//Screen 6: paneHandlePlotPieChart
+	//Screen 7: paneHandlePlotPieChart
 	private Button btPlotPie;
 	private Button btReturn_alt;
 	 *
@@ -165,7 +165,7 @@ public class Main extends Application {
 		scenes[SCENE_PLOT_LINE_CHART] = new Scene(paneHandlePlotLineChart(), 800, 600);
 		/*
 		 * TODO PieChart (will be using similar method as Line Chart)
-		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotChart(), 800, 600);
+		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotPieChart(), 800, 600);
 		 */
 		for (Scene s : scenes) {
 			if (s != null)
@@ -236,21 +236,19 @@ public class Main extends Application {
 	private void initHandleMultiDataAndChart() {		
 		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
-			
+			btPlotChart.setOnAction(o->{
+				DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+				plotlinechart = new PlotLineChart(selectedDataTable);
+				putSceneOnStage(SCENE_PLOT_LINE_CHART);
+			});
 		});
 		
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
-			
+			btShowChart.setOnAction(o->{
+				
+			});
 		});
 		
-		btShowChart.setOnAction(e->{
-			
-		});
-		
-		btPlotChart.setOnAction(e->{
-			putSceneOnStage(SCENE_PLOT_LINE_CHART);
-		});		
-
 		btBackToMenu2.setOnAction(e -> {
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
@@ -311,8 +309,6 @@ public class Main extends Application {
 		
 		btPlotLine.setOnAction(e->{
 
-			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
-
 		});
 		
 		btReturn.setOnAction(e->{
@@ -326,8 +322,6 @@ public class Main extends Application {
 	 * private void initHandlePlotPieChart() {		
 		
 		btPlotLine.setOnAction(e->{
-
-			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
 
 		});
 		
@@ -695,6 +689,7 @@ public class Main extends Application {
 
             mapDataFilter.put(dataFilterVBox,allDataSet.get(i));
 
+            dataTableMap.put(dataVBoxHandle, allDataSet.get(i));
 			
             dataVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
             		" : " + allDataSet.get(i).getFileName() +  ""));

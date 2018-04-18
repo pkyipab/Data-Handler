@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import core.comp3111.DataColumn;
+import core.comp3111.DataTable;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -18,6 +19,11 @@ public class PlotLineChart {
 	private NumberAxis xAxis = new NumberAxis();
     private NumberAxis yAxis = new NumberAxis();
     int chartCount;
+    DataTable recieved;
+    
+    public PlotLineChart(DataTable dataTable) {
+    	this.recieved = dataTable;
+    }
     
     public void createLineChart(ArrayList<Chart> exist, Map<VBox, Chart> cMap, DataColumn x, DataColumn y) {
     	chartCount = exist.size();
