@@ -3,6 +3,7 @@ package core.comp3111;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 2D array of data values with the following requirements: (1) There are 0 to
@@ -177,6 +178,24 @@ public class DataTable implements Serializable {
 	public String getFileName() {
 		return fileName;
 	}
+	
+	
+	 /*
+	  * 
+	 public LinkedHashMap<String, DataColumn> copyData(){
+		 
+		 LinkedHashMap<String, DataColumn> temp = new LinkedHashMap<String, DataColumn>();
+		 
+		 for(Entry<String, DataColumn> copied : this.dc.entrySet()) {
+			 String key = copied.getKey();
+			 DataColumn value = copied.getValue();
+			 temp.put(key, value);
+		 }
+		 
+		 return temp;
+	 }	
+	  *
+	  */
 	
 	// attribute: A java.util.Map interface
 	// KeyType: String

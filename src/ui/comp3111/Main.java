@@ -30,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -143,12 +144,16 @@ public class Main extends Application {
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
 	private Button btReturn;
+	private ComboBox xCombo;
+	private ComboBox yCombo;
 	
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
 	//Screen 7: paneHandlePlotPieChart
 	private Button btPlotPie;
 	private Button btReturn_alt;
+	private ComboBox numCombo;
+	private ComboBox textCombo;
 	 *
 	 */
 	public static int numOfConlict = 0;

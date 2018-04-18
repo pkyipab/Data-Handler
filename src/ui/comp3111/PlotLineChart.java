@@ -1,6 +1,7 @@
 package ui.comp3111;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import core.comp3111.DataColumn;
@@ -20,16 +21,17 @@ public class PlotLineChart {
     private NumberAxis yAxis = new NumberAxis();
     int chartCount;
     DataTable recieved;
-    DataColumn filtedX;
-    DataColumn filtedY;
+    DataColumn[] filtedSet;
     
     public PlotLineChart(DataTable dataTable) {
     	this.recieved = dataTable;
     }
     
-    public void selectColumn(DataTable dataTable) {
-    	
-    }
+    /*
+     * Filtered all the dataColumn from the receive one
+     * String type dataColumn are removed
+     * Become a new DataTable to hold remaining numeric type dataColumn
+     */
     
     public void createLineChart(ArrayList<Chart> exist, Map<VBox, Chart> cMap, DataColumn x, DataColumn y) {
     	
