@@ -5,6 +5,7 @@ import java.util.Map;
 
 import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
+import core.comp3111.DataType;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -18,15 +19,25 @@ public class PlotLineChart {
 	
 	private NumberAxis xAxis = new NumberAxis();
     private NumberAxis yAxis = new NumberAxis();
+    private DataTable recieved;
+    private ArrayList<DataColumn> filtedSet;
     int chartCount;
-    DataTable recieved;
-    DataColumn[] filtedSet;
     
     public PlotLineChart(DataTable dataTable) {
     	this.recieved = dataTable;
+    	filtrateColumn(recieved);
     }
     
-    
+    public void filtrateColumn(DataTable source) {
+    	DataColumn temp;
+    	int size = source.getNumCol();
+    	for(int i = 0; i < size; i++) {
+    		temp = source.getColByNum(size);
+    		if(temp.getTypeName() == DataType.TYPE_NUMBER) {
+    			filtedSet.add(temp);
+    		}
+    	}
+    }
     
     /*
      * Filtered all the dataColumn from the receive one
