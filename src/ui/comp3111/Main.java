@@ -66,14 +66,11 @@ public class Main extends Application {
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
 	private DataFilter dataFilter = new DataFilter();
-
-	public static ArrayList<Chart> storedChart = new ArrayList<Chart>();
-	private PlotLineChart plotlinechart;
-	private Chart chartToDisplay;
+	//private PlotLineChart plotlinechart;
 	
 	// Attributes: Scene and Stage
 
-	private static final int SCENE_NUM = 8;
+	private static final int SCENE_NUM = 7;
 
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
@@ -82,9 +79,8 @@ public class Main extends Application {
 	private static final int SCENE_FILTER_DATA = 4;
 	private static final int SCENE_PLOT_LINE_CHART = 5;
 	private static final int SCENE_PLOT_PIE_CHART = 6;
-	private static final int SCENE_SHOW_CHART = 7;
 	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",
-			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart", "Show Selected Chart"};
+			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart"};
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -158,9 +154,6 @@ public class Main extends Application {
 	 *
 	 */
 	
-	//Screen 8: paneShowChart
-	private Button btGoBack;
-	
 	public static int numOfConlict = 0;
 	/**
 	 * create all scenes in this application
@@ -173,7 +166,6 @@ public class Main extends Application {
 		scenes[SCENE_SAVE_LOAD] = new Scene(paneSaveAndLoad(), 400, 500);
 		scenes[SCENE_FILTER_DATA] = new Scene(paneDataFiltering(), 800, 600);
 		scenes[SCENE_PLOT_LINE_CHART] = new Scene(paneHandlePlotLineChart(), 800, 600);
-		scenes[SCENE_SHOW_CHART] = new Scene(paneHandleShowChart(), 800, 600);
 		/*
 		 * TODO PieChart (will be using similar method as Line Chart)
 		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotPieChart(), 800, 600);
@@ -197,7 +189,6 @@ public class Main extends Application {
 		initSaveAndLoad();
 		initDataFiltering();
 		initHandlePlotLineChart();
-		initHandleShowChart();
 	}
 	
 	/**
@@ -249,7 +240,7 @@ public class Main extends Application {
 		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btPlotChart.setOnAction(o->{
-				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
+			/*	if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
 					DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 					xCombo.getItems().clear();
 					yCombo.getItems().clear();
@@ -263,17 +254,13 @@ public class Main extends Application {
 						yCombo.getItems().add(optionsY.get(i));
 					}
 					putSceneOnStage(SCENE_PLOT_LINE_CHART);
-				}
+				}	*/
 			});
 		});
 		
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btShowChart.setOnAction(o->{
-				if(!listViewChartObj.getSelectionModel().isEmpty()) {
-					chartToDisplay = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
-					chart.getChildren().add(chartToDisplay);
-					putSceneOnStage(SCENE_SHOW_CHART);
-				}
+				
 			});
 		});
 		
@@ -337,25 +324,18 @@ public class Main extends Application {
 		
 		btPlotLine.setOnAction(e->{
 			if(xCombo.getValue() != null && yCombo.getValue() != null) {
-				String selectedX = xCombo.getValue();
+			/*	String selectedX = xCombo.getValue();
 				String selectedY = yCombo.getValue();
 				plotlinechart.createLineChart(storedChart, chartMap, plotlinechart.getFiltedSet(), selectedX, selectedY);
 				System.out.println("Line chart create Succesfully");
 				updateListView();
-				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);	*/
 			}
 		});
 		
 		btReturn.setOnAction(e->{
 			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 		});		
-	}
-	
-	private void initHandleShowChart() {
-		
-		btGoBack.setOnAction(e->{
-			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
-		});
 	}
 	
 	/*
@@ -633,19 +613,6 @@ public class Main extends Application {
 		pane.setCenter(comboBox);
 		pane.setBottom(bottomContainer);
 		pane.getStyleClass().add("screen-background");		
-		return pane;
-	}
-	
-	private Pane paneHandleShowChart() {
-		btGoBack = new Button("Return");
-		
-		HBox bottomContainer = new HBox(20);
-		chart = new VBox(20);
-		bottomContainer.getChildren().add(btGoBack);
-		bottomContainer.setAlignment(Pos.CENTER);
-		BorderPane pane = new BorderPane();
-		pane.setBottom(bottomContainer);
-		pane.setCenter(chart);
 		return pane;
 	}
 	

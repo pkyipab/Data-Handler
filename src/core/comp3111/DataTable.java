@@ -1,6 +1,7 @@
 package core.comp3111;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,8 +26,8 @@ public class DataTable implements Serializable {
 		// In this application, we use HashMap data structure defined in
 		// java.util.HashMap
 		dc = new LinkedHashMap<String, DataColumn>();
+		storedChart = new LinkedHashMap<String, GeneralChart>();
 		this.fileName = fileName;
-		
 	}
 
 	/**
@@ -179,9 +180,12 @@ public class DataTable implements Serializable {
 		return fileName;
 	}
 	
+	public Map<String, GeneralChart> getStoredChart(){
+		return this.storedChart;
+	}
 	
-	 /*
-	  * 
+	/*
+	 * 
 	 public LinkedHashMap<String, DataColumn> copyData(){
 		 
 		 LinkedHashMap<String, DataColumn> temp = new LinkedHashMap<String, DataColumn>();
@@ -194,14 +198,14 @@ public class DataTable implements Serializable {
 		 
 		 return temp;
 	 }	
-	  *
-	  */
+	 *
+	 */
 	
 	// attribute: A java.util.Map interface
 	// KeyType: String
 	// ValueType: DataColumn
 	private Map<String, DataColumn> dc;
-	
 	private String fileName;
+	private Map<String, GeneralChart> storedChart;
 
 }
