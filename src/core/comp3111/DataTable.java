@@ -184,6 +184,16 @@ public class DataTable implements Serializable {
 		return this.storedChart;
 	}
 	
+	public ArrayList<String> getNumberTypeColnumName(){
+		ArrayList<String> list = new ArrayList<String>();
+		for(String key: dc.keySet()) {
+			if(dc.get(key).getTypeName() == DataType.TYPE_NUMBER) {
+				list.add(key);
+			}
+		}
+		return list;
+	}
+	
 	/*
 	 * 
 	 public LinkedHashMap<String, DataColumn> copyData(){

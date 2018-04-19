@@ -15,8 +15,9 @@ import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 import core.comp3111.SampleDataGenerator;
-
-
+import core.comp3111.GeneralChart;
+import core.comp3111.LineChartObj;
+import core.comp3111.PieChartObj;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -240,21 +241,20 @@ public class Main extends Application {
 		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btPlotChart.setOnAction(o->{
-			/*	if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
-					DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
+					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 					xCombo.getItems().clear();
-					yCombo.getItems().clear();
-					plotlinechart = new PlotLineChart(selectedDataTable);
-					optionsX = plotlinechart.getList();	
+					yCombo.getItems().clear();	
+					optionsX = dc.getNumberTypeColnumName();
 					for(int i = 0; i < optionsX.size(); i++) {
 						xCombo.getItems().add(optionsX.get(i));
 					}
-					optionsY = plotlinechart.getList();
+					optionsY = dc.getNumberTypeColnumName();
 					for(int i = 0; i < optionsY.size(); i++) {
 						yCombo.getItems().add(optionsY.get(i));
 					}
 					putSceneOnStage(SCENE_PLOT_LINE_CHART);
-				}	*/
+				}
 			});
 		});
 		
@@ -324,12 +324,13 @@ public class Main extends Application {
 		
 		btPlotLine.setOnAction(e->{
 			if(xCombo.getValue() != null && yCombo.getValue() != null) {
-			/*	String selectedX = xCombo.getValue();
+				String selectedX = xCombo.getValue();
 				String selectedY = yCombo.getValue();
-				plotlinechart.createLineChart(storedChart, chartMap, plotlinechart.getFiltedSet(), selectedX, selectedY);
-				System.out.println("Line chart create Succesfully");
-				updateListView();
-				putSceneOnStage(SCENE_MUTIPLE_CHRAT);	*/
+				GeneralChart newChart = new LineChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedX), dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedY), dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY);
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + (dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
+						, newChart);
+				System.out.println("[ Line Chart create SUCCESSFULLY ]");
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
 		});
 		
@@ -612,6 +613,9 @@ public class Main extends Application {
 		pane.setTop(topContainer);
 		pane.setCenter(comboBox);
 		pane.setBottom(bottomContainer);
+		
+		btPlotLine.getStyleClass().add("menu-button");
+		btReturn.getStyleClass().add("menu-button");
 		pane.getStyleClass().add("screen-background");		
 		return pane;
 	}
@@ -619,32 +623,7 @@ public class Main extends Application {
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
 	private Pane paneHandlePlotPieChart() {
-		Label Hints = new Label("Select ONE Text and ONE Numeric Column");
-		Label lbXaxis = new Label("Selected X-axis");
-		Label lbYaxis = new Label("Selected Y-axis");
 		
-		btPlotPie = new Button("Plot");
-		btReturn_alt = new Button("Return");
-		
-		HBox topContainer = new HBox(20);
-		HBox comboBox = new HBox(20);
-		VBox selectX = new VBox(20);
-		VBox selectY = new VBox(20);
-		HBox bottomContainer = new HBox(20);
-		
-		TODO
-		Still learning to use Combo box Class (use Combo box is the Requirement of the Project)	
-			
-		topContainer.getChildren().add(Hints);
-		comboBox.getChildren().addAll(selectX, selectY);
-		bottomContainer.getChildren().addAll(btPlotPie, btReturn_alt);
-		
-		BorderPane pane = new BorderPane();
-		pane.setTop(topContainer);
-		pane.setCenter(comboBox);
-		pane.setBottom(bottomContainer);
-		pane.getStyleClass().add("screen-background");		
-		return pane;
 	}
 	*/
 	
