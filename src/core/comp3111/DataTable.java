@@ -194,23 +194,6 @@ public class DataTable implements Serializable {
 		return list;
 	}
 	
-	/*
-	 * 
-	 public LinkedHashMap<String, DataColumn> copyData(){
-		 
-		 LinkedHashMap<String, DataColumn> temp = new LinkedHashMap<String, DataColumn>();
-		 
-		 for(Entry<String, DataColumn> copied : this.dc.entrySet()) {
-			 String key = copied.getKey();
-			 DataColumn value = copied.getValue();
-			 temp.put(key, value);
-		 }
-		 
-		 return temp;
-	 }	
-	 *
-	 */
-	
 	// attribute: A java.util.Map interface
 	// KeyType: String
 	// ValueType: DataColumn
