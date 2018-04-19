@@ -269,8 +269,9 @@ public class Main extends Application {
 				if(!listViewChartObj.getSelectionModel().isEmpty()) {
 					Chart selectedChart = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
 					Stage displayStage = new Stage();
+					Scene scene = new Scene(selectedChart,800,600);
 					displayStage.setTitle("Display chart");
-					displayStage.setScene(new Scene(selectedChart,800,600));
+					displayStage.setScene(scene);
 					displayStage.show();
 				}
 			});
