@@ -194,6 +194,16 @@ public class DataTable implements Serializable {
 		return list;
 	}
 	
+	public ArrayList<String> getStringTypeColnumName(){
+		ArrayList<String> list = new ArrayList<String>();
+		for(String key: dc.keySet()) {
+			if(dc.get(key).getTypeName() == DataType.TYPE_STRING) {
+				list.add(key);
+			}
+		}
+		return list;
+	}
+	
 	// attribute: A java.util.Map interface
 	// KeyType: String
 	// ValueType: DataColumn
