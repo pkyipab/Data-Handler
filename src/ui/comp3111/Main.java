@@ -246,6 +246,8 @@ public class Main extends Application {
 			btPlotChart.setOnAction(o->{
 				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
 					DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+					xCombo.getItems().clear();
+					yCombo.getItems().clear();
 					plotlinechart = new PlotLineChart(selectedDataTable);
 					optionsX = plotlinechart.getList();	
 					for(int i = 0; i < optionsX.size(); i++) {
