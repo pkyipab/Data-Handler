@@ -278,6 +278,16 @@ public class Main extends Application {
 				if(!listViewChartObj.getSelectionModel().isEmpty()) {
 					selectedChart = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
 					putSceneOnStage(SCENE_SHOW_CHART);
+					/*
+					 * Remove ---[ putSceneOnStage(SCENE_SHOW_CHART); ]--- AND
+	 				 * Uncomment the below code if you went to see the chart
+					 * 
+					 * Scene scene  = new Scene(selectedChart,800,600);
+        		 	 * stage.setScene(scene);
+        			 * stage.show();
+					 * 
+					 * 
+					 */
 				}
 			});
 		});
