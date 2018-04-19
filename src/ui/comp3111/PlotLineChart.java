@@ -25,6 +25,7 @@ public class PlotLineChart {
     private DataTable recieved;
     private LinkedHashMap<String ,DataColumn> filtedSet = new LinkedHashMap<String ,DataColumn>();
     private ArrayList<String> list = new ArrayList<String>();
+    private ArrayList<String> name = new ArrayList<String>();
     
     public PlotLineChart(DataTable dataTable) {
     	this.recieved = dataTable;
@@ -70,6 +71,7 @@ public class PlotLineChart {
     	
     	lineChart.getData().add(series);
     	exist.add(lineChart);
+    	name.add(cTitle);
     	VBox chartBox = new VBox(20);
     	chartBox.getChildren().add(new Label(cTitle));
     	cMap.put(chartBox, lineChart);
@@ -79,7 +81,7 @@ public class PlotLineChart {
     
     /*
      * Not a requirement, optional
-     * public void removeLineChart(ChartTable exist, String chartName) {
+     * public void removeLineChart(ArrayList<Chart> exist, Map<VBox, Chart> cMap) {
      *    
      * }
      * 

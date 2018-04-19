@@ -332,6 +332,7 @@ public class Main extends Application {
 				String selectedY = yCombo.getValue();
 				plotlinechart.createLineChart(storedChart, chartMap, plotlinechart.getFiltedSet(), selectedX, selectedY);
 				System.out.println("Line chart create Succesfully");
+				updateListView();
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
 		});
@@ -704,11 +705,17 @@ public class Main extends Application {
 
 		viewDataSet.clear();
 		listViewDataSet.clear();
+		listViewChart.clear();
 		dataFilterDataSet.clear();
 		
 		map.clear();
 		mapDataFilter.clear();
 		
+		for(VBox chartBox: chartMap.keySet()) {
+			
+			listViewChart.add(chartBox);
+			
+		}
 
 		for(int i = 0; i < allDataSet.size(); i++) {
 			
