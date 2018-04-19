@@ -144,8 +144,10 @@ public class Main extends Application {
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
 	private Button btReturn;
-	private ComboBox xCombo;
-	private ComboBox yCombo;
+	private ComboBox<String> xCombo;
+	private ComboBox<String> yCombo;
+	private ArrayList<String> optionsX;
+	private ArrayList<String> optionsY;
 	
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
@@ -245,6 +247,14 @@ public class Main extends Application {
 				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
 					DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 					plotlinechart = new PlotLineChart(selectedDataTable);
+					optionsX = plotlinechart.getList();	
+					for(int i = 0; i < optionsX.size(); i++) {
+						xCombo.getItems().add(optionsX.get(i));
+					}
+					optionsY = plotlinechart.getList();
+					for(int i = 0; i < optionsY.size(); i++) {
+						yCombo.getItems().add(optionsY.get(i));
+					}
 					putSceneOnStage(SCENE_PLOT_LINE_CHART);
 				}
 			});
@@ -315,7 +325,13 @@ public class Main extends Application {
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-
+			if(xCombo.getValue() != null && yCombo.getValue() != null) {
+				String selectedX = xCombo.getValue();
+				String selectedY = yCombo.getValue();
+				plotlinechart.createLineChart(storedChart, chartMap, plotlinechart.getFiltedSet(), selectedX, selectedY);
+				System.out.println("Line chart create Succesfully");
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+			}
 		});
 		
 		btReturn.setOnAction(e->{

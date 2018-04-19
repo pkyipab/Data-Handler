@@ -7,6 +7,8 @@ import java.util.Map;
 import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataType;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -22,7 +24,7 @@ public class PlotLineChart {
     private NumberAxis yAxis = new NumberAxis();
     private DataTable recieved;
     private LinkedHashMap<String ,DataColumn> filtedSet = new LinkedHashMap<String ,DataColumn>();
-    int chartCount;
+    private ArrayList<String> list = new ArrayList<String>();
     
     public PlotLineChart(DataTable dataTable) {
     	this.recieved = dataTable;
@@ -38,31 +40,32 @@ public class PlotLineChart {
     		name = source.getColName(i);
     		if(temp.getTypeName() == DataType.TYPE_NUMBER) {
     			filtedSet.put(name, temp);
-    			System.out.println("Data had put in filtedSet: Name: " + name);
+    			list.add(name);
     		}
     	}
+    }
+    
+    public ArrayList<String> getList(){
+    	return this.list;
     }
     
     public LinkedHashMap<String ,DataColumn> getFiltedSet(){
     	return this.filtedSet;
     }
     
-    /*
-     * Filtered all the dataColumn from the receive one
-     * String type dataColumn are removed
-     * Become a new DataTable to hold remaining numeric type dataColumn
-     */
-    
-    public void createLineChart(ArrayList<Chart> exist, Map<VBox, Chart> cMap, DataColumn x, DataColumn y) {
+    public void createLineChart(ArrayList<Chart> exist, Map<VBox, Chart> cMap, LinkedHashMap<String ,DataColumn> givenSet, String xAxisData, String yAxisData) {
     	
-    	chartCount = exist.size();
-    	String cTitle = "Chart " + chartCount;
+    	int chartCount = exist.size();
+    	String cTitle = "Chart " + chartCount + 1;
     	
     	LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
     	XYChart.Series<Number, Number> series = new Series<Number, Number>();
-    	for(int i = 0; i < x.getSize(); i++) {
-    		series.getData().add(new Data<Number, Number>((Number)x.getData()[i], (Number)y.getData()[i]));
-    		System.out.println("Added the " + i + " row data: X-axis index = " + (Number)x.getData()[i] + ", Y-axis index = " + (Number)y.getData()[i]);
+    	
+    	DataColumn dataColumnX = givenSet.get(xAxisData);
+    	DataColumn dataColumnY = givenSet.get(yAxisData);
+    	for(int i = 0; i < dataColumnX.getSize(); i++) {
+    		series.getData().add(new Data<Number, Number>((Number)dataColumnX.getData()[i], (Number)dataColumnY.getData()[i]));
+    		System.out.println("Added the " + i + " row data: X-axis index = " + (Number)dataColumnX.getData()[i] + ", Y-axis index = " + (Number)dataColumnY.getData()[i]);
     	}
     	
     	lineChart.getData().add(series);
