@@ -14,7 +14,6 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
-
 import core.comp3111.SampleDataGenerator;
 
 
@@ -69,12 +68,12 @@ public class Main extends Application {
 	private DataFilter dataFilter = new DataFilter();
 
 	public static ArrayList<Chart> storedChart = new ArrayList<Chart>();
-
 	private PlotLineChart plotlinechart;
+	private Chart chartToDisplay;
 	
 	// Attributes: Scene and Stage
 
-	private static final int SCENE_NUM = 7;
+	private static final int SCENE_NUM = 8;
 
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
@@ -83,8 +82,9 @@ public class Main extends Application {
 	private static final int SCENE_FILTER_DATA = 4;
 	private static final int SCENE_PLOT_LINE_CHART = 5;
 	private static final int SCENE_PLOT_PIE_CHART = 6;
+	private static final int SCENE_SHOW_CHART = 7;
 	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",
-			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart"};
+			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart", "Show Selected Chart"};
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -144,6 +144,7 @@ public class Main extends Application {
 	private Button btReturn;
 	private ComboBox<String> xCombo;
 	private ComboBox<String> yCombo;
+	private VBox chart;
 	private ArrayList<String> optionsX;
 	private ArrayList<String> optionsY;
 	
@@ -172,6 +173,7 @@ public class Main extends Application {
 		scenes[SCENE_SAVE_LOAD] = new Scene(paneSaveAndLoad(), 400, 500);
 		scenes[SCENE_FILTER_DATA] = new Scene(paneDataFiltering(), 800, 600);
 		scenes[SCENE_PLOT_LINE_CHART] = new Scene(paneHandlePlotLineChart(), 800, 600);
+		scenes[SCENE_SHOW_CHART] = new Scene(paneHandleShowChart(), 800, 600);
 		/*
 		 * TODO PieChart (will be using similar method as Line Chart)
 		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotPieChart(), 800, 600);
@@ -195,6 +197,7 @@ public class Main extends Application {
 		initSaveAndLoad();
 		initDataFiltering();
 		initHandlePlotLineChart();
+		initHandleShowChart();
 	}
 	
 	/**
@@ -267,12 +270,9 @@ public class Main extends Application {
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btShowChart.setOnAction(o->{
 				if(!listViewChartObj.getSelectionModel().isEmpty()) {
-					Chart selectedChart = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
-					Stage displayStage = new Stage();
-					Scene scene = new Scene(selectedChart,800,600);
-					displayStage.setTitle("Display chart");
-					displayStage.setScene(scene);
-					displayStage.show();
+					chartToDisplay = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
+					chart.getChildren().add(chartToDisplay);
+					putSceneOnStage(SCENE_SHOW_CHART);
 				}
 			});
 		});
@@ -349,6 +349,13 @@ public class Main extends Application {
 		btReturn.setOnAction(e->{
 			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 		});		
+	}
+	
+	private void initHandleShowChart() {
+		
+		btGoBack.setOnAction(e->{
+			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+		});
 	}
 	
 	/*
@@ -626,6 +633,19 @@ public class Main extends Application {
 		pane.setCenter(comboBox);
 		pane.setBottom(bottomContainer);
 		pane.getStyleClass().add("screen-background");		
+		return pane;
+	}
+	
+	private Pane paneHandleShowChart() {
+		btGoBack = new Button("Return");
+		
+		HBox bottomContainer = new HBox(20);
+		chart = new VBox(20);
+		bottomContainer.getChildren().add(btGoBack);
+		bottomContainer.setAlignment(Pos.CENTER);
+		BorderPane pane = new BorderPane();
+		pane.setBottom(bottomContainer);
+		pane.setCenter(chart);
 		return pane;
 	}
 	
