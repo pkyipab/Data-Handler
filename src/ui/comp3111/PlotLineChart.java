@@ -61,10 +61,10 @@ public class PlotLineChart {
     	
     	LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
     	XYChart.Series<Number, Number> series = new Series<Number, Number>();
-    	lineChart.setTitle(xAxisData + "Versus" + yAxisData);
+    	lineChart.setTitle(xAxisData + " versus " + yAxisData);
     	xAxis.setLabel(xAxisData);   
     	yAxis.setLabel(yAxisData);   
-    	series.setName(xAxisData + "Versus" + yAxisData);
+    	series.setName(xAxisData + "/" + yAxisData);
     	DataColumn dataColumnX = givenSet.get(xAxisData);
     	DataColumn dataColumnY = givenSet.get(yAxisData);
     	for(int i = 0; i < dataColumnX.getSize(); i++) {

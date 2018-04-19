@@ -72,11 +72,9 @@ public class Main extends Application {
 
 	private PlotLineChart plotlinechart;
 	
-	private Chart selectedChart;
-	
 	// Attributes: Scene and Stage
 
-	private static final int SCENE_NUM = 8;
+	private static final int SCENE_NUM = 7;
 
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
@@ -85,13 +83,8 @@ public class Main extends Application {
 	private static final int SCENE_FILTER_DATA = 4;
 	private static final int SCENE_PLOT_LINE_CHART = 5;
 	private static final int SCENE_PLOT_PIE_CHART = 6;
-	private static final int SCENE_SHOW_CHART = 7;
-	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
-	 * private static final int SCENE_PLOT_PIE_CHART = 6;
-	 */
 	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",
-			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart", "Display Chart"};
+			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart"};
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -183,7 +176,6 @@ public class Main extends Application {
 		 * TODO PieChart (will be using similar method as Line Chart)
 		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotPieChart(), 800, 600);
 		 */
-		scenes[SCENE_SHOW_CHART] = new Scene(paneHandleShowChart(), 800, 600);
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -203,7 +195,6 @@ public class Main extends Application {
 		initSaveAndLoad();
 		initDataFiltering();
 		initHandlePlotLineChart();
-		initHandleShowChart();
 	}
 	
 	/**
@@ -276,18 +267,11 @@ public class Main extends Application {
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btShowChart.setOnAction(o->{
 				if(!listViewChartObj.getSelectionModel().isEmpty()) {
-					selectedChart = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
-					putSceneOnStage(SCENE_SHOW_CHART);
-					/*
-					 * Remove ---[ putSceneOnStage(SCENE_SHOW_CHART); ]--- AND
-	 				 * Uncomment the below code if you went to see the chart
-					 * 
-					 * Scene scene  = new Scene(selectedChart,800,600);
-        		 	 * stage.setScene(scene);
-        			 * stage.show();
-					 * 
-					 * 
-					 */
+					Chart selectedChart = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
+					Stage displayStage = new Stage();
+					displayStage.setTitle("Display chart");
+					displayStage.setScene(new Scene(selectedChart,800,600));
+					displayStage.show();
 				}
 			});
 		});
@@ -382,13 +366,6 @@ public class Main extends Application {
 	 * 
 	 */
 
-	private void initHandleShowChart() {
-		
-		btGoBack.setOnAction(e->{
-			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
-		});	
-	}
-	
 	/**
 	 * Creates the main screen and layout its UI components
 	 * 
@@ -682,19 +659,6 @@ public class Main extends Application {
 		return pane;
 	}
 	*/
-	
-	private Pane paneHandleShowChart() {
-		btGoBack = new Button("Return");
-		
-		HBox bottomContainer = new HBox(20);
-		
-		bottomContainer.getChildren().add(btGoBack);
-		bottomContainer.setAlignment(Pos.CENTER);
-		BorderPane pane = new BorderPane();
-		pane.setCenter(selectedChart);
-		pane.setBottom(bottomContainer);
-		return pane;
-	}
 	
 	/**
 	 * This method is used to pick anyone of the scene on the stage. It handles the
