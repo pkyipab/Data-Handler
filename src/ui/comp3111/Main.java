@@ -67,7 +67,6 @@ public class Main extends Application {
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
 	private DataFilter dataFilter = new DataFilter();
-	//private PlotLineChart plotlinechart;
 	
 	// Attributes: Scene and Stage
 
@@ -141,17 +140,18 @@ public class Main extends Application {
 	private Button btReturn;
 	private ComboBox<String> xCombo;
 	private ComboBox<String> yCombo;
-	private VBox chart;
 	private ArrayList<String> optionsX;
 	private ArrayList<String> optionsY;
 	
 	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
+	 * TODO PieChart
 	//Screen 7: paneHandlePlotPieChart
 	private Button btPlotPie;
 	private Button btReturn_alt;
-	private ComboBox numCombo;
-	private ComboBox textCombo;
+	private ComboBox<Number> numCombo;
+	private ComboBox<String> textCombo;
+	private ArrayList<String> optionsX;
+	private ArrayList<String> optionsY;
 	 *
 	 */
 	
