@@ -57,7 +57,7 @@ public class PlotLineChart {
     public void createLineChart(ArrayList<Chart> exist, Map<VBox, Chart> cMap, LinkedHashMap<String ,DataColumn> givenSet, String xAxisData, String yAxisData) {
     	
     	int chartCount = exist.size();
-    	String cTitle = "Chart " + chartCount + 1;
+    	String cTitle = "Chart " + (chartCount + 1);
     	
     	LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
     	XYChart.Series<Number, Number> series = new Series<Number, Number>();

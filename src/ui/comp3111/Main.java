@@ -72,9 +72,11 @@ public class Main extends Application {
 
 	private PlotLineChart plotlinechart;
 	
+	private Chart selectedChart;
+	
 	// Attributes: Scene and Stage
 
-	private static final int SCENE_NUM = 6;
+	private static final int SCENE_NUM = 8;
 
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
@@ -82,11 +84,14 @@ public class Main extends Application {
 	private static final int SCENE_SAVE_LOAD = 3;
 	private static final int SCENE_FILTER_DATA = 4;
 	private static final int SCENE_PLOT_LINE_CHART = 5;
+	private static final int SCENE_PLOT_PIE_CHART = 6;
+	private static final int SCENE_SHOW_CHART = 7;
 	/*
 	 * TODO PieChart (will be using similar method as Line Chart)
 	 * private static final int SCENE_PLOT_PIE_CHART = 6;
 	 */
-	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",  "Save And Load", "Data Filtering","Plot Line Chart"};
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",
+			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart", "Display Chart"};
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -95,7 +100,7 @@ public class Main extends Application {
 	// The following UI components are used to keep references after invoking
 	// createScene()
 
-	// Screen 1: paneMainScreen
+	//Screen 1: paneMainScreen
 	private Button btImportExport, btMutipleChart, btSavingLoading, btDataFiltering;
 	private Label lbMainScreenTitle;
 	
@@ -158,6 +163,10 @@ public class Main extends Application {
 	private ComboBox textCombo;
 	 *
 	 */
+	
+	//Screen 8: paneShowChart
+	private Button btGoBack;
+	
 	public static int numOfConlict = 0;
 	/**
 	 * create all scenes in this application
@@ -174,6 +183,7 @@ public class Main extends Application {
 		 * TODO PieChart (will be using similar method as Line Chart)
 		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotPieChart(), 800, 600);
 		 */
+		scenes[SCENE_SHOW_CHART] = new Scene(paneHandleShowChart(), 800, 600);
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -193,6 +203,7 @@ public class Main extends Application {
 		initSaveAndLoad();
 		initDataFiltering();
 		initHandlePlotLineChart();
+		initHandleShowChart();
 	}
 	
 	/**
@@ -264,7 +275,10 @@ public class Main extends Application {
 		
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btShowChart.setOnAction(o->{
-				
+				if(!listViewChartObj.getSelectionModel().isEmpty()) {
+					selectedChart = chartMap.get(listViewChartObj.getSelectionModel().getSelectedItem());
+					putSceneOnStage(SCENE_SHOW_CHART);
+				}
 			});
 		});
 		
@@ -358,6 +372,13 @@ public class Main extends Application {
 	 * 
 	 */
 
+	private void initHandleShowChart() {
+		
+		btGoBack.setOnAction(e->{
+			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+		});	
+	}
+	
 	/**
 	 * Creates the main screen and layout its UI components
 	 * 
@@ -651,6 +672,19 @@ public class Main extends Application {
 		return pane;
 	}
 	*/
+	
+	private Pane paneHandleShowChart() {
+		btGoBack = new Button("Return");
+		
+		HBox bottomContainer = new HBox(20);
+		
+		bottomContainer.getChildren().add(btGoBack);
+		bottomContainer.setAlignment(Pos.CENTER);
+		BorderPane pane = new BorderPane();
+		pane.setCenter(selectedChart);
+		pane.setBottom(bottomContainer);
+		return pane;
+	}
 	
 	/**
 	 * This method is used to pick anyone of the scene on the stage. It handles the
