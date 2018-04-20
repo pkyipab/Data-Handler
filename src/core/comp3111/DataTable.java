@@ -194,6 +194,23 @@ public class DataTable implements Serializable {
 		return list;
 	}
 	
+	public ArrayList<String> getNonNegativeNumberTypeColnumName(){
+		ArrayList<String> list = new ArrayList<String>();
+		for(String key: dc.keySet()) {
+			if(dc.get(key).getTypeName() == DataType.TYPE_NUMBER) {
+				list.add(key);
+				for(int i = 0; i < dc.get(key).getSize(); i++) {
+					if(((Number)dc.get(key).getData()[i]).doubleValue() < 0) {
+						list.remove(list.size() - 1);
+						break;
+					}
+				}
+				
+			}
+		}
+		return list;
+	}
+	
 	public ArrayList<String> getStringTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
 		for(String key: dc.keySet()) {

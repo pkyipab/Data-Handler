@@ -261,7 +261,7 @@ public class Main extends Application {
 					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 					numCombo.getItems().clear();
 					textCombo.getItems().clear();	
-					optionsNum = dc.getNumberTypeColnumName();
+					optionsNum = dc.getNonNegativeNumberTypeColnumName();
 					for(int i = 0; i < optionsNum.size(); i++) {
 						numCombo.getItems().add(optionsNum.get(i));
 					}
