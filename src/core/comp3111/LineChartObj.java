@@ -1,12 +1,10 @@
 package core.comp3111;
 
-import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
-import javafx.stage.Stage;
 
 public class LineChartObj extends GeneralChart {
 	private DataColumn xAxisColumn;
@@ -32,14 +30,6 @@ public class LineChartObj extends GeneralChart {
 		lineChart.getData().add(series);
 		this.chart = lineChart;
 		System.out.println("[ NEW Line Chart : " + this.chartName + " created ]");
-	}
-
-	@Override
-	public void show() {
-		Stage dialog = new Stage();
-		Scene dialogScene = new Scene(this.chart, 800, 600);
-		dialog.setScene(dialogScene);
-		dialog.show();
 	}
 
 }

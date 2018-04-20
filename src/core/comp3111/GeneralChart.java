@@ -1,8 +1,10 @@
 package core.comp3111;
 
+import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
+import javafx.stage.Stage;
 
-public abstract class GeneralChart {
+public class GeneralChart {
 	protected String chartName;
 	protected Chart chart;
 	
@@ -14,5 +16,10 @@ public abstract class GeneralChart {
 		return this.chart;
 	}
 	
-	public abstract void show();
+	public void show() {
+		Stage dialog = new Stage();
+		Scene dialogScene = new Scene(this.chart, 800, 600);
+		dialog.setScene(dialogScene);
+		dialog.show();
+	}
 }

@@ -2,9 +2,7 @@ package core.comp3111;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.stage.Stage;
 
 public class PieChartObj extends GeneralChart {
 	private DataColumn numColumn;
@@ -24,14 +22,6 @@ public class PieChartObj extends GeneralChart {
 		}
 		this.chart = pieChart;
 		System.out.println("[ NEW Line Chart : " + this.chartName + " created ]");
-	}
-	
-	@Override
-	public void show() {
-		Stage dialog = new Stage();
-		Scene dialogScene = new Scene(this.chart, 800, 600);
-		dialog.setScene(dialogScene);
-		dialog.show();
 	}
 
 }
