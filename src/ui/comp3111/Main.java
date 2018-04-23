@@ -14,10 +14,10 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
-
 import core.comp3111.SampleDataGenerator;
-
-
+import core.comp3111.GeneralChart;
+import core.comp3111.LineChartObj;
+import core.comp3111.PieChartObj;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -30,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -66,15 +67,10 @@ public class Main extends Application {
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
 	private DataFilter dataFilter = new DataFilter();
-
-	public static ArrayList<Chart> storedChart = new ArrayList<Chart>();
-	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
-
-	private PlotLineChart plotlinechart = new PlotLineChart();
 	
 	// Attributes: Scene and Stage
 
-	private static final int SCENE_NUM = 6;
+	private static final int SCENE_NUM = 7;
 
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
@@ -82,11 +78,9 @@ public class Main extends Application {
 	private static final int SCENE_SAVE_LOAD = 3;
 	private static final int SCENE_FILTER_DATA = 4;
 	private static final int SCENE_PLOT_LINE_CHART = 5;
-	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
-	 * private static final int SCENE_PLOT_PIE_CHART = 6;
-	 */
-	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",  "Save And Load", "Data Filtering","Plot Line Chart"};
+	private static final int SCENE_PLOT_PIE_CHART = 6;
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",
+			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart"};
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -95,7 +89,7 @@ public class Main extends Application {
 	// The following UI components are used to keep references after invoking
 	// createScene()
 
-	// Screen 1: paneMainScreen
+	//Screen 1: paneMainScreen
 	private Button btImportExport, btMutipleChart, btSavingLoading, btDataFiltering;
 	private Label lbMainScreenTitle;
 	
@@ -105,7 +99,7 @@ public class Main extends Application {
 	private Button btImportData;
 	private Button btExportData;
 	private Button btImportExport_BackToMenu;
-	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();;
+	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();
 	
 	
 	//Screen 3: paneHandleMultiDataAndChart
@@ -115,8 +109,10 @@ public class Main extends Application {
 	private ObservableList<VBox> listViewChart = FXCollections.observableArrayList();
 	private Button btShowChart;
 	private Button btBackToMenu2;
-	private Button btPlotChart;
-	
+	private Button btPlotLineChart;
+	private Button btPlotPieChart;
+	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
+	private Map<VBox, DataTable> dataTableMap = new LinkedHashMap<VBox, DataTable>();
 
 	//Screen 4: paneSaveAndLoad
 	private Button loadButton;
@@ -143,14 +139,20 @@ public class Main extends Application {
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
 	private Button btReturn;
+	private ComboBox<String> xCombo;
+	private ComboBox<String> yCombo;
+	private ArrayList<String> optionsX;
+	private ArrayList<String> optionsY;
 	
-	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
-	//Screen 6: paneHandlePlotPieChart
+	
+	//Screen 7: paneHandlePlotPieChart
 	private Button btPlotPie;
 	private Button btReturn_alt;
-	 *
-	 */
+	private ComboBox<String> numCombo;
+	private ComboBox<String> textCombo;
+	private ArrayList<String> optionsNum;
+	private ArrayList<String> optionsString;
+	
 	public static int numOfConlict = 0;
 	/**
 	 * create all scenes in this application
@@ -163,10 +165,8 @@ public class Main extends Application {
 		scenes[SCENE_SAVE_LOAD] = new Scene(paneSaveAndLoad(), 400, 500);
 		scenes[SCENE_FILTER_DATA] = new Scene(paneDataFiltering(), 800, 600);
 		scenes[SCENE_PLOT_LINE_CHART] = new Scene(paneHandlePlotLineChart(), 800, 600);
-		/*
-		 * TODO PieChart (will be using similar method as Line Chart)
-		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotChart(), 800, 600);
-		 */
+		scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotPieChart(), 800, 600);
+		 
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -186,6 +186,7 @@ public class Main extends Application {
 		initSaveAndLoad();
 		initDataFiltering();
 		initHandlePlotLineChart();
+		initHandlePlotPiChart();
 	}
 	
 	/**
@@ -236,21 +237,49 @@ public class Main extends Application {
 	private void initHandleMultiDataAndChart() {		
 		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
-			
+			btPlotLineChart.setOnAction(o->{
+				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
+					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+					xCombo.getItems().clear();
+					yCombo.getItems().clear();	
+					optionsX = dc.getNumberTypeColnumName();
+					for(int i = 0; i < optionsX.size(); i++) {
+						xCombo.getItems().add(optionsX.get(i));
+					}
+					optionsY = dc.getNumberTypeColnumName();
+					for(int i = 0; i < optionsY.size(); i++) {
+						yCombo.getItems().add(optionsY.get(i));
+					}
+					putSceneOnStage(SCENE_PLOT_LINE_CHART);
+				}
+			});
+		});
+		
+		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
+			btPlotPieChart.setOnAction(o->{
+				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
+					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+					numCombo.getItems().clear();
+					textCombo.getItems().clear();	
+					optionsNum = dc.getNonNegativeNumberTypeColnumName();
+					for(int i = 0; i < optionsNum.size(); i++) {
+						numCombo.getItems().add(optionsNum.get(i));
+					}
+					optionsString = dc.getStringTypeColnumName();
+					for(int i = 0; i < optionsString.size(); i++) {
+						textCombo.getItems().add(optionsString.get(i));
+					}
+					putSceneOnStage(SCENE_PLOT_PIE_CHART);
+				}
+			});
 		});
 		
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
-			
+			btShowChart.setOnAction(o->{
+				
+			});
 		});
 		
-		btShowChart.setOnAction(e->{
-			
-		});
-		
-		btPlotChart.setOnAction(e->{
-			putSceneOnStage(SCENE_PLOT_LINE_CHART);
-		});		
-
 		btBackToMenu2.setOnAction(e -> {
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
@@ -310,9 +339,16 @@ public class Main extends Application {
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{
-
-			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
-
+			if(xCombo.getValue() != null && yCombo.getValue() != null) {
+				String selectedX = xCombo.getValue();
+				String selectedY = yCombo.getValue();
+				GeneralChart newChart = new LineChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedX), dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedY), dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY);
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + (dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
+						, newChart);
+				System.out.println("[ Line Chart create SUCCESSFULLY ]");
+				newChart.show();
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+			}
 		});
 		
 		btReturn.setOnAction(e->{
@@ -320,23 +356,25 @@ public class Main extends Application {
 		});		
 	}
 	
-	/*
-	 * 
-	 * TODO PieChart (will be using similar method as Line Chart)
-	 * private void initHandlePlotPieChart() {		
+	private void initHandlePlotPiChart() {		
 		
-		btPlotLine.setOnAction(e->{
-
-			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
-
+		btPlotPie.setOnAction(e->{
+			if(numCombo.getValue() != null && textCombo.getValue() != null) {
+				String selectedNum = numCombo.getValue();
+				String selectedText = textCombo.getValue();
+				GeneralChart newChart = new PieChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedNum), dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedText), dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedNum, selectedText);
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + (dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
+						, newChart);
+				System.out.println("[ Pie Chart create SUCCESSFULLY ]");
+				newChart.show();
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+			}
 		});
 		
-		btReturn.setOnAction(e->{
+		btReturn_alt.setOnAction(e->{
 			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 		});		
 	}
-	 * 
-	 */
 
 	/**
 	 * Creates the main screen and layout its UI components
@@ -404,7 +442,8 @@ public class Main extends Application {
 		Label lbChart = new Label("Chart");
 		btShowChart = new Button("Show Chart");
 		btBackToMenu2 = new Button("Back to Menu");
-		btPlotChart = new Button("Plot Chart");
+		btPlotLineChart = new Button("Plot Line Chart");
+		btPlotPieChart = new Button("Plot Pie Chart");
 
 		listViewDataSetObj = new ListView<VBox>();
 		listViewDataSetObj.setItems(listViewDataSet);
@@ -418,7 +457,7 @@ public class Main extends Application {
 		VBox chartContainer = new VBox(10);
 		
 		
-		dataSetContainer.getChildren().addAll(lbDataSet, listViewDataSetObj, btPlotChart);
+		dataSetContainer.getChildren().addAll(lbDataSet, listViewDataSetObj, btPlotLineChart, btPlotPieChart);
 		chartContainer.getChildren().addAll(lbChart, listViewChartObj, btShowChart);
 		bottomContainer.getChildren().add(btBackToMenu2);
 		bottomContainer.setAlignment(Pos.CENTER);
@@ -575,12 +614,18 @@ public class Main extends Application {
 		VBox selectX = new VBox(20);
 		VBox selectY = new VBox(20);
 		HBox bottomContainer = new HBox(20);
-		/*
-		 * TODO
-		 * Still learning to use Combo box Class (use Combo box is the Requirement of the Project)
-		 */
+		
+		xCombo = new ComboBox<String>();
+		xCombo.setPrefSize(200, 20);
+		yCombo = new ComboBox<String>();
+		yCombo.setPrefSize(200, 20);
+		
 		topContainer.getChildren().add(Hints);
-		topContainer.setAlignment(Pos.CENTER);
+		topContainer.setAlignment(Pos.CENTER);	
+		selectX.getChildren().addAll(lbXaxis, xCombo);
+		selectY.getChildren().addAll(lbYaxis, yCombo);
+		selectX.setAlignment(Pos.CENTER);
+		selectY.setAlignment(Pos.CENTER);
 		comboBox.getChildren().addAll(selectX, selectY);
 		comboBox.setAlignment(Pos.CENTER);
 		bottomContainer.getChildren().addAll(btPlotLine, btReturn);
@@ -594,28 +639,35 @@ public class Main extends Application {
 		return pane;
 	}
 	
-	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
 	private Pane paneHandlePlotPieChart() {
-		Label Hints = new Label("Select ONE Text and ONE Numeric Column");
-		Label lbXaxis = new Label("Selected X-axis");
-		Label lbYaxis = new Label("Selected Y-axis");
+		Label Hints = new Label("select ONE set of Numerical data and String data from combo box");
+		Label lbNum = new Label("Selected Numerical Data");
+		Label lbStr = new Label("Selected String Data");
 		
 		btPlotPie = new Button("Plot");
 		btReturn_alt = new Button("Return");
 		
 		HBox topContainer = new HBox(20);
 		HBox comboBox = new HBox(20);
-		VBox selectX = new VBox(20);
-		VBox selectY = new VBox(20);
+		VBox selectNum = new VBox(20);
+		VBox selectStr = new VBox(20);
 		HBox bottomContainer = new HBox(20);
 		
-		TODO
-		Still learning to use Combo box Class (use Combo box is the Requirement of the Project)	
-			
+		numCombo = new ComboBox<String>();
+		xCombo.setPrefSize(200, 20);
+		textCombo = new ComboBox<String>();
+		yCombo.setPrefSize(200, 20);
+		
 		topContainer.getChildren().add(Hints);
-		comboBox.getChildren().addAll(selectX, selectY);
+		topContainer.setAlignment(Pos.CENTER);	
+		selectNum.getChildren().addAll(lbNum, numCombo);
+		selectStr.getChildren().addAll(lbStr, textCombo);
+		selectNum.setAlignment(Pos.CENTER);
+		selectStr.setAlignment(Pos.CENTER);
+		comboBox.getChildren().addAll(selectNum, selectStr);
+		comboBox.setAlignment(Pos.CENTER);
 		bottomContainer.getChildren().addAll(btPlotPie, btReturn_alt);
+		bottomContainer.setAlignment(Pos.CENTER);
 		
 		BorderPane pane = new BorderPane();
 		pane.setTop(topContainer);
@@ -624,7 +676,6 @@ public class Main extends Application {
 		pane.getStyleClass().add("screen-background");		
 		return pane;
 	}
-	*/
 	
 	/**
 	 * This method is used to pick anyone of the scene on the stage. It handles the
@@ -679,11 +730,17 @@ public class Main extends Application {
 
 		viewDataSet.clear();
 		listViewDataSet.clear();
+		listViewChart.clear();
 		dataFilterDataSet.clear();
 		
 		map.clear();
 		mapDataFilter.clear();
 		
+		for(VBox chartBox: chartMap.keySet()) {
+			
+			listViewChart.add(chartBox);
+			
+		}
 
 		for(int i = 0; i < allDataSet.size(); i++) {
 			
@@ -695,6 +752,7 @@ public class Main extends Application {
 
             mapDataFilter.put(dataFilterVBox,allDataSet.get(i));
 
+            dataTableMap.put(dataVBoxHandle, allDataSet.get(i));
 			
             dataVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
             		" : " + allDataSet.get(i).getFileName() +  ""));
