@@ -19,6 +19,10 @@ import java.util.Map.Entry;
 public class DataTable implements Serializable {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3613739931437317121L;
+	/**
 	 * Construct - Create an empty DataTable
 	 */
 	public DataTable(String fileName) {
@@ -186,8 +190,11 @@ public class DataTable implements Serializable {
 	
 	public ArrayList<String> getNumberTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
+		System.out.println(dc.size());
 		for(String key: dc.keySet()) {
-			if(dc.get(key).getTypeName() == DataType.TYPE_NUMBER) {
+			System.out.println(dc.get(key).getTypeName());
+			if(dc.get(key).getTypeName().equals(DataType.TYPE_NUMBER)) {
+				System.out.println("hi");
 				list.add(key);
 			}
 		}
@@ -197,7 +204,7 @@ public class DataTable implements Serializable {
 	public ArrayList<String> getNonNegativeNumberTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
 		for(String key: dc.keySet()) {
-			if(dc.get(key).getTypeName() == DataType.TYPE_NUMBER) {
+			if(dc.get(key).getTypeName().equals(DataType.TYPE_NUMBER)) {
 				list.add(key);
 				for(int i = 0; i < dc.get(key).getSize(); i++) {
 					if(((Number)dc.get(key).getData()[i]).doubleValue() < 0) {
@@ -205,7 +212,6 @@ public class DataTable implements Serializable {
 						break;
 					}
 				}
-				
 			}
 		}
 		return list;
@@ -214,7 +220,7 @@ public class DataTable implements Serializable {
 	public ArrayList<String> getStringTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
 		for(String key: dc.keySet()) {
-			if(dc.get(key).getTypeName() == DataType.TYPE_STRING) {
+			if(dc.get(key).getTypeName().equals(DataType.TYPE_STRING)) {
 				list.add(key);
 			}
 		}
