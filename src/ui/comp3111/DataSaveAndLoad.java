@@ -25,6 +25,7 @@ public class DataSaveAndLoad {
 		catch (FileNotFoundException e){
 		} 
 		catch (IOException e) {
+			System.out.println(e.getMessage());
 		}		
 	}
 	
@@ -36,7 +37,7 @@ public class DataSaveAndLoad {
             ois.close();
 		}		
 		catch (Exception e){
-		}
-		
+			System.out.println(e.getMessage());
+		}		
 	}
 }

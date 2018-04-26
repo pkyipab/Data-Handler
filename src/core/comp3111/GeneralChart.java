@@ -1,10 +1,12 @@
 package core.comp3111;
 
+import java.io.Serializable;
+
 import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
 import javafx.stage.Stage;
 
-public class GeneralChart {
+public class GeneralChart implements Serializable {
 	protected String chartName;
 	protected Chart chart;
 	

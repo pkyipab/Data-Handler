@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author cspeter
  *
  */
-public class DataColumn implements Serializable{
+public class DataColumn implements Serializable {
 
 	/**
 	 * Constructor. Create an empty data column

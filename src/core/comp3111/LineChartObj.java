@@ -1,12 +1,14 @@
 package core.comp3111;
 
+import java.io.Serializable;
+
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 
-public class LineChartObj extends GeneralChart {
+public class LineChartObj extends GeneralChart implements Serializable{
 	private DataColumn xAxisColumn;
 	private DataColumn yAxisColumn;
 	private NumberAxis xAxis = new NumberAxis();
