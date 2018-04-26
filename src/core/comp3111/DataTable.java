@@ -19,10 +19,6 @@ import java.util.Map.Entry;
 public class DataTable implements Serializable {
 
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3613739931437317121L;
-	/**
 	 * Construct - Create an empty DataTable
 	 */
 	public DataTable(String fileName) {
@@ -190,11 +186,8 @@ public class DataTable implements Serializable {
 	
 	public ArrayList<String> getNumberTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
-		System.out.println(dc.size());
 		for(String key: dc.keySet()) {
-			System.out.println(dc.get(key).getTypeName());
 			if(dc.get(key).getTypeName().equals(DataType.TYPE_NUMBER)) {
-				System.out.println("hi");
 				list.add(key);
 			}
 		}
