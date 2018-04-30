@@ -1,6 +1,7 @@
 package core.comp3111;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * DataColumn - A column of data. This class will be used by DataTable. It
@@ -92,6 +93,20 @@ public class DataColumn implements Serializable {
 		}
 		mean /= data.length;
 		return mean;
+	}
+	
+	public float getMedian() {
+		Object[] temp = data.clone();	
+		Arrays.sort(temp);
+		int counter = 0;
+		for(int i = 0; i < temp.length; i++) {
+			if(temp[i] != null)
+				counter++;
+		}
+		if(counter % 2 == 0)
+			return ((float)temp[counter/2] + (float)temp[counter/2+1]) / 2;
+		else
+			return (float)temp[counter/2];
 	}
 
 	// attributes

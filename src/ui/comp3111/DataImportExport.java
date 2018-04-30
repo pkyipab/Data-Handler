@@ -25,15 +25,9 @@ import javafx.stage.Stage;
 
 /* TODO 
  * 
- * 
  *  1) Add pop-up window for user to choose fill in mean / zero / median
  * 
- * 
- *  2) Mix Integer and Double Type -> NUMBER
- * 
- * 
- * 	3) Name checking
- * 
+ *	2) change to core 
  */
 
 
@@ -227,7 +221,6 @@ public class DataImportExport {
 		}
 		
 	}
-
 	
 	private boolean isDouble(String input) {
 		   try
