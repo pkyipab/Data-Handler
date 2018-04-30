@@ -75,6 +75,24 @@ public class DataColumn implements Serializable {
 			return 0;
 		return data.length;
 	}
+	
+	public void fillin(float num) {
+
+		for(int i = 0; i < data.length; i++) {
+			if(data[i] == null)
+				data[i] = num;
+		}
+	}
+	
+	public float getMean() {
+		int mean = 0;
+		for(int i = 0; i < data.length; i++) {
+			if(data[i] == null)
+			mean += (float) data[i];
+		}
+		mean /= data.length;
+		return mean;
+	}
 
 	// attributes
 	private Object[] data;

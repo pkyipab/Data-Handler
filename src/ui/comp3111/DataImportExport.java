@@ -27,9 +27,6 @@ import javafx.stage.Stage;
  * 
  * 
  *  1) Add pop-up window for user to choose fill in mean / zero / median
- * 	
- * 
- * 
  * 
  * 
  *  2) Mix Integer and Double Type -> NUMBER
@@ -84,8 +81,7 @@ public class DataImportExport {
 			            //Transfer from ArrayList into DataColumn
 			            for(int colNum = 0; colNum < row.get(0).length; colNum ++) {
 			            	ArrayList<String> strData = new ArrayList<String>();
-			            	ArrayList<Integer> intData;
-			            	ArrayList<Double> doubleData;
+			            	ArrayList<Object> numData;
 			            	DataColumn dataCol;
 			            	String type = "";
 			            	
@@ -100,15 +96,9 @@ public class DataImportExport {
 			            	type = dataChecking(strData);
 			            	
 			            	switch(type) {
-			            		case "Integer": 
-			            			intData = strToInt(strData);
-			            			dataCol = new DataColumn(DataType.TYPE_NUMBER, intData.toArray());
-			            			dataTable.addCol(row.get(0)[colNum], dataCol);
-			            			break;
-			            			
-			            		case "Double": 
-			            			doubleData = strToDouble(strData);
-			            			dataCol = new DataColumn(DataType.TYPE_NUMBER, doubleData.toArray());
+			            		case "Number": 
+			            			numData = strToDouble(strData);
+			            			dataCol = new DataColumn(DataType.TYPE_NUMBER, numData.toArray());
 			            			dataTable.addCol(row.get(0)[colNum], dataCol);
 			            			break;
 			            			
@@ -194,12 +184,12 @@ public class DataImportExport {
 		} 
 	}
 	
-	private ArrayList<Double> strToDouble(ArrayList<String> arrList) {
-		ArrayList<Double> doubleList = new ArrayList<Double>();
+	private ArrayList<Object> strToDouble(ArrayList<String> arrList) {
+		ArrayList<Object> doubleList = new ArrayList<Object>();
 		
 		for(int i = 0; i < arrList.size(); i++) {
 			if(arrList.get(i).isEmpty()) {
-				doubleList.add(0.0);
+				doubleList.add("");
 			} else {
 				doubleList.add(Double.parseDouble(arrList.get(i)));
 			}
@@ -208,20 +198,6 @@ public class DataImportExport {
 		return doubleList;
 	}
 	
-	private ArrayList<Integer> strToInt(ArrayList<String> arrList) {
-		
-		ArrayList<Integer> intList = new ArrayList<Integer>();
-	
-		for(int i = 0; i < arrList.size(); i++) {
-			if(arrList.get(i).isEmpty()) {
-				intList.add(0);
-			} else {
-				intList.add(Integer.parseInt(arrList.get(i)));
-			}
-		}
-		
-		return intList;
-	}
 	
 	private String dataChecking(ArrayList<String> arrList) throws DataTableException{
 		String type = "null";
@@ -244,29 +220,14 @@ public class DataImportExport {
 		
 		if(str.isEmpty()) {
 			return "empty";
-		}
-		else if(isDouble(str) && isInteger(str)) {
-			return "Integer";
-		} else if(isDouble(str) && !isInteger(str)) {
-			return "Double";
+		} else if(isDouble(str)) {
+			return "Number";
 		} else {
 			return "String";
 		}
 		
 	}
-	
-	private boolean isInteger(String input)
-	{
-	   try
-	   {
-	      Integer.parseInt( input );
-	      return true;
-	   }
-	   catch( Exception e )
-	   {
-	      return false;
-	   }
-	}
+
 	
 	private boolean isDouble(String input) {
 		   try
