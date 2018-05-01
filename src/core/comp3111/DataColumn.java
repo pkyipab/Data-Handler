@@ -121,7 +121,28 @@ public class DataColumn implements Serializable {
 		}
 		return false;
 	}
-
+	
+	//For the use of animation chart
+	public double getMax() {
+		double max = (double)data[0];
+		for(Object obj: data) {
+			if((double)obj > max) {
+				max = (double)obj;
+			}
+		}
+		return max;
+	}
+	
+	public double getMin() {
+		double mim = (double)data[0];
+		for(Object obj: data) {
+			if((double)obj < mim) {
+				mim = (double)obj;
+			}
+		}
+		return mim;
+	}
+	
 	// attributes
 	private Object[] data;
 	private String typeName;

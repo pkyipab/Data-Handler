@@ -24,4 +24,9 @@ public class PieChartObj extends GeneralChart {
 		System.out.println("[ NEW Line Chart : " + this.chartName + " created ]");
 	}
 
+	@Override
+	public void animationStart() {
+		//WILL NOT DO
+		
+	}
 }
