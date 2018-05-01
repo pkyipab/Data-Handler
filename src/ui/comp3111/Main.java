@@ -9,15 +9,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
-
 import core.comp3111.SampleDataGenerator;
-
-
+import core.comp3111.GeneralChart;
+import core.comp3111.LineChartObj;
+import core.comp3111.PieChartObj;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -30,12 +31,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -66,15 +69,10 @@ public class Main extends Application {
 	private DataImportExport dataImportExport = new DataImportExport();
 	private DataSaveAndLoad dataSaveAndLoad = new DataSaveAndLoad();
 	private DataFilter dataFilter = new DataFilter();
-
-	public static ArrayList<Chart> storedChart = new ArrayList<Chart>();
-	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
-
-	private PlotLineChart plotlinechart = new PlotLineChart();
 	
 	// Attributes: Scene and Stage
 
-	private static final int SCENE_NUM = 6;
+	private static final int SCENE_NUM = 7;
 
 	private static final int SCENE_MAIN_SCREEN = 0;
 	private static final int SCENE_IMPORT_EXPORT = 1;
@@ -82,11 +80,9 @@ public class Main extends Application {
 	private static final int SCENE_SAVE_LOAD = 3;
 	private static final int SCENE_FILTER_DATA = 4;
 	private static final int SCENE_PLOT_LINE_CHART = 5;
-	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
-	 * private static final int SCENE_PLOT_PIE_CHART = 6;
-	 */
-	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",  "Save And Load", "Data Filtering","Plot Line Chart"};
+	private static final int SCENE_PLOT_PIE_CHART = 6;
+	private static final String[] SCENE_TITLES = { "COMP3111 - [Sun of the bench]", "Data Import & Export",  "HandleMultiDataAndChart",
+			"Save And Load", "Data Filtering", "Plot Line Chart", "Plot Pie Chart"};
 
     private Scene[] scenes = null;
     private Stage stage = null;
@@ -95,7 +91,7 @@ public class Main extends Application {
 	// The following UI components are used to keep references after invoking
 	// createScene()
 
-	// Screen 1: paneMainScreen
+	//Screen 1: paneMainScreen
 	private Button btImportExport, btMutipleChart, btSavingLoading, btDataFiltering;
 	private Label lbMainScreenTitle;
 	
@@ -105,7 +101,7 @@ public class Main extends Application {
 	private Button btImportData;
 	private Button btExportData;
 	private Button btImportExport_BackToMenu;
-	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();;
+	private Map<VBox, DataTable> map = new LinkedHashMap<VBox, DataTable>();
 	
 	
 	//Screen 3: paneHandleMultiDataAndChart
@@ -115,42 +111,54 @@ public class Main extends Application {
 	private ObservableList<VBox> listViewChart = FXCollections.observableArrayList();
 	private Button btShowChart;
 	private Button btBackToMenu2;
-	private Button btPlotChart;
-	
+	private Button btPlotLineChart;
+	private Button btPlotPieChart;
+	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
+	private Map<VBox, DataTable> dataTableMap = new LinkedHashMap<VBox, DataTable>();
 
 	//Screen 4: paneSaveAndLoad
 	private Button loadButton;
 	private Button saveButton;
 	private Button btBackToMenu3;
 	
-	//Screen 5: paneSaveAndLoad
+	//Screen 5: paneDataFiltering
 	private ObservableList<VBox> dataFilterDataSet = FXCollections.observableArrayList();
-	private ObservableList<HBox> dataColumnDataSet = FXCollections.observableArrayList();
+	private ObservableList<VBox> dataColumnDataSet = FXCollections.observableArrayList();
 	private ListView<VBox> dataFilterData;
-	private ListView<HBox> dataColumnList;
+	private ListView<VBox> dataColumnList;
 	private final ToggleGroup groupRandom = new ToggleGroup();
-	private final ToggleGroup groupText = new ToggleGroup();
+	private final ToggleGroup groupNumeric = new ToggleGroup();
 	private RadioButton replaceRandom;
 	private RadioButton createNewRandom;
-	private RadioButton replaceText;
-	private RadioButton createNewText;
+	private RadioButton replaceNumeric;
+	private RadioButton createNewNumeric;
 	private Button btRandomPaneConfirm;
-	private Button btTextPaneConfirm;
+	private Button btNumericPaneConfirm;
 	private Button btDataFilter_BackToMenu;
-	private Map<VBox, DataTable> mapDataFilter = new LinkedHashMap<VBox, DataTable>();
-	private Map<CheckBox, DataColumn> dataFilterColumns = new LinkedHashMap<CheckBox, DataColumn>();
+	
+	private TextField compareNumText;
+	private ComboBox<String> compareSignChooser;
+	
+	private Map<VBox, DataTable> mapDataFilterTable = new LinkedHashMap<VBox, DataTable>();
+	private Map<VBox, DataColumn> mapDataFilterCol = new LinkedHashMap<VBox, DataColumn>();
 
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
 	private Button btReturn;
+	private ComboBox<String> xCombo;
+	private ComboBox<String> yCombo;
+	private ArrayList<String> optionsX;
+	private ArrayList<String> optionsY;
 	
-	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
-	//Screen 6: paneHandlePlotPieChart
+	
+	//Screen 7: paneHandlePlotPieChart
 	private Button btPlotPie;
 	private Button btReturn_alt;
-	 *
-	 */
+	private ComboBox<String> numCombo;
+	private ComboBox<String> textCombo;
+	private ArrayList<String> optionsNum;
+	private ArrayList<String> optionsString;
+	
 	public static int numOfConlict = 0;
 	/**
 	 * create all scenes in this application
@@ -163,10 +171,8 @@ public class Main extends Application {
 		scenes[SCENE_SAVE_LOAD] = new Scene(paneSaveAndLoad(), 400, 500);
 		scenes[SCENE_FILTER_DATA] = new Scene(paneDataFiltering(), 800, 600);
 		scenes[SCENE_PLOT_LINE_CHART] = new Scene(paneHandlePlotLineChart(), 800, 600);
-		/*
-		 * TODO PieChart (will be using similar method as Line Chart)
-		 * scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotChart(), 800, 600);
-		 */
+		scenes[SCENE_PLOT_PIE_CHART] = new Scene(paneHandlePlotPieChart(), 800, 600);
+		 
 		for (Scene s : scenes) {
 			if (s != null)
 				// Assumption: all scenes share the same stylesheet
@@ -186,6 +192,7 @@ public class Main extends Application {
 		initSaveAndLoad();
 		initDataFiltering();
 		initHandlePlotLineChart();
+		initHandlePlotPiChart();
 	}
 	
 	/**
@@ -217,9 +224,8 @@ public class Main extends Application {
 		
 		btImportData.setOnAction(e -> {
 			dataImportExport.importData(stage);
-			if(allDataSet.size() > 0) {
+			if(allDataSet.size() > 0) 
 				btExportData.setDisable(false);
-			}
 			updateListView();
 		});
 			
@@ -233,27 +239,112 @@ public class Main extends Application {
 		
 	}
 	
-	private void initHandleMultiDataAndChart() {		
+	private void initHandleMultiDataAndChart() {	
+		listViewDataSetObj.setOnMouseClicked(e->{
+			updateSelectedDataTableChartListView();
+		});
 		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
-			
+			btPlotLineChart.setOnAction(o->{
+				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
+					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+					xCombo.getItems().clear();
+					yCombo.getItems().clear();	
+					System.out.println(dc.getNumCol());
+					optionsX = dc.getNumberTypeColnumName();
+					System.out.println(optionsX.size());
+					for(int i = 0; i < optionsX.size(); i++) {
+						xCombo.getItems().add(optionsX.get(i));
+					}
+					optionsY = dc.getNumberTypeColnumName();
+					for(int i = 0; i < optionsY.size(); i++) {
+						yCombo.getItems().add(optionsY.get(i));
+					}
+					putSceneOnStage(SCENE_PLOT_LINE_CHART);
+				}
+				updateSelectedDataTableChartListView();
+			});
+		});
+		
+		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
+			btPlotPieChart.setOnAction(o->{
+				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
+					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+					System.out.println(dc.getNumCol());
+					numCombo.getItems().clear();
+					textCombo.getItems().clear();	
+					optionsNum = dc.getNonNegativeNumberTypeColnumName();
+					for(int i = 0; i < optionsNum.size(); i++) {
+						numCombo.getItems().add(optionsNum.get(i));
+					}
+					optionsString = dc.getStringTypeColnumName();
+					for(int i = 0; i < optionsString.size(); i++) {
+						textCombo.getItems().add(optionsString.get(i));
+					}
+					putSceneOnStage(SCENE_PLOT_PIE_CHART);
+				}
+				updateSelectedDataTableChartListView();
+			});
 		});
 		
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
-			
+			btShowChart.setOnAction(o->{				
+				
+			});
 		});
 		
-		btShowChart.setOnAction(e->{
-			
-		});
 		
-		btPlotChart.setOnAction(e->{
-			putSceneOnStage(SCENE_PLOT_LINE_CHART);
-		});		
-
 		btBackToMenu2.setOnAction(e -> {
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
+	}
+	
+	private void initHandlePlotLineChart() {		
+		
+		btPlotLine.setOnAction(e->{
+			if(xCombo.getValue() != null && yCombo.getValue() != null) {
+				String selectedX = xCombo.getValue();
+				String selectedY = yCombo.getValue();
+				GeneralChart newChart = new LineChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedX), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedY), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY);
+				
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + 
+						(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
+						, newChart);
+				System.out.println("[ Line Chart create SUCCESSFULLY ]");
+				newChart.show();
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+			}
+		});
+		
+		btReturn.setOnAction(e->{
+			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+		});		
+	}
+	
+	private void initHandlePlotPiChart() {		
+		
+		btPlotPie.setOnAction(e->{
+			if(numCombo.getValue() != null && textCombo.getValue() != null) {
+				String selectedNum = numCombo.getValue();
+				String selectedText = textCombo.getValue();
+				GeneralChart newChart = new PieChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedNum), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedText), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedNum, selectedText);
+				
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + 
+						(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
+						, newChart);
+				System.out.println("[ Pie Chart create SUCCESSFULLY ]");
+				newChart.show();
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+			}
+		});
+		
+		btReturn_alt.setOnAction(e->{
+			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+		});		
 	}
 	
 	private void initSaveAndLoad() {
@@ -265,6 +356,9 @@ public class Main extends Application {
 			File file = fileChooser.showOpenDialog(stage);
 			if(file != null)
 				dataSaveAndLoad.loadData(file);
+
+			if(allDataSet.size() > 0) 
+				btExportData.setDisable(false);
 			updateListView();
 		});
 		
@@ -286,57 +380,69 @@ public class Main extends Application {
 	private void initDataFiltering() {	
 		
 		dataFilterData.getSelectionModel().selectedItemProperty().addListener(e->{
-			DataTable selectedDataTable = mapDataFilter.get(dataFilterData.getSelectionModel().getSelectedItem());
+			DataTable selectedDataTable = mapDataFilterTable.get(dataFilterData.getSelectionModel().getSelectedItem());
+		
 			
 			if( selectedDataTable != null) {
+				updateNumericDataColumnListView(selectedDataTable);
+			
 				btRandomPaneConfirm.setOnAction(e2 -> {
 					if(replaceRandom.isSelected()) {
 						dataFilter.RandomSplit("Replace", selectedDataTable.getFileName());
 					} else if (createNewRandom.isSelected()) {
 						dataFilter.RandomSplit("Create New", selectedDataTable.getFileName());
+					} else {
+						alertUser("Missing Action", "Cannot generate DataTable", "Please Select Replace current / Create new Data Table");
 					}
 					updateListView();
 				});
-			
-				updateDataColumnListView(selectedDataTable);
-			}
+				
+				dataColumnList.getSelectionModel().selectedItemProperty().addListener(e2->{
+					
+					DataColumn selectedCol = mapDataFilterCol.get(dataColumnList.getSelectionModel().getSelectedItem());
+					
+					if(selectedCol != null) {
+						btNumericPaneConfirm.setOnAction(e3 -> {
+							if(compareSignChooser.getValue() == null) {
+								alertUser("OPERATOR NOT FOUND","CANNOT FOUND OPERATOR","PLEASE SELECT AN OPERATOR");
+							} else {
+								
+								if(this.compareNumText.getText().trim().equals("")) {
+									alertUser("COMPARE NUM NOT FOUND", "NO COMPARE NUM", "PLEASE INPUT A NUM");
+								} else {
+									 try
+									   {
+									      double compareNum = Double.parseDouble(compareNumText.getText());
+									      
+									  	if(replaceNumeric.isSelected()) {
+									  		dataFilter.NumericSplit("Replace", selectedDataTable,selectedCol, compareSignChooser.getValue(), compareNum);
+										} else if (createNewNumeric.isSelected()) {
+											dataFilter.NumericSplit("Create New", selectedDataTable,selectedCol, compareSignChooser.getValue(), compareNum);
+										} else {
+											alertUser("Missing Action", "Cannot generate DataTable", "Please Select Replace current / Create new Data Table");
+										}
+										updateListView();
+									   }
+									   catch( Exception e1 )
+									   {
+										   System.out.println(e1.getMessage());
+									   }
+								}
+								
+							}
+						});
+					}
+				});
+			}		
 		});
 		
-		btDataFilter_BackToMenu.setOnAction(e->{
+		
+		btDataFilter_BackToMenu.setOnAction(e->{	
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});		
 	}
 	
-	private void initHandlePlotLineChart() {		
-		
-		btPlotLine.setOnAction(e->{
 
-			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
-
-		});
-		
-		btReturn.setOnAction(e->{
-			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
-		});		
-	}
-	
-	/*
-	 * 
-	 * TODO PieChart (will be using similar method as Line Chart)
-	 * private void initHandlePlotPieChart() {		
-		
-		btPlotLine.setOnAction(e->{
-
-			//TODO call the PlotLineChart Class function to create a new chart and save in storedChart
-
-		});
-		
-		btReturn.setOnAction(e->{
-			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
-		});		
-	}
-	 * 
-	 */
 
 	/**
 	 * Creates the main screen and layout its UI components
@@ -404,7 +510,8 @@ public class Main extends Application {
 		Label lbChart = new Label("Chart");
 		btShowChart = new Button("Show Chart");
 		btBackToMenu2 = new Button("Back to Menu");
-		btPlotChart = new Button("Plot Chart");
+		btPlotLineChart = new Button("Plot Line Chart");
+		btPlotPieChart = new Button("Plot Pie Chart");
 
 		listViewDataSetObj = new ListView<VBox>();
 		listViewDataSetObj.setItems(listViewDataSet);
@@ -418,7 +525,7 @@ public class Main extends Application {
 		VBox chartContainer = new VBox(10);
 		
 		
-		dataSetContainer.getChildren().addAll(lbDataSet, listViewDataSetObj, btPlotChart);
+		dataSetContainer.getChildren().addAll(lbDataSet, listViewDataSetObj, btPlotLineChart, btPlotPieChart);
 		chartContainer.getChildren().addAll(lbChart, listViewChartObj, btShowChart);
 		bottomContainer.getChildren().add(btBackToMenu2);
 		bottomContainer.setAlignment(Pos.CENTER);
@@ -434,6 +541,83 @@ public class Main extends Application {
 
 		return pane;
 	}	
+	
+
+	private Pane paneHandlePlotLineChart() {
+		Label Hints = new Label("ONLY Numeric Columns will DISPLAYED");
+		Label lbXaxis = new Label("Selected X-axis");
+		Label lbYaxis = new Label("Selected Y-axis");
+		
+		btPlotLine = new Button("Plot");
+		btReturn = new Button("Return");
+		
+		HBox topContainer = new HBox(20);
+		HBox comboBox = new HBox(20);
+		VBox selectX = new VBox(20);
+		VBox selectY = new VBox(20);
+		HBox bottomContainer = new HBox(20);
+		
+		xCombo = new ComboBox<String>();
+		xCombo.setPrefSize(200, 20);
+		yCombo = new ComboBox<String>();
+		yCombo.setPrefSize(200, 20);
+		
+		topContainer.getChildren().add(Hints);
+		topContainer.setAlignment(Pos.CENTER);	
+		selectX.getChildren().addAll(lbXaxis, xCombo);
+		selectY.getChildren().addAll(lbYaxis, yCombo);
+		selectX.setAlignment(Pos.CENTER);
+		selectY.setAlignment(Pos.CENTER);
+		comboBox.getChildren().addAll(selectX, selectY);
+		comboBox.setAlignment(Pos.CENTER);
+		bottomContainer.getChildren().addAll(btPlotLine, btReturn);
+		bottomContainer.setAlignment(Pos.CENTER);
+		
+		BorderPane pane = new BorderPane();
+		pane.setTop(topContainer);
+		pane.setCenter(comboBox);
+		pane.setBottom(bottomContainer);
+		pane.getStyleClass().add("screen-background");		
+		return pane;
+	}
+	
+	private Pane paneHandlePlotPieChart() {
+		Label Hints = new Label("select ONE set of Numerical data and String data from combo box");
+		Label lbNum = new Label("Selected Numerical Data");
+		Label lbStr = new Label("Selected String Data");
+		
+		btPlotPie = new Button("Plot");
+		btReturn_alt = new Button("Return");
+		
+		HBox topContainer = new HBox(20);
+		HBox comboBox = new HBox(20);
+		VBox selectNum = new VBox(20);
+		VBox selectStr = new VBox(20);
+		HBox bottomContainer = new HBox(20);
+		
+		numCombo = new ComboBox<String>();
+		xCombo.setPrefSize(200, 20);
+		textCombo = new ComboBox<String>();
+		yCombo.setPrefSize(200, 20);
+		
+		topContainer.getChildren().add(Hints);
+		topContainer.setAlignment(Pos.CENTER);	
+		selectNum.getChildren().addAll(lbNum, numCombo);
+		selectStr.getChildren().addAll(lbStr, textCombo);
+		selectNum.setAlignment(Pos.CENTER);
+		selectStr.setAlignment(Pos.CENTER);
+		comboBox.getChildren().addAll(selectNum, selectStr);
+		comboBox.setAlignment(Pos.CENTER);
+		bottomContainer.getChildren().addAll(btPlotPie, btReturn_alt);
+		bottomContainer.setAlignment(Pos.CENTER);
+		
+		BorderPane pane = new BorderPane();
+		pane.setTop(topContainer);
+		pane.setCenter(comboBox);
+		pane.setBottom(bottomContainer);
+		pane.getStyleClass().add("screen-background");		
+		return pane;
+	}
 
 	public Pane paneSaveAndLoad() {
 		loadButton = new Button("Load");
@@ -466,16 +650,18 @@ public class Main extends Application {
 		createNewRandom.setToggleGroup(groupRandom);
 		btRandomPaneConfirm = new Button("Confirm");
 		
-		replaceText = new RadioButton(" Replace Current DataSet ");
-		replaceText.setToggleGroup(groupText);
-		createNewText = new RadioButton(" Create New DataSet ");
-		createNewText.setToggleGroup(groupText);
-		btTextPaneConfirm = new Button("Confirm");
+		compareNumText = new TextField();
+		compareSignChooser = new ComboBox<String>();
+		replaceNumeric = new RadioButton(" Replace Current DataSet ");
+		replaceNumeric.setToggleGroup(groupNumeric);
+		createNewNumeric = new RadioButton(" Create New DataSet ");
+		createNewNumeric.setToggleGroup(groupNumeric);
+		btNumericPaneConfirm = new Button("Confirm");
 		
 		btDataFilter_BackToMenu = new Button("Back to menu");
 		dataFilterData = new ListView<VBox>();
 		dataFilterData.setItems(dataFilterDataSet);
-		dataColumnList = new ListView<HBox>();
+		dataColumnList = new ListView<VBox>();
 		dataColumnList.setItems(dataColumnDataSet);
 		
 		
@@ -501,7 +687,7 @@ public class Main extends Application {
 		StackPane root = new StackPane();
 		
 		VBox randomVbox = new VBox();
-		randomVbox.getChildren().addAll(new Label("Please Select a SINGLE Dataset and choose following : "), replaceRandom, createNewRandom, btRandomPaneConfirm);
+		randomVbox.getChildren().addAll(new Label("* Please Select a SINGLE Dataset and choose following : "), replaceRandom, createNewRandom, btRandomPaneConfirm);
 		replaceRandom.setPadding(new Insets(20, 0, 0, 0));
 		createNewRandom.setPadding(new Insets(20, 0, 50, 0));
 		randomVbox.setAlignment(Pos.CENTER);
@@ -513,23 +699,33 @@ public class Main extends Application {
 		randomTab.closableProperty().setValue(false);
 		
 		VBox columnBox = new VBox();
-		Label colTitle = new Label(" The Columns of Current Dataset : ");
+		Label colTitle = new Label(" The Numeric Columns of Current Dataset : ");
 		colTitle.setPadding(new Insets(10, 0, 10, 0));
 		columnBox.getChildren().addAll(colTitle, dataColumnList);
 		columnBox.setPadding(new Insets(0, 25, 20, 10));
 		
 		
 		VBox textVBox = new VBox();
-		textVBox.getChildren().addAll(new Label("Please choose following : "), replaceText, createNewText, btTextPaneConfirm);
-		replaceText.setPadding(new Insets(20, 0, 0, 0));
-		createNewText.setPadding(new Insets(20, 0, 50, 0));
+		Label sign = new Label("* Comparsion Opeator :");
+		Label num = new Label("* Compares To : ");
+		Label alert = new Label(" * Please choose following : ");
+		
+		compareSignChooser.setPromptText("Select Operator");
+		compareSignChooser.getItems().addAll("Less than", "Greater than", "Less than or equals to", "Greater than or equals to", "Not equals to", "Equals to");
+		
+		textVBox.getChildren().addAll(sign, compareSignChooser, num, compareNumText, alert, replaceNumeric, createNewNumeric, btNumericPaneConfirm);
+		sign.setPadding(new Insets(20, 0, 20, 0));
+		num.setPadding(new Insets(20, 0, 20, 0));
+		alert.setPadding(new Insets(20, 0, 20, 0));
+		replaceNumeric.setPadding(new Insets(20, 0, 0, 0));
+		createNewNumeric.setPadding(new Insets(20, 0, 40, 0));
 		textVBox.setAlignment(Pos.CENTER);
 		
 		HBox textHBox = new HBox();
 		textHBox.getChildren().addAll(columnBox, textVBox);
 		
 		Tab textTab = new Tab();
-		textTab.setText("Text Filter");
+		textTab.setText("Numeric Filter");
 		textTab.setContent(textHBox);
 		textTab.closableProperty().setValue(false);
 		
@@ -552,7 +748,7 @@ public class Main extends Application {
 		pane.setPadding(new Insets(20, 20, 20, 20));
 		
 		
-		btTextPaneConfirm.getStyleClass().add("menu-button");
+		btNumericPaneConfirm.getStyleClass().add("menu-button");
 		btRandomPaneConfirm.getStyleClass().add("menu-button");
 		btDataFilter_BackToMenu.getStyleClass().add("menu-button");
 		tabPane.getStyleClass().add("tab-pane");
@@ -562,69 +758,6 @@ public class Main extends Application {
 		return pane;
 	}
 	
-	private Pane paneHandlePlotLineChart() {
-		Label Hints = new Label("ONLY Numeric Columns will DISPLAYED");
-		Label lbXaxis = new Label("Selected X-axis");
-		Label lbYaxis = new Label("Selected Y-axis");
-		
-		btPlotLine = new Button("Plot");
-		btReturn = new Button("Return");
-		
-		HBox topContainer = new HBox(20);
-		HBox comboBox = new HBox(20);
-		VBox selectX = new VBox(20);
-		VBox selectY = new VBox(20);
-		HBox bottomContainer = new HBox(20);
-		/*
-		 * TODO
-		 * Still learning to use Combo box Class (use Combo box is the Requirement of the Project)
-		 */
-		topContainer.getChildren().add(Hints);
-		topContainer.setAlignment(Pos.CENTER);
-		comboBox.getChildren().addAll(selectX, selectY);
-		comboBox.setAlignment(Pos.CENTER);
-		bottomContainer.getChildren().addAll(btPlotLine, btReturn);
-		bottomContainer.setAlignment(Pos.CENTER);
-		
-		BorderPane pane = new BorderPane();
-		pane.setTop(topContainer);
-		pane.setCenter(comboBox);
-		pane.setBottom(bottomContainer);
-		pane.getStyleClass().add("screen-background");		
-		return pane;
-	}
-	
-	/*
-	 * TODO PieChart (will be using similar method as Line Chart)
-	private Pane paneHandlePlotPieChart() {
-		Label Hints = new Label("Select ONE Text and ONE Numeric Column");
-		Label lbXaxis = new Label("Selected X-axis");
-		Label lbYaxis = new Label("Selected Y-axis");
-		
-		btPlotPie = new Button("Plot");
-		btReturn_alt = new Button("Return");
-		
-		HBox topContainer = new HBox(20);
-		HBox comboBox = new HBox(20);
-		VBox selectX = new VBox(20);
-		VBox selectY = new VBox(20);
-		HBox bottomContainer = new HBox(20);
-		
-		TODO
-		Still learning to use Combo box Class (use Combo box is the Requirement of the Project)	
-			
-		topContainer.getChildren().add(Hints);
-		comboBox.getChildren().addAll(selectX, selectY);
-		bottomContainer.getChildren().addAll(btPlotPie, btReturn_alt);
-		
-		BorderPane pane = new BorderPane();
-		pane.setTop(topContainer);
-		pane.setCenter(comboBox);
-		pane.setBottom(bottomContainer);
-		pane.getStyleClass().add("screen-background");		
-		return pane;
-	}
-	*/
 	
 	/**
 	 * This method is used to pick anyone of the scene on the stage. It handles the
@@ -680,21 +813,22 @@ public class Main extends Application {
 		viewDataSet.clear();
 		listViewDataSet.clear();
 		dataFilterDataSet.clear();
+		dataColumnDataSet.clear();
 		
 		map.clear();
-		mapDataFilter.clear();
+		mapDataFilterTable.clear();
+		mapDataFilterCol.clear();
 		
+		for(VBox chartBox: chartMap.keySet()) {
+			
+			listViewChart.add(chartBox);
+			
+		}
 
 		for(int i = 0; i < allDataSet.size(); i++) {
-			
 			VBox dataVBox = new VBox();
 			VBox dataVBoxHandle = new VBox();
 			VBox dataFilterVBox = new VBox();
-			
-            map.put(dataVBox, allDataSet.get(i));
-
-            mapDataFilter.put(dataFilterVBox,allDataSet.get(i));
-
 			
             dataVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
             		" : " + allDataSet.get(i).getFileName() +  ""));
@@ -707,21 +841,43 @@ public class Main extends Application {
             dataFilterVBox.getChildren().addAll(new Label("DataSet " + (i + 1) +
             		" : " + allDataSet.get(i).getFileName() +  ""));
             dataFilterDataSet.add(dataFilterVBox);
+			
+            map.put(dataVBox, allDataSet.get(i));
+
+            mapDataFilterTable.put(dataFilterVBox, allDataSet.get(i));
+
+            dataTableMap.put(dataVBoxHandle, allDataSet.get(i));
 		}
 	}
 	
 
-	private void updateDataColumnListView(DataTable data) {
+	public void updateSelectedDataTableChartListView() {
+		DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
+		if(selectedDataTable != null) {
+			listViewChart.clear();
+			for(Entry<String, GeneralChart> key : selectedDataTable.getStoredChart().entrySet()) {
+				VBox chartBox = new VBox();
+				chartBox.getChildren().add(new Label(key.getValue().getTitle()));
+				listViewChart.add(chartBox);
+			}
+		}
+	}
+	
+	private void updateNumericDataColumnListView(DataTable data) {
+		
 		dataColumnDataSet.clear();
+		mapDataFilterCol.clear();
 		
 		for(int i = 0; i < data.getNumCol(); i++) {
-			HBox dataHBox = new HBox();
-			CheckBox checkBox = new CheckBox();
-		
-			dataFilterColumns.put(checkBox, data.getColByNum(i));
-			
-			dataHBox.getChildren().addAll(checkBox,new Label(data.getColName(i)));
-			dataColumnDataSet.add(dataHBox);
+			if(data.getColByNum(i).getTypeName().equals(DataType.TYPE_NUMBER)) {
+				VBox dataCol = new VBox();
+				
+		        dataCol.getChildren().addAll(new Label(data.getColName(i)));
+		        
+		        dataColumnDataSet.add(dataCol);
+		        
+		        mapDataFilterCol.put(dataCol, data.getColByNum(i));
+			}
 		}
 	}
 	
@@ -768,8 +924,7 @@ public class Main extends Application {
 		} else {
 			return 0;
 		}
-	}
-	
+	}	
 
 	/**
 	 *  Alert Method - only use when Exception caught
@@ -779,14 +934,12 @@ public class Main extends Application {
 	 * 	@param 
 	 * 
 	 */
-	
 	public static void alertUser(String title, String errorType,String content) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(title);
 		alert.setHeaderText(errorType);
 		alert.setContentText(content);
 		alert.showAndWait();
-	}
-	
+	}	
 	
 }

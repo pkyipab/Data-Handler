@@ -1,6 +1,8 @@
 package core.comp3111;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * DataColumn - A column of data. This class will be used by DataTable. It
@@ -10,7 +12,7 @@ import java.io.Serializable;
  * @author cspeter
  *
  */
-public class DataColumn implements Serializable{
+public class DataColumn implements Serializable {
 
 	/**
 	 * Constructor. Create an empty data column
@@ -74,6 +76,50 @@ public class DataColumn implements Serializable{
 		if (data == null)
 			return 0;
 		return data.length;
+	}
+	
+	public void fillin(double num) {
+
+		for(int i = 0; i < data.length; i++) {
+			if(data[i] == null)
+				data[i] = num;
+		}
+	}
+	
+	public double getMean() {
+		double mean = 0;
+		for(int i = 0; i < data.length; i++) {
+			if(data[i] != null)
+			mean += Double.valueOf(data[i].toString());
+		}
+		mean /= data.length;
+		return mean;
+	}
+	
+	public double getMedian() {
+		ArrayList<Double> temp = new ArrayList<Double>();	
+		
+		for(Object i : data) {
+			if(i != null) {
+				temp.add(Double.valueOf(i.toString()));
+			}
+		}
+		
+		temp.sort(null);
+		
+		if(temp.size() % 2 == 0)
+			return (temp.get((temp.size()/2)-1) + temp.get((temp.size()/2))) / 2;
+		else
+			return temp.get(temp.size()/2);
+	}
+	
+	public boolean hasNumericEmpty() {
+		for(int i = 0; i < data.length; i++) {
+			if(typeName.equals(DataType.TYPE_NUMBER) && data[i] == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// attributes

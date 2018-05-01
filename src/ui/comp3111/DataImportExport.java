@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
@@ -16,6 +17,7 @@ import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
@@ -25,18 +27,9 @@ import javafx.stage.Stage;
 
 /* TODO 
  * 
- * 
  *  1) Add pop-up window for user to choose fill in mean / zero / median
- * 	
  * 
- * 
- * 
- * 
- *  2) Mix Integer and Double Type -> NUMBER
- * 
- * 
- * 	3) Name checking
- * 
+ *	2) change to core 
  */
 
 
@@ -48,6 +41,7 @@ public class DataImportExport {
 			BufferedReader br = null;
 			String line = "";
 			ArrayList<String[]> row = new ArrayList<String[]>();
+			int hasNumericEmpty = 0;
 			
 			DataTable dataTable;
 			
@@ -84,8 +78,7 @@ public class DataImportExport {
 			            //Transfer from ArrayList into DataColumn
 			            for(int colNum = 0; colNum < row.get(0).length; colNum ++) {
 			            	ArrayList<String> strData = new ArrayList<String>();
-			            	ArrayList<Integer> intData;
-			            	ArrayList<Double> doubleData;
+			            	ArrayList<Object> numData;
 			            	DataColumn dataCol;
 			            	String type = "";
 			            	
@@ -100,15 +93,12 @@ public class DataImportExport {
 			            	type = dataChecking(strData);
 			            	
 			            	switch(type) {
-			            		case "Integer": 
-			            			intData = strToInt(strData);
-			            			dataCol = new DataColumn(DataType.TYPE_NUMBER, intData.toArray());
-			            			dataTable.addCol(row.get(0)[colNum], dataCol);
-			            			break;
-			            			
-			            		case "Double": 
-			            			doubleData = strToDouble(strData);
-			            			dataCol = new DataColumn(DataType.TYPE_NUMBER, doubleData.toArray());
+			            		case "Number": 
+			            			numData = strToDouble(strData);
+			            			dataCol = new DataColumn(DataType.TYPE_NUMBER, numData.toArray());
+			            			if(dataCol.hasNumericEmpty()) {
+			            				hasNumericEmpty ++;
+			            			};
 			            			dataTable.addCol(row.get(0)[colNum], dataCol);
 			            			break;
 			            			
@@ -120,6 +110,22 @@ public class DataImportExport {
 			            	
 			            }
 			           
+			            if(hasNumericEmpty > 0) {
+			            switch(selectAction()) {
+			            	case "Zero":	
+			            		dataTable.handleEmptyNumericSpace("Zero");
+			            		break;
+			            	case "Median":
+			            		dataTable.handleEmptyNumericSpace("Median");
+			            		break;
+			            	case "Mean":
+			            		dataTable.handleEmptyNumericSpace("Mean");
+			            		break;
+			            	default: 
+			            		dataTable.handleEmptyNumericSpace("Zero");
+			            		break;
+			            	}
+			            }
 			            Main.allDataSet.add(dataTable);
 
 			            System.out.println("[ Import Success ]");
@@ -194,12 +200,12 @@ public class DataImportExport {
 		} 
 	}
 	
-	private ArrayList<Double> strToDouble(ArrayList<String> arrList) {
-		ArrayList<Double> doubleList = new ArrayList<Double>();
+	private ArrayList<Object> strToDouble(ArrayList<String> arrList) {
+		ArrayList<Object> doubleList = new ArrayList<Object>();
 		
 		for(int i = 0; i < arrList.size(); i++) {
 			if(arrList.get(i).isEmpty()) {
-				doubleList.add(0.0);
+				doubleList.add(null);
 			} else {
 				doubleList.add(Double.parseDouble(arrList.get(i)));
 			}
@@ -208,20 +214,6 @@ public class DataImportExport {
 		return doubleList;
 	}
 	
-	private ArrayList<Integer> strToInt(ArrayList<String> arrList) {
-		
-		ArrayList<Integer> intList = new ArrayList<Integer>();
-	
-		for(int i = 0; i < arrList.size(); i++) {
-			if(arrList.get(i).isEmpty()) {
-				intList.add(0);
-			} else {
-				intList.add(Integer.parseInt(arrList.get(i)));
-			}
-		}
-		
-		return intList;
-	}
 	
 	private String dataChecking(ArrayList<String> arrList) throws DataTableException{
 		String type = "null";
@@ -244,28 +236,12 @@ public class DataImportExport {
 		
 		if(str.isEmpty()) {
 			return "empty";
-		}
-		else if(isDouble(str) && isInteger(str)) {
-			return "Integer";
-		} else if(isDouble(str) && !isInteger(str)) {
-			return "Double";
+		} else if(isDouble(str)) {
+			return "Number";
 		} else {
 			return "String";
 		}
 		
-	}
-	
-	private boolean isInteger(String input)
-	{
-	   try
-	   {
-	      Integer.parseInt( input );
-	      return true;
-	   }
-	   catch( Exception e )
-	   {
-	      return false;
-	   }
 	}
 	
 	private boolean isDouble(String input) {
@@ -280,4 +256,22 @@ public class DataImportExport {
 		   }
 	}
 	
+	private String selectAction() {
+		final ChoiceDialog<String> choiceDialog = new ChoiceDialog<String>("Zero", "Mean", "Median");
+		choiceDialog.setTitle("Fill in empty space");
+		choiceDialog.setHeaderText("Will be fill in \"0\" by Default");
+		choiceDialog.setContentText("Please select an action¡G"); 
+		final Optional<String> opt = choiceDialog.showAndWait(); 
+		String rtn;
+		try{
+		    rtn = opt.get();
+		}catch(final Exception ex){
+		    rtn = null;
+		}
+		if(rtn == null){
+		    return "No Action Selected";
+		}else{
+			return rtn;
+		}
+	}
 }

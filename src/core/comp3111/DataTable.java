@@ -1,8 +1,10 @@
 package core.comp3111;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 2D array of data values with the following requirements: (1) There are 0 to
@@ -24,8 +26,8 @@ public class DataTable implements Serializable {
 		// In this application, we use HashMap data structure defined in
 		// java.util.HashMap
 		dc = new LinkedHashMap<String, DataColumn>();
+		storedChart = new LinkedHashMap<String, GeneralChart>();
 		this.fileName = fileName;
-		
 	}
 
 	/**
@@ -178,11 +180,69 @@ public class DataTable implements Serializable {
 		return fileName;
 	}
 	
+	public Map<String, GeneralChart> getStoredChart(){
+		return this.storedChart;
+	}
+	
+	public ArrayList<String> getNumberTypeColnumName(){
+		ArrayList<String> list = new ArrayList<String>();
+		for(String key: dc.keySet()) {
+			if(dc.get(key).getTypeName().equals(DataType.TYPE_NUMBER)) {
+				list.add(key);
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<String> getNonNegativeNumberTypeColnumName(){
+		ArrayList<String> list = new ArrayList<String>();
+		for(String key: dc.keySet()) {
+			if(dc.get(key).getTypeName().equals(DataType.TYPE_NUMBER)) {
+				list.add(key);
+				for(int i = 0; i < dc.get(key).getSize(); i++) {
+					if(((Number)dc.get(key).getData()[i]).doubleValue() < 0) {
+						list.remove(list.size() - 1);
+						break;
+					}
+				}
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<String> getStringTypeColnumName(){
+		ArrayList<String> list = new ArrayList<String>();
+		for(String key: dc.keySet()) {
+			if(dc.get(key).getTypeName().equals(DataType.TYPE_STRING)) {
+				list.add(key);
+			}
+		}
+		return list;
+	}
+	
+	public void handleEmptyNumericSpace(String action) {	
+		dc.forEach((name, col) -> {
+			if(col.hasNumericEmpty()) {
+			switch(action) {
+				case "Zero":
+					col.fillin(0);
+					break;
+				case "Mean":
+					col.fillin(col.getMean());
+					break;
+				case "Median":
+					col.fillin(col.getMedian());
+					break;
+				}
+			}
+		});
+	}
+	
 	// attribute: A java.util.Map interface
 	// KeyType: String
 	// ValueType: DataColumn
 	private Map<String, DataColumn> dc;
-	
 	private String fileName;
+	private Map<String, GeneralChart> storedChart;
 
 }
