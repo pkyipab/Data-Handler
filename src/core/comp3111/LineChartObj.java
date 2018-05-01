@@ -26,10 +26,10 @@ public class LineChartObj extends GeneralChart implements Serializable{
     XYChart.Series<Number, Number> series;
     //Animation
     private int MAX_DATA_POINTS;
-    private int xSeriesData = 0;
     private XYChart.Series<Number, Number> animationSeries;
     private ExecutorService executor;
-    private ConcurrentLinkedQueue<Number> dataQ = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Number> dataQX = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Number> dataQY = new ConcurrentLinkedQueue<>();
     private LineChart<Number,Number> animationLineChart;
     private NumberAxis xAxisAnimation;
     private NumberAxis yAxisAnimation;
@@ -58,7 +58,7 @@ public class LineChartObj extends GeneralChart implements Serializable{
 	private void init(Stage primaryStage) {
 		MAX_DATA_POINTS = xAxisColumn.getSize()/4;
 		
-		xAxisAnimation = new NumberAxis(0, MAX_DATA_POINTS, MAX_DATA_POINTS / 10);
+		xAxisAnimation = new NumberAxis();
 		xAxisAnimation.setForceZeroInRange(false);
 
 		yAxisAnimation = new NumberAxis();
@@ -110,7 +110,8 @@ public class LineChartObj extends GeneralChart implements Serializable{
         public void run() {
             try {
                 for(int i = 1; i < xAxisColumn.getSize(); i++) {
-                	dataQ.add((Number)xAxisColumn.getData()[i]);
+                	dataQX.add((Number)xAxisColumn.getData()[i]);
+                	dataQY.add((Number)yAxisColumn.getData()[i]);
                 	Thread.sleep(100);
                 }
                 executor.execute(this);
@@ -129,14 +130,14 @@ public class LineChartObj extends GeneralChart implements Serializable{
     }
 	
 	private void addDataToSeries() {
-        for (int i = 0; i < 20; i++) {
-            if (dataQ.isEmpty()) break;
-            animationSeries.getData().add(new XYChart.Data<>(xSeriesData++, dataQ.remove()));
+        for (int i = 0; i < xAxisColumn.getSize(); i++) {
+            if (dataQX.isEmpty()) break;
+            animationSeries.getData().add(new XYChart.Data<>(dataQX.remove(), dataQY.remove()));
         }
         if (animationSeries.getData().size() > MAX_DATA_POINTS) {
         	animationSeries.getData().remove(0, animationSeries.getData().size() - MAX_DATA_POINTS);
         }
-        xAxisAnimation.setLowerBound(xSeriesData - MAX_DATA_POINTS);
-        xAxisAnimation.setUpperBound(xSeriesData - 1);
+        xAxisAnimation.setLowerBound(xAxisColumn.getMin());
+        xAxisAnimation.setUpperBound(xAxisColumn.getMax());
     }
 }
