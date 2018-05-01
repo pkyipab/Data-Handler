@@ -113,7 +113,7 @@ public class LineChartObj extends GeneralChart implements Serializable{
                 for(int i = 1; i < xAxisColumn.getSize(); i++) {
                 	dataQX.add((Number)xAxisColumn.getData()[i]);
                 	dataQY.add((Number)yAxisColumn.getData()[i]);
-                	Thread.sleep(120);
+                	Thread.sleep(150);
                 }
                 executor.execute(this);
             } catch (InterruptedException ex) {
