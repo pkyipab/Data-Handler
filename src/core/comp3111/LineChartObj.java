@@ -60,7 +60,7 @@ public class LineChartObj extends GeneralChart implements Serializable{
 		
 		xAxisAnimation = new NumberAxis();
 		xAxisAnimation.setForceZeroInRange(false);
-
+		xAxisAnimation.setAutoRanging(false);
 		yAxisAnimation = new NumberAxis();
 		yAxisAnimation.setForceZeroInRange(false);
 
@@ -109,10 +109,11 @@ public class LineChartObj extends GeneralChart implements Serializable{
 	private class AddToQueue implements Runnable {
         public void run() {
             try {
+            	animationSeries.getData().clear();
                 for(int i = 1; i < xAxisColumn.getSize(); i++) {
                 	dataQX.add((Number)xAxisColumn.getData()[i]);
                 	dataQY.add((Number)yAxisColumn.getData()[i]);
-                	Thread.sleep(100);
+                	Thread.sleep(120);
                 }
                 executor.execute(this);
             } catch (InterruptedException ex) {
