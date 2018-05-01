@@ -15,6 +15,7 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
+import core.comp3111.SampleDataGenerator;
 import core.comp3111.GeneralChart;
 import core.comp3111.LineChartObj;
 import core.comp3111.PieChartObj;
@@ -26,6 +27,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -37,7 +44,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -105,14 +111,13 @@ public class Main extends Application {
 	
 	//Screen 3: paneHandleMultiDataAndChart
 	private ListView<VBox> listViewDataSetObj;
-	private ListView<VBox> listViewChartObj;
+	private ListView<String> listViewChartObj;
 	private ObservableList<VBox> listViewDataSet = FXCollections.observableArrayList();
-	private ObservableList<VBox> listViewChart = FXCollections.observableArrayList();
+	private ObservableList<String> listViewChart = FXCollections.observableArrayList();
 	private Button btShowChart;
 	private Button btBackToMenu2;
 	private Button btPlotLineChart;
 	private Button btPlotPieChart;
-	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
 	private Map<VBox, DataTable> dataTableMap = new LinkedHashMap<VBox, DataTable>();
 
 	//Screen 4: paneSaveAndLoad
@@ -122,27 +127,24 @@ public class Main extends Application {
 	
 	//Screen 5: paneDataFiltering
 	private ObservableList<VBox> dataFilterDataSet = FXCollections.observableArrayList();
-	private ObservableList<VBox> dataColumnDataSet = FXCollections.observableArrayList();
+	private ObservableList<HBox> dataColumnDataSet = FXCollections.observableArrayList();
 	private ListView<VBox> dataFilterData;
-	private ListView<VBox> dataColumnList;
+	private ListView<HBox> dataColumnList;
 	private final ToggleGroup groupRandom = new ToggleGroup();
-	private final ToggleGroup groupNumeric = new ToggleGroup();
+	private final ToggleGroup groupText = new ToggleGroup();
 	private RadioButton replaceRandom;
 	private RadioButton createNewRandom;
-	private RadioButton replaceNumeric;
-	private RadioButton createNewNumeric;
+	private RadioButton replaceText;
+	private RadioButton createNewText;
 	private Button btRandomPaneConfirm;
-	private Button btNumericPaneConfirm;
+	private Button btTextPaneConfirm;
 	private Button btDataFilter_BackToMenu;
-	
-	private TextField compareNumText;
-	private ComboBox<String> compareSignChooser;
-	
-	private Map<VBox, DataTable> mapDataFilterTable = new LinkedHashMap<VBox, DataTable>();
-	private Map<VBox, DataColumn> mapDataFilterCol = new LinkedHashMap<VBox, DataColumn>();
+	private Map<VBox, DataTable> mapDataFilter = new LinkedHashMap<VBox, DataTable>();
+	private Map<CheckBox, DataColumn> dataFilterColumns = new LinkedHashMap<CheckBox, DataColumn>();
 
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
+	private Button btPlotAnimationLine;
 	private Button btReturn;
 	private ComboBox<String> xCombo;
 	private ComboBox<String> yCombo;
@@ -288,7 +290,55 @@ public class Main extends Application {
 		
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btShowChart.setOnAction(o->{				
-				
+				GeneralChart chart = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().get(
+						listViewChartObj.getSelectionModel().getSelectedIndex());
+				System.out.println(listViewChartObj.getSelectionModel().getSelectedItem());
+				System.out.println(chart == null);
+				if(chart instanceof LineChartObj) {
+					if(((LineChartObj) chart).isAnimated()) {
+						ShowAnimatedLineChart show = new ShowAnimatedLineChart();
+						show.showAnimation(chart);						
+					}
+					else {
+						NumberAxis xAxis = new NumberAxis();
+					    NumberAxis yAxis = new NumberAxis();
+					    XYChart.Series<Number, Number> series;
+	
+						LineChart<Number,Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+						series = new Series<Number, Number>();
+						lineChart.setTitle(chart.getTitle());
+						xAxis.setLabel(((LineChartObj) chart).getXAxisName());
+						yAxis.setLabel(((LineChartObj) chart).getYAxisName());
+						series.setName(((LineChartObj) chart).getXAxisName() + " versus " + ((LineChartObj) chart).getYAxisName());
+						for(int i = 0; i < ((LineChartObj) chart).getXAxisColumn().getSize(); i++) {
+							series.getData().add(new Data<Number, Number>((Number)((LineChartObj) chart).getXAxisColumn().getData()[i], 
+									(Number)((LineChartObj) chart).getYAxisColumn().getData()[i]));
+						}
+						lineChart.getData().add(series);					
+	
+						Stage dialog = new Stage();
+						Scene dialogScene = new Scene(lineChart, 800, 600);
+						dialog.setTitle("Line Chart");
+
+						dialog.setScene(dialogScene);
+						dialog.show();
+					}
+				}
+				else if(chart instanceof PieChartObj) {
+					ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+					PieChart pieChart = new PieChart(pieChartData);;
+					pieChart.setTitle(((PieChartObj) chart).getNumItemsName() + " Distriubution");
+					for(int i = 0; i < ((PieChartObj) chart).getnumColumn().getSize(); i++) {
+						pieChartData.add(new PieChart.Data((String)((PieChartObj) chart).getTextColumn().getData()[i], 
+								((Number)((PieChartObj) chart).getnumColumn().getData()[i]).doubleValue()));
+					}				
+
+					Stage dialog = new Stage();
+					Scene dialogScene = new Scene(pieChart, 800, 600);
+					dialog.setTitle("Pie Chart");
+					dialog.setScene(dialogScene);
+					dialog.show();
+				}
 			});
 		});
 		
@@ -300,22 +350,37 @@ public class Main extends Application {
 	
 	private void initHandlePlotLineChart() {		
 		
-		btPlotLine.setOnAction(e->{
+		btPlotLine.setOnAction(e->{ 
 			if(xCombo.getValue() != null && yCombo.getValue() != null) {
 				String selectedX = xCombo.getValue();
 				String selectedY = yCombo.getValue();
 				GeneralChart newChart = new LineChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedX), 
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedY), 
-						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY);
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY, false);
 				
-				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + 
-						(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
-						, newChart);
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
 				System.out.println("[ Line Chart create SUCCESSFULLY ]");
-				newChart.animationStart(); //Test animation
-				//newChart.show();
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
+			updateSelectedDataTableChartListView();
+
+		});
+		
+		
+		btPlotAnimationLine.setOnAction(e->{ 
+			if(xCombo.getValue() != null && yCombo.getValue() != null) {
+				String selectedX = xCombo.getValue();
+				String selectedY = yCombo.getValue();
+				GeneralChart newChart = new LineChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedX), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedY), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY, true);
+				
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
+				System.out.println("[ Line Chart create SUCCESSFULLY ]");
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+			}
+			updateSelectedDataTableChartListView();
+
 		});
 		
 		btReturn.setOnAction(e->{
@@ -333,13 +398,11 @@ public class Main extends Application {
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedText), 
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedNum, selectedText);
 				
-				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + 
-						(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
-						, newChart);
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
 				System.out.println("[ Pie Chart create SUCCESSFULLY ]");
-				newChart.show();
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
+			updateSelectedDataTableChartListView();
 		});
 		
 		btReturn_alt.setOnAction(e->{
@@ -380,64 +443,23 @@ public class Main extends Application {
 	private void initDataFiltering() {	
 		
 		dataFilterData.getSelectionModel().selectedItemProperty().addListener(e->{
-			DataTable selectedDataTable = mapDataFilterTable.get(dataFilterData.getSelectionModel().getSelectedItem());
-		
+			DataTable selectedDataTable = mapDataFilter.get(dataFilterData.getSelectionModel().getSelectedItem());
 			
 			if( selectedDataTable != null) {
-				updateNumericDataColumnListView(selectedDataTable);
-			
 				btRandomPaneConfirm.setOnAction(e2 -> {
 					if(replaceRandom.isSelected()) {
 						dataFilter.RandomSplit("Replace", selectedDataTable.getFileName());
 					} else if (createNewRandom.isSelected()) {
 						dataFilter.RandomSplit("Create New", selectedDataTable.getFileName());
-					} else {
-						alertUser("Missing Action", "Cannot generate DataTable", "Please Select Replace current / Create new Data Table");
 					}
 					updateListView();
 				});
-				
-				dataColumnList.getSelectionModel().selectedItemProperty().addListener(e2->{
-					
-					DataColumn selectedCol = mapDataFilterCol.get(dataColumnList.getSelectionModel().getSelectedItem());
-					
-					if(selectedCol != null) {
-						btNumericPaneConfirm.setOnAction(e3 -> {
-							if(compareSignChooser.getValue() == null) {
-								alertUser("OPERATOR NOT FOUND","CANNOT FOUND OPERATOR","PLEASE SELECT AN OPERATOR");
-							} else {
-								
-								if(this.compareNumText.getText().trim().equals("")) {
-									alertUser("COMPARE NUM NOT FOUND", "NO COMPARE NUM", "PLEASE INPUT A NUM");
-								} else {
-									 try
-									   {
-									      double compareNum = Double.parseDouble(compareNumText.getText());
-									      
-									  	if(replaceNumeric.isSelected()) {
-									  		dataFilter.NumericSplit("Replace", selectedDataTable,selectedCol, compareSignChooser.getValue(), compareNum);
-										} else if (createNewNumeric.isSelected()) {
-											dataFilter.NumericSplit("Create New", selectedDataTable,selectedCol, compareSignChooser.getValue(), compareNum);
-										} else {
-											alertUser("Missing Action", "Cannot generate DataTable", "Please Select Replace current / Create new Data Table");
-										}
-										updateListView();
-									   }
-									   catch( Exception e1 )
-									   {
-										   System.out.println(e1.getMessage());
-									   }
-								}
-								
-							}
-						});
-					}
-				});
-			}		
+			
+				updateDataColumnListView(selectedDataTable);
+			}
 		});
 		
-		
-		btDataFilter_BackToMenu.setOnAction(e->{	
+		btDataFilter_BackToMenu.setOnAction(e->{
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});		
 	}
@@ -515,7 +537,7 @@ public class Main extends Application {
 
 		listViewDataSetObj = new ListView<VBox>();
 		listViewDataSetObj.setItems(listViewDataSet);
-		listViewChartObj = new ListView<VBox>();
+		listViewChartObj = new ListView<String>();
 		listViewChartObj.setItems(listViewChart);
 		
 		HBox container = new HBox(20);
@@ -549,6 +571,8 @@ public class Main extends Application {
 		Label lbYaxis = new Label("Selected Y-axis");
 		
 		btPlotLine = new Button("Plot");
+		btPlotAnimationLine = new Button("Plot Animation Chart");
+
 		btReturn = new Button("Return");
 		
 		HBox topContainer = new HBox(20);
@@ -570,7 +594,7 @@ public class Main extends Application {
 		selectY.setAlignment(Pos.CENTER);
 		comboBox.getChildren().addAll(selectX, selectY);
 		comboBox.setAlignment(Pos.CENTER);
-		bottomContainer.getChildren().addAll(btPlotLine, btReturn);
+		bottomContainer.getChildren().addAll(btPlotLine, btPlotAnimationLine, btReturn);
 		bottomContainer.setAlignment(Pos.CENTER);
 		
 		BorderPane pane = new BorderPane();
@@ -650,18 +674,16 @@ public class Main extends Application {
 		createNewRandom.setToggleGroup(groupRandom);
 		btRandomPaneConfirm = new Button("Confirm");
 		
-		compareNumText = new TextField();
-		compareSignChooser = new ComboBox<String>();
-		replaceNumeric = new RadioButton(" Replace Current DataSet ");
-		replaceNumeric.setToggleGroup(groupNumeric);
-		createNewNumeric = new RadioButton(" Create New DataSet ");
-		createNewNumeric.setToggleGroup(groupNumeric);
-		btNumericPaneConfirm = new Button("Confirm");
+		replaceText = new RadioButton(" Replace Current DataSet ");
+		replaceText.setToggleGroup(groupText);
+		createNewText = new RadioButton(" Create New DataSet ");
+		createNewText.setToggleGroup(groupText);
+		btTextPaneConfirm = new Button("Confirm");
 		
 		btDataFilter_BackToMenu = new Button("Back to menu");
 		dataFilterData = new ListView<VBox>();
 		dataFilterData.setItems(dataFilterDataSet);
-		dataColumnList = new ListView<VBox>();
+		dataColumnList = new ListView<HBox>();
 		dataColumnList.setItems(dataColumnDataSet);
 		
 		
@@ -687,7 +709,7 @@ public class Main extends Application {
 		StackPane root = new StackPane();
 		
 		VBox randomVbox = new VBox();
-		randomVbox.getChildren().addAll(new Label("* Please Select a SINGLE Dataset and choose following : "), replaceRandom, createNewRandom, btRandomPaneConfirm);
+		randomVbox.getChildren().addAll(new Label("Please Select a SINGLE Dataset and choose following : "), replaceRandom, createNewRandom, btRandomPaneConfirm);
 		replaceRandom.setPadding(new Insets(20, 0, 0, 0));
 		createNewRandom.setPadding(new Insets(20, 0, 50, 0));
 		randomVbox.setAlignment(Pos.CENTER);
@@ -699,33 +721,23 @@ public class Main extends Application {
 		randomTab.closableProperty().setValue(false);
 		
 		VBox columnBox = new VBox();
-		Label colTitle = new Label(" The Numeric Columns of Current Dataset : ");
+		Label colTitle = new Label(" The Columns of Current Dataset : ");
 		colTitle.setPadding(new Insets(10, 0, 10, 0));
 		columnBox.getChildren().addAll(colTitle, dataColumnList);
 		columnBox.setPadding(new Insets(0, 25, 20, 10));
 		
 		
 		VBox textVBox = new VBox();
-		Label sign = new Label("* Comparsion Opeator :");
-		Label num = new Label("* Compares To : ");
-		Label alert = new Label(" * Please choose following : ");
-		
-		compareSignChooser.setPromptText("Select Operator");
-		compareSignChooser.getItems().addAll("Less than", "Greater than", "Less than or equals to", "Greater than or equals to", "Not equals to", "Equals to");
-		
-		textVBox.getChildren().addAll(sign, compareSignChooser, num, compareNumText, alert, replaceNumeric, createNewNumeric, btNumericPaneConfirm);
-		sign.setPadding(new Insets(20, 0, 20, 0));
-		num.setPadding(new Insets(20, 0, 20, 0));
-		alert.setPadding(new Insets(20, 0, 20, 0));
-		replaceNumeric.setPadding(new Insets(20, 0, 0, 0));
-		createNewNumeric.setPadding(new Insets(20, 0, 40, 0));
+		textVBox.getChildren().addAll(new Label("Please choose following : "), replaceText, createNewText, btTextPaneConfirm);
+		replaceText.setPadding(new Insets(20, 0, 0, 0));
+		createNewText.setPadding(new Insets(20, 0, 50, 0));
 		textVBox.setAlignment(Pos.CENTER);
 		
 		HBox textHBox = new HBox();
 		textHBox.getChildren().addAll(columnBox, textVBox);
 		
 		Tab textTab = new Tab();
-		textTab.setText("Numeric Filter");
+		textTab.setText("Text Filter");
 		textTab.setContent(textHBox);
 		textTab.closableProperty().setValue(false);
 		
@@ -748,7 +760,7 @@ public class Main extends Application {
 		pane.setPadding(new Insets(20, 20, 20, 20));
 		
 		
-		btNumericPaneConfirm.getStyleClass().add("menu-button");
+		btTextPaneConfirm.getStyleClass().add("menu-button");
 		btRandomPaneConfirm.getStyleClass().add("menu-button");
 		btDataFilter_BackToMenu.getStyleClass().add("menu-button");
 		tabPane.getStyleClass().add("tab-pane");
@@ -813,18 +825,10 @@ public class Main extends Application {
 		viewDataSet.clear();
 		listViewDataSet.clear();
 		dataFilterDataSet.clear();
-		dataColumnDataSet.clear();
 		
 		map.clear();
-		mapDataFilterTable.clear();
-		mapDataFilterCol.clear();
+		mapDataFilter.clear();
 		
-		for(VBox chartBox: chartMap.keySet()) {
-			
-			listViewChart.add(chartBox);
-			
-		}
-
 		for(int i = 0; i < allDataSet.size(); i++) {
 			VBox dataVBox = new VBox();
 			VBox dataVBoxHandle = new VBox();
@@ -844,7 +848,7 @@ public class Main extends Application {
 			
             map.put(dataVBox, allDataSet.get(i));
 
-            mapDataFilterTable.put(dataFilterVBox, allDataSet.get(i));
+            mapDataFilter.put(dataFilterVBox, allDataSet.get(i));
 
             dataTableMap.put(dataVBoxHandle, allDataSet.get(i));
 		}
@@ -855,29 +859,23 @@ public class Main extends Application {
 		DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 		if(selectedDataTable != null) {
 			listViewChart.clear();
-			for(Entry<String, GeneralChart> key : selectedDataTable.getStoredChart().entrySet()) {
-				VBox chartBox = new VBox();
-				chartBox.getChildren().add(new Label(key.getValue().getTitle()));
-				listViewChart.add(chartBox);
+			for(GeneralChart c : selectedDataTable.getStoredChart()) {
+				listViewChart.add(c.getTitle());
 			}
 		}
 	}
 	
-	private void updateNumericDataColumnListView(DataTable data) {
-		
+	private void updateDataColumnListView(DataTable data) {
 		dataColumnDataSet.clear();
-		mapDataFilterCol.clear();
 		
 		for(int i = 0; i < data.getNumCol(); i++) {
-			if(data.getColByNum(i).getTypeName().equals(DataType.TYPE_NUMBER)) {
-				VBox dataCol = new VBox();
-				
-		        dataCol.getChildren().addAll(new Label(data.getColName(i)));
-		        
-		        dataColumnDataSet.add(dataCol);
-		        
-		        mapDataFilterCol.put(dataCol, data.getColByNum(i));
-			}
+			HBox dataHBox = new HBox();
+			CheckBox checkBox = new CheckBox();
+		
+			dataFilterColumns.put(checkBox, data.getColByNum(i));
+			
+			dataHBox.getChildren().addAll(checkBox,new Label(data.getColName(i)));
+			dataColumnDataSet.add(dataHBox);
 		}
 	}
 	
@@ -924,7 +922,8 @@ public class Main extends Application {
 		} else {
 			return 0;
 		}
-	}	
+	}
+	
 
 	/**
 	 *  Alert Method - only use when Exception caught
@@ -934,6 +933,7 @@ public class Main extends Application {
 	 * 	@param 
 	 * 
 	 */
+	
 	public static void alertUser(String title, String errorType,String content) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(title);
