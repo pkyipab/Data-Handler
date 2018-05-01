@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
@@ -16,6 +17,7 @@ import core.comp3111.DataTableException;
 import core.comp3111.DataType;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
@@ -39,6 +41,7 @@ public class DataImportExport {
 			BufferedReader br = null;
 			String line = "";
 			ArrayList<String[]> row = new ArrayList<String[]>();
+			int hasNumericEmpty = 0;
 			
 			DataTable dataTable;
 			
@@ -93,6 +96,9 @@ public class DataImportExport {
 			            		case "Number": 
 			            			numData = strToDouble(strData);
 			            			dataCol = new DataColumn(DataType.TYPE_NUMBER, numData.toArray());
+			            			if(dataCol.hasNumericEmpty()) {
+			            				hasNumericEmpty ++;
+			            			};
 			            			dataTable.addCol(row.get(0)[colNum], dataCol);
 			            			break;
 			            			
@@ -104,6 +110,22 @@ public class DataImportExport {
 			            	
 			            }
 			           
+			            if(hasNumericEmpty > 0) {
+			            switch(selectAction()) {
+			            	case "Zero":	
+			            		dataTable.handleEmptyNumericSpace("Zero");
+			            		break;
+			            	case "Median":
+			            		dataTable.handleEmptyNumericSpace("Median");
+			            		break;
+			            	case "Mean":
+			            		dataTable.handleEmptyNumericSpace("Mean");
+			            		break;
+			            	default: 
+			            		dataTable.handleEmptyNumericSpace("Zero");
+			            		break;
+			            	}
+			            }
 			            Main.allDataSet.add(dataTable);
 
 			            System.out.println("[ Import Success ]");
@@ -183,7 +205,7 @@ public class DataImportExport {
 		
 		for(int i = 0; i < arrList.size(); i++) {
 			if(arrList.get(i).isEmpty()) {
-				doubleList.add("");
+				doubleList.add(null);
 			} else {
 				doubleList.add(Double.parseDouble(arrList.get(i)));
 			}
@@ -234,4 +256,22 @@ public class DataImportExport {
 		   }
 	}
 	
+	private String selectAction() {
+		final ChoiceDialog<String> choiceDialog = new ChoiceDialog<String>("Zero", "Mean", "Median");
+		choiceDialog.setTitle("Fill in empty space");
+		choiceDialog.setHeaderText("Will be fill in \"0\" by Default");
+		choiceDialog.setContentText("Please select an action¡G"); 
+		final Optional<String> opt = choiceDialog.showAndWait(); 
+		String rtn;
+		try{
+		    rtn = opt.get();
+		}catch(final Exception ex){
+		    rtn = null;
+		}
+		if(rtn == null){
+		    return "No Action Selected";
+		}else{
+			return rtn;
+		}
+	}
 }

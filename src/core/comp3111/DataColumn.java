@@ -1,6 +1,7 @@
 package core.comp3111;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -77,7 +78,7 @@ public class DataColumn implements Serializable {
 		return data.length;
 	}
 	
-	public void fillin(float num) {
+	public void fillin(double num) {
 
 		for(int i = 0; i < data.length; i++) {
 			if(data[i] == null)
@@ -85,28 +86,40 @@ public class DataColumn implements Serializable {
 		}
 	}
 	
-	public float getMean() {
-		int mean = 0;
+	public double getMean() {
+		double mean = 0;
 		for(int i = 0; i < data.length; i++) {
-			if(data[i] == null)
-			mean += (float) data[i];
+			if(data[i] != null)
+			mean += Double.valueOf(data[i].toString());
 		}
 		mean /= data.length;
 		return mean;
 	}
 	
-	public float getMedian() {
-		Object[] temp = data.clone();	
-		Arrays.sort(temp);
-		int counter = 0;
-		for(int i = 0; i < temp.length; i++) {
-			if(temp[i] != null)
-				counter++;
+	public double getMedian() {
+		ArrayList<Double> temp = new ArrayList<Double>();	
+		
+		for(Object i : data) {
+			if(i != null) {
+				temp.add(Double.valueOf(i.toString()));
+			}
 		}
-		if(counter % 2 == 0)
-			return ((float)temp[counter/2] + (float)temp[counter/2+1]) / 2;
+		
+		temp.sort(null);
+		
+		if(temp.size() % 2 == 0)
+			return (temp.get((temp.size()/2)-1) + temp.get((temp.size()/2))) / 2;
 		else
-			return (float)temp[counter/2];
+			return temp.get(temp.size()/2);
+	}
+	
+	public boolean hasNumericEmpty() {
+		for(int i = 0; i < data.length; i++) {
+			if(typeName.equals(DataType.TYPE_NUMBER) && data[i] == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// attributes
