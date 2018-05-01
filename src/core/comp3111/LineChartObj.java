@@ -19,11 +19,13 @@ import java.util.concurrent.ThreadFactory;
 public class LineChartObj extends GeneralChart implements Serializable{
 	private DataColumn xAxisColumn;
 	private DataColumn yAxisColumn;
+	private String xName;
+	private String yName;
 	private NumberAxis xAxis = new NumberAxis();
     private NumberAxis yAxis = new NumberAxis();
     XYChart.Series<Number, Number> series;
     //Animation
-    private int MAX_DATA_POINTS = 10;
+    private int MAX_DATA_POINTS;
     private int xSeriesData = 0;
     private XYChart.Series<Number, Number> animationSeries;
     private ExecutorService executor;
@@ -33,16 +35,18 @@ public class LineChartObj extends GeneralChart implements Serializable{
     private NumberAxis yAxisAnimation;
     
 	public LineChartObj(DataColumn xData, DataColumn yData, DataTable dt, String xAxisName, String yAxisName) {
-		this.chartName = "Chart " + (dt.getStoredChart().size() + 1) + " [Type = Line] [X-Axis: " + xAxisName + ", Y-Axis: " + yAxisName + "]";
 		this.xAxisColumn = xData;
 		this.yAxisColumn = yData;
+		this.xName = xAxisName;
+		this.yName = yAxisName;
+		this.chartName = "Chart " + (dt.getStoredChart().size() + 1) + " [Type = Line] [X-Axis: " + xName + ", Y-Axis: " + yName + "]";
 		LineChart<Number,Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
 		series = new Series<Number, Number>();
-		lineChart.setTitle(xAxisName + " versus " + yAxisName);
-		xAxis.setLabel(xAxisName);
-		yAxis.setLabel(yAxisName);
-		series.setName(xAxisName + " versus " + yAxisName);
-		for(int i = 0; i < xData.getSize(); i++) {
+		lineChart.setTitle(this.chartName);
+		xAxis.setLabel(xName);
+		yAxis.setLabel(yName);
+		series.setName(xName + " versus " + yName);
+		for(int i = 0; i < xAxisColumn.getSize(); i++) {
 			series.getData().add(new Data<Number, Number>((Number)xAxisColumn.getData()[i], (Number)yAxisColumn.getData()[i]));
 			System.out.println("Added " + ( i + 1 ) + " row data. [ X-Axis index = " + (Number)xAxisColumn.getData()[i] + " ] [ Y-Axis index = " + (Number)yAxisColumn.getData()[i] + " ]");
 		}
@@ -52,26 +56,27 @@ public class LineChartObj extends GeneralChart implements Serializable{
 	}
 
 	private void init(Stage primaryStage) {
-
+		MAX_DATA_POINTS = xAxisColumn.getSize()/4;
+		
 		xAxisAnimation = new NumberAxis(0, MAX_DATA_POINTS, MAX_DATA_POINTS / 10);
 		xAxisAnimation.setForceZeroInRange(false);
-		xAxisAnimation.setAutoRanging(false);
-		xAxisAnimation.setTickLabelsVisible(false);
-		xAxisAnimation.setTickMarkVisible(false);
-		xAxisAnimation.setMinorTickVisible(false);
 
 		yAxisAnimation = new NumberAxis();
+		yAxisAnimation.setForceZeroInRange(false);
 
+		xAxisAnimation.setLabel(xName);
+		yAxisAnimation.setLabel(yName);
+		
 		animationLineChart = new LineChart<Number, Number>(xAxisAnimation, yAxisAnimation) {
         @Override
         protected void dataItemAdded(Series<Number, Number> series, int itemIndex, Data<Number, Number> item) {}
         };
 
         animationLineChart.setAnimated(false);
-        animationLineChart.setTitle(this.chartName);
-        animationLineChart.setHorizontalGridLinesVisible(true);
+        animationLineChart.setTitle("Animation : " + this.chartName);
+        
         animationSeries = new XYChart.Series<>();
-        animationSeries.setName("Series 1");
+        animationSeries.setName(xName + " versus " + yName);
 
         animationLineChart.getData().add(animationSeries);
 
@@ -89,8 +94,8 @@ public class LineChartObj extends GeneralChart implements Serializable{
 
         executor = Executors.newCachedThreadPool(new ThreadFactory() {
             @Override
-            public Thread newThread(Runnable r) {
-                Thread thread = new Thread(r);
+            public Thread newThread(Runnable run) {
+                Thread thread = new Thread(run);
                 thread.setDaemon(true);
                 return thread;
             }
