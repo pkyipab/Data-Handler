@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
 import javafx.stage.Stage;
 
-public class GeneralChart implements Serializable {
+public abstract class GeneralChart implements Serializable {
 	protected String chartName;
 	protected Chart chart;
 	
@@ -24,4 +24,6 @@ public class GeneralChart implements Serializable {
 		dialog.setScene(dialogScene);
 		dialog.show();
 	}
+	
+	public abstract void animationStart();
 }

@@ -313,7 +313,8 @@ public class Main extends Application {
 						(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
 						, newChart);
 				System.out.println("[ Line Chart create SUCCESSFULLY ]");
-				newChart.show();
+				newChart.animationStart(); //Test animation
+				//newChart.show();
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
 		});
