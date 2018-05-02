@@ -64,7 +64,7 @@ import javafx.stage.Stage;
  *
  */
 public class Main extends Application {
-
+ 
 	// Attribute: DataTable
 	// In this sample application, a single data table is provided
 	// You need to extend it to handle multiple data tables
@@ -222,7 +222,10 @@ public class Main extends Application {
 		});
 
 	}
-	
+
+	/**
+	 * Initialize event handlers of the Data Import and Export screen
+	 */
 	private void initImportExportScreenHandlers() {
 		
 		btExportData.setDisable(true);
@@ -243,21 +246,21 @@ public class Main extends Application {
 		});
 		
 	}
-	
+
+	/**
+	 * Initialize event handlers of the Handle Multi Data and Chart screen
+	 */
 	private void initHandleMultiDataAndChart() {	
 		listViewDataSetObj.setOnMouseClicked(e->{
 			updateSelectedDataTableChartListView();
 		});
-		//TODO 
 		listViewDataSetObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btPlotLineChart.setOnAction(o->{
 				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
 					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 					xCombo.getItems().clear();
 					yCombo.getItems().clear();	
-					System.out.println(dc.getNumCol());
 					optionsX = dc.getNumberTypeColnumName();
-					System.out.println(optionsX.size());
 					for(int i = 0; i < optionsX.size(); i++) {
 						xCombo.getItems().add(optionsX.get(i));
 					}
@@ -275,8 +278,8 @@ public class Main extends Application {
 			btPlotPieChart.setOnAction(o->{
 				if(!listViewDataSetObj.getSelectionModel().isEmpty()) {
 					DataTable dc = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
-					System.out.println(dc.getNumCol());
 					numCombo.getItems().clear();
+					
 					textCombo.getItems().clear();	
 					optionsNum = dc.getNonNegativeNumberTypeColnumName();
 					for(int i = 0; i < optionsNum.size(); i++) {
@@ -296,8 +299,6 @@ public class Main extends Application {
 			btShowChart.setOnAction(o->{				
 				GeneralChart chart = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().get(
 						listViewChartObj.getSelectionModel().getSelectedIndex());
-				System.out.println(listViewChartObj.getSelectionModel().getSelectedItem());
-				System.out.println(chart == null);
 				if(chart instanceof LineChartObj) {
 					if(((LineChartObj) chart).isAnimated()) {
 						ShowAnimatedLineChart show = new ShowAnimatedLineChart();
@@ -352,6 +353,11 @@ public class Main extends Application {
 		});
 	}
 	
+	
+
+	/**
+	 * Initialize event handlers of the Plot Line Chart screen
+	 */
 	private void initHandlePlotLineChart() {		
 		
 		btPlotLine.setOnAction(e->{ 
@@ -363,7 +369,6 @@ public class Main extends Application {
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY, false);
 				
 				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
-				System.out.println("[ Line Chart create SUCCESSFULLY ]");
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
 			updateSelectedDataTableChartListView();
@@ -380,7 +385,6 @@ public class Main extends Application {
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY, true);
 				
 				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
-				System.out.println("[ Line Chart create SUCCESSFULLY ]");
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
 			updateSelectedDataTableChartListView();
@@ -392,6 +396,9 @@ public class Main extends Application {
 		});		
 	}
 	
+	/**
+	 * Initialize event handlers of the Plot Pie Chart screen
+	 */
 	private void initHandlePlotPiChart() {		
 		
 		btPlotPie.setOnAction(e->{
@@ -403,7 +410,7 @@ public class Main extends Application {
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedNum, selectedText);
 				
 				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
-				System.out.println("[ Pie Chart create SUCCESSFULLY ]");
+
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
 			updateSelectedDataTableChartListView();
@@ -413,7 +420,9 @@ public class Main extends Application {
 			putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 		});		
 	}
-	
+	/**
+	 * Initialize event handlers of the Data Save and Load screen
+	 */
 	private void initSaveAndLoad() {
 		loadButton.setOnAction(e->{
 			FileChooser fileChooser = new FileChooser();
@@ -443,7 +452,9 @@ public class Main extends Application {
 		});
 		
 	}
-	
+	/**
+	 * Initialize event handlers of the Data Filtering screen
+	 */
 	private void initDataFiltering() {	
 		dataFilterData.getSelectionModel().selectedItemProperty().addListener(e->{
 			DataTable selectedDataTable = mapDataFilterTable.get(dataFilterData.getSelectionModel().getSelectedItem());
@@ -491,6 +502,7 @@ public class Main extends Application {
 									   }
 									   catch( Exception e1 )
 									   {
+
 										   alertUser("Input Error", "Cannot Resolve Non-Numeric Input", "Please Input Again: ");
 									   }
 								}
@@ -571,6 +583,11 @@ public class Main extends Application {
 		return pane;
 	}
 	
+	/**
+	 * Creates the Handle Multi Data And Chart screen and layout its UI components
+	 * 
+	 * @return a Pane component to be displayed on a scene
+	 */
 	private Pane paneHandleMultiDataAndChart() {
 		Label lbDataSet = new Label("Data set");
 		Label lbChart = new Label("Chart");
@@ -608,7 +625,11 @@ public class Main extends Application {
 		return pane;
 	}	
 	
-
+	/**
+	 * Creates the Plot Line Chart screen and layout its UI components
+	 * 
+	 * @return a Pane component to be displayed on a scene
+	 */
 	private Pane paneHandlePlotLineChart() {
 		Label Hints = new Label("ONLY Numeric Columns will DISPLAYED");
 		Label lbXaxis = new Label("Selected X-axis");
@@ -648,7 +669,11 @@ public class Main extends Application {
 		pane.getStyleClass().add("screen-background");		
 		return pane;
 	}
-	
+	/**
+	 * Creates the Plot Pie Chart screen and layout its UI components
+	 * 
+	 * @return a Pane component to be displayed on a scene
+	 */
 	private Pane paneHandlePlotPieChart() {
 		Label Hints = new Label("select ONE set of Numerical data and String data from combo box");
 		Label lbNum = new Label("Selected Numerical Data");
@@ -686,7 +711,12 @@ public class Main extends Application {
 		pane.getStyleClass().add("screen-background");		
 		return pane;
 	}
-
+	
+	/**
+	 * Creates the Data Save and Load screen and layout its UI components
+	 * 
+	 * @return a Pane component to be displayed on a scene
+	 */
 	public Pane paneSaveAndLoad() {
 		loadButton = new Button("Load");
 		saveButton = new Button("Save");
@@ -711,6 +741,11 @@ public class Main extends Application {
 		return pane;
 	}
 	
+	/**
+	 * Creates the Data Filtering screen and layout its UI components
+	 * 
+	 * @return a Pane component to be displayed on a scene
+	 */
 	public Pane paneDataFiltering() {
 		replaceRandom = new RadioButton(" Replace Current DataSet ");
 		replaceRandom.setToggleGroup(groupRandom);
@@ -876,6 +911,10 @@ public class Main extends Application {
 		launch(args);
 	}
 	
+	/**
+	 * updateListView method - update the ListView Object at different scene
+	 * 
+	 */
 	public void updateListView() {
 
 		viewDataSet.clear();
@@ -912,7 +951,11 @@ public class Main extends Application {
 		}
 	}
 	
-
+	/**
+	 * updateSelectedDataTableChartListView method - update the ListView Object after click on ListView at Handle 
+	 * DataTable and Chart Scene
+	 * 
+	 */
 	public void updateSelectedDataTableChartListView() {
 		DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 		if(selectedDataTable != null) {
@@ -922,7 +965,14 @@ public class Main extends Application {
 			}
 		}
 	}
-	
+
+	/**
+	 * updateNumericDataColumnListView method - update the ListView Object after click on DataTable ListView at Data Filtering 
+	 * Scene
+	 * 
+	 * @param data 
+	 * 				- The selected DataTable 
+	 */
 	private void updateNumericDataColumnListView(DataTable data) {
 		
 		dataColumnDataSet.clear();
@@ -941,6 +991,12 @@ public class Main extends Application {
 		}
 	}
 	
+	/**
+	 * isValidFileName method - to handle the FileName when user impoert the file with same name
+	 * 
+	 * @param name 
+	 * 				- The input file name
+	 */
 	public static int isValidFileName(String name) {
 		Boolean conflict = false;
 		for(DataTable data : allDataSet) {
@@ -956,7 +1012,13 @@ public class Main extends Application {
 			return 0;
 		}
 	}
-	
+
+	/**
+	 * checkNameHelper method - Helper method to check the file name conflict
+	 * 
+	 * @param name 
+	 * 				- The input file name
+	 */
 	public static int checkNameHelper(String name) {
 		Boolean conflict = false;
 		for(DataTable data : allDataSet) {
@@ -978,7 +1040,6 @@ public class Main extends Application {
 				}
 			}
 			
-			System.out.println(next  + Integer.toString(num));
 			return 1 + checkNameHelper(next  + Integer.toString(num));
 				
 		} else {

@@ -4,6 +4,13 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * LineChartObj - A class that stored the text and number DataColumn for pie chart. This class will be used by DataTable. It
+ * stores the text and number column and column name
+ * 
+ * @author cpkoaajack
+ *
+ */
 public class PieChartObj extends GeneralChart {
 	private DataColumn numColumn;
 	private DataColumn textColumn;
@@ -43,15 +50,30 @@ public class PieChartObj extends GeneralChart {
 		
 		
 	}
-	
+
+	/**
+	 * Get Method 
+	 * 
+	 * @return the numColumn
+	 */
 	public DataColumn getnumColumn() {
 		return numColumn;
 	}
-	
+
+	/**
+	 * Get Method 
+	 * 
+	 * @return the textColumn
+	 */
 	public DataColumn getTextColumn() {
 		return textColumn;
 	} 
-	
+
+	/**
+	 * Get Method 
+	 * 
+	 * @return the numItemsName
+	 */
 	public String getNumItemsName() {
 		return numItemsName;
 	}

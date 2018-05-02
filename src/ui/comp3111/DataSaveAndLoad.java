@@ -11,8 +11,21 @@ import java.util.ArrayList;
 
 import core.comp3111.DataTable;
 
+/**
+ * DataSaveAndLoad - A helper class to handle the data saving and loading
+ * 
+ * @author tmtam
+ *
+ */
 
 public class DataSaveAndLoad {
+	/**
+	 *  Save Data Method - save allDataSet in file .comp3111
+	 * 
+	 * 	@param file
+	 * 			- the save file direction 	 
+	 * 
+	 */
 	public void saveData(File file) {
 		try{
 			FileOutputStream  fos = new FileOutputStream(file.getPath());
@@ -23,12 +36,20 @@ public class DataSaveAndLoad {
             oos.close();
 		}		
 		catch (FileNotFoundException e){
+			Main.alertUser("Save Error", "FileNotFoundException", "Return");
 		} 
 		catch (IOException e) {
-			System.out.println(e.getMessage());
+			Main.alertUser("Save Error", "IOException", "Return");
 		}		
 	}
-	
+
+	/**
+	 *  load Data Method - read a .comp3111 and write it to allDataSet
+	 * 
+	 * 	@param file
+	 * 			- the input file 	 
+	 * 
+	 */
 	public void loadData(File file) {
 		try{
 			FileInputStream fis = new FileInputStream(file.getPath());
@@ -37,7 +58,7 @@ public class DataSaveAndLoad {
             ois.close();
 		}		
 		catch (Exception e){
-			System.out.println(e.getMessage());
+			Main.alertUser("Load Error", "Exception", "Return");
 		}		
 	}
 }
