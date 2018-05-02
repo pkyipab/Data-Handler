@@ -264,6 +264,7 @@ public class DataTable implements Serializable {
 				}
 			}
 		});
+	}
 	/**
 	 * get method
 	 * 
