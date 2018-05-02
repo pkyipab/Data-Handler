@@ -471,11 +471,11 @@ public class Main extends Application {
 					if(selectedCol != null) {
 						btNumericPaneConfirm.setOnAction(e3 -> {
 							if(compareSignChooser.getValue() == null) {
-								alertUser("OPERATOR NOT FOUND","CANNOT FOUND OPERATOR","PLEASE SELECT AN OPERATOR");
+								alertUser("Operator Not Found","Cannot Find Compare Operator","Please Select an Operator");
 							} else {
 								
 								if(this.compareNumText.getText().trim().equals("")) {
-									alertUser("COMPARE NUM NOT FOUND", "NO COMPARE NUM", "PLEASE INPUT A NUM");
+									alertUser("Compare Number Not Found", "No Compare Number", "Please Input Again: ");
 								} else {
 									 try
 									   {
@@ -492,7 +492,7 @@ public class Main extends Application {
 									   }
 									   catch( Exception e1 )
 									   {
-										   System.out.println(e1.getMessage());
+										   alertUser("Input Error", "Cannot Resolve Non-Numeric Input", "Please Input Again: ");
 									   }
 								}
 								

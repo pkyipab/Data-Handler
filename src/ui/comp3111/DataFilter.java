@@ -127,21 +127,6 @@ public class DataFilter {
 		String[] colName = new String[dataTable.getNumCol()];			
 		int order = 0;
 		
-		/*Ask user to input the DataName, which cannot be Empty and Duplicate*/
-		while(true) {
-			alertEnterName("Numeric");
-			
-			if(!firstDataSet.isEmpty()) {
-				break;
-			} 
-			else if (cancelAlert == true) {
-				return;
-			}
-			else {
-				Main.alertUser("Empty DataSet Name", "DataSet Name cannot be Empty", "");
-			}
-		}
-		
         /*If there exits the same file name, make the different*/
 		if(Main.isValidFileName(firstDataSet) > 0) {
 			this.firstDataSet = (firstDataSet + "_" + Main.isValidFileName(firstDataSet));
@@ -195,6 +180,26 @@ public class DataFilter {
 						dataRow.add(addRow(dataTable, i));
 					}
 					break;
+			}
+		}
+		
+		if(dataRow.isEmpty()) {
+			Main.alertUser("Fatal Error", "Will Cause An Empty DataTable", "Sorry, You are not able to create an empty data table");
+			return;
+		} 
+		
+		/*Ask user to input the DataName, which cannot be Empty and Duplicate*/
+		while(true) {
+			alertEnterName("Numeric");
+			
+			if(!firstDataSet.isEmpty()) {
+				break;
+			} 
+			else if (cancelAlert == true) {
+				return;
+			}
+			else {
+				Main.alertUser("Empty DataSet Name", "DataSet Name cannot be Empty", "");
 			}
 		}
 
