@@ -145,7 +145,7 @@ public class DataColumn implements Serializable {
 			}
 		}
 		return min;
-
+	}
 	
 	// attributes
 	private Object[] data;
