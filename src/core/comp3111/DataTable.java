@@ -264,6 +264,13 @@ public class DataTable implements Serializable {
 				}
 			}
 		});
+	/**
+	 * get method
+	 * 
+	 * @return the Map dc
+	 */
+	public Map<String, DataColumn> getMap() {	
+		return dc;
 	}
 	
 	// attribute: A java.util.Map interface
