@@ -220,22 +220,8 @@ public class DataTable implements Serializable {
 		return list;
 	}
 	
-	public void handleEmptyNumericSpace(String action) {	
-		dc.forEach((name, col) -> {
-			if(col.hasNumericEmpty()) {
-			switch(action) {
-				case "Zero":
-					col.fillin(0);
-					break;
-				case "Mean":
-					col.fillin(col.getMean());
-					break;
-				case "Median":
-					col.fillin(col.getMedian());
-					break;
-				}
-			}
-		});
+	public Map<String, DataColumn> getMap() {	
+		return dc;
 	}
 	
 	// attribute: A java.util.Map interface

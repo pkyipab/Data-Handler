@@ -110,22 +110,26 @@ public class DataImportExport {
 			            	
 			            }
 			           
-			            if(hasNumericEmpty > 0) {
-			            switch(selectAction()) {
-			            	case "Zero":	
-			            		dataTable.handleEmptyNumericSpace("Zero");
-			            		break;
-			            	case "Median":
-			            		dataTable.handleEmptyNumericSpace("Median");
-			            		break;
-			            	case "Mean":
-			            		dataTable.handleEmptyNumericSpace("Mean");
-			            		break;
-			            	default: 
-			            		dataTable.handleEmptyNumericSpace("Zero");
-			            		break;
-			            	}
+			            if(hasNumericEmpty > 0) { 	
+			            	String action = selectAction();
+			            	dataTable.getMap().forEach((name, col) -> {
+			        			if(col.hasNumericEmpty()) {
+			     		
+				        			switch(action) {
+				        				case "Zero":
+				        					col.fillin(0);
+				        					break;
+				        				case "Mean":
+				        					col.fillin(col.getMean());
+				        					break;
+				        				case "Median":
+				        					col.fillin(col.getMedian());
+				        					break;
+				        				}
+			        			}
+			        		});
 			            }
+			            
 			            Main.allDataSet.add(dataTable);
 
 			            System.out.println("[ Import Success ]");
@@ -158,10 +162,11 @@ public class DataImportExport {
             
             //Show save file dialog
             File file = fileChooser.showSaveDialog(stage);
+            FileWriter fileWriter;
             
             if(selectedDataTable != null && file != null){
             	try {
-                    FileWriter fileWriter = new FileWriter(file);
+                    fileWriter = new FileWriter(file);
                     
                     for(int sizeOfTable = 0; sizeOfTable < selectedDataTable.getNumCol(); sizeOfTable ++) {
                     
@@ -194,7 +199,8 @@ public class DataImportExport {
                     fileWriter.close();
                     System.out.println("[ Export Success ]");
                 } catch (IOException ex) {
-                    ex.printStackTrace();;
+                   // ex.printStackTrace();
+                	Main.alertUser("Cannot Export File","The file going to reaplce is using by another program","");
                 } 
             } 
 		} 
@@ -222,7 +228,7 @@ public class DataImportExport {
 			if(!arrList.get(i).isEmpty() && type == "null") {
 				type = typeChecking(arrList.get(i));
 			}
-			else if (!arrList.get(i).isEmpty() && type != "null") {
+			else if (!arrList.get(i).isEmpty() && type != "null" && type != "String") {
 				if(typeChecking(arrList.get(i)) != type) {
 					throw new DataTableException(" Unmatch Datatype !");
 				}
