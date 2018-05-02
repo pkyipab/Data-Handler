@@ -882,6 +882,7 @@ public class Main extends Application {
 		viewDataSet.clear();
 		listViewDataSet.clear();
 		dataFilterDataSet.clear();
+		dataColumnDataSet.clear();
 		
 		map.clear();
 		mapDataFilterTable.clear();
