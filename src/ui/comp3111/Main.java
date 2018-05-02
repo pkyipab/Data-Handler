@@ -15,6 +15,7 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
+import core.comp3111.SampleDataGenerator;
 import core.comp3111.GeneralChart;
 import core.comp3111.LineChartObj;
 import core.comp3111.PieChartObj;
@@ -26,6 +27,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -105,14 +112,13 @@ public class Main extends Application {
 	
 	//Screen 3: paneHandleMultiDataAndChart
 	private ListView<VBox> listViewDataSetObj;
-	private ListView<VBox> listViewChartObj;
+	private ListView<String> listViewChartObj;
 	private ObservableList<VBox> listViewDataSet = FXCollections.observableArrayList();
-	private ObservableList<VBox> listViewChart = FXCollections.observableArrayList();
+	private ObservableList<String> listViewChart = FXCollections.observableArrayList();
 	private Button btShowChart;
 	private Button btBackToMenu2;
 	private Button btPlotLineChart;
 	private Button btPlotPieChart;
-	private Map<VBox, Chart> chartMap = new LinkedHashMap<VBox, Chart>();
 	private Map<VBox, DataTable> dataTableMap = new LinkedHashMap<VBox, DataTable>();
 
 	//Screen 4: paneSaveAndLoad
@@ -143,6 +149,7 @@ public class Main extends Application {
 
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
+	private Button btPlotAnimationLine;
 	private Button btReturn;
 	private ComboBox<String> xCombo;
 	private ComboBox<String> yCombo;
@@ -288,7 +295,55 @@ public class Main extends Application {
 		
 		listViewChartObj.getSelectionModel().selectedItemProperty().addListener(e->{
 			btShowChart.setOnAction(o->{				
-				
+				GeneralChart chart = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().get(
+						listViewChartObj.getSelectionModel().getSelectedIndex());
+				System.out.println(listViewChartObj.getSelectionModel().getSelectedItem());
+				System.out.println(chart == null);
+				if(chart instanceof LineChartObj) {
+					if(((LineChartObj) chart).isAnimated()) {
+						ShowAnimatedLineChart show = new ShowAnimatedLineChart();
+						show.showAnimation(chart);						
+					}
+					else {
+						NumberAxis xAxis = new NumberAxis();
+					    NumberAxis yAxis = new NumberAxis();
+					    XYChart.Series<Number, Number> series;
+	
+						LineChart<Number,Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+						series = new Series<Number, Number>();
+						lineChart.setTitle(chart.getTitle());
+						xAxis.setLabel(((LineChartObj) chart).getXAxisName());
+						yAxis.setLabel(((LineChartObj) chart).getYAxisName());
+						series.setName(((LineChartObj) chart).getXAxisName() + " versus " + ((LineChartObj) chart).getYAxisName());
+						for(int i = 0; i < ((LineChartObj) chart).getXAxisColumn().getSize(); i++) {
+							series.getData().add(new Data<Number, Number>((Number)((LineChartObj) chart).getXAxisColumn().getData()[i], 
+									(Number)((LineChartObj) chart).getYAxisColumn().getData()[i]));
+						}
+						lineChart.getData().add(series);					
+	
+						Stage dialog = new Stage();
+						Scene dialogScene = new Scene(lineChart, 800, 600);
+						dialog.setTitle("Line Chart");
+
+						dialog.setScene(dialogScene);
+						dialog.show();
+					}
+				}
+				else if(chart instanceof PieChartObj) {
+					ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+					PieChart pieChart = new PieChart(pieChartData);;
+					pieChart.setTitle(((PieChartObj) chart).getNumItemsName() + " Distriubution");
+					for(int i = 0; i < ((PieChartObj) chart).getnumColumn().getSize(); i++) {
+						pieChartData.add(new PieChart.Data((String)((PieChartObj) chart).getTextColumn().getData()[i], 
+								((Number)((PieChartObj) chart).getnumColumn().getData()[i]).doubleValue()));
+					}				
+
+					Stage dialog = new Stage();
+					Scene dialogScene = new Scene(pieChart, 800, 600);
+					dialog.setTitle("Pie Chart");
+					dialog.setScene(dialogScene);
+					dialog.show();
+				}
 			});
 		});
 		
@@ -300,22 +355,37 @@ public class Main extends Application {
 	
 	private void initHandlePlotLineChart() {		
 		
-		btPlotLine.setOnAction(e->{
+		btPlotLine.setOnAction(e->{ 
 			if(xCombo.getValue() != null && yCombo.getValue() != null) {
 				String selectedX = xCombo.getValue();
 				String selectedY = yCombo.getValue();
 				GeneralChart newChart = new LineChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedX), 
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedY), 
-						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY);
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY, false);
 				
-				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + 
-						(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
-						, newChart);
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
 				System.out.println("[ Line Chart create SUCCESSFULLY ]");
-				newChart.animationStart(); //Test animation
-				//newChart.show();
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
+			updateSelectedDataTableChartListView();
+
+		});
+		
+		
+		btPlotAnimationLine.setOnAction(e->{ 
+			if(xCombo.getValue() != null && yCombo.getValue() != null) {
+				String selectedX = xCombo.getValue();
+				String selectedY = yCombo.getValue();
+				GeneralChart newChart = new LineChartObj(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedX), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedY), 
+						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedX, selectedY, true);
+				
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
+				System.out.println("[ Line Chart create SUCCESSFULLY ]");
+				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
+			}
+			updateSelectedDataTableChartListView();
+
 		});
 		
 		btReturn.setOnAction(e->{
@@ -333,13 +403,11 @@ public class Main extends Application {
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getCol(selectedText), 
 						dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()), selectedNum, selectedText);
 				
-				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().put("Chart " + 
-						(dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().size() + 1)
-						, newChart);
+				dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem()).getStoredChart().add(newChart);
 				System.out.println("[ Pie Chart create SUCCESSFULLY ]");
-				newChart.show();
 				putSceneOnStage(SCENE_MUTIPLE_CHRAT);
 			}
+			updateSelectedDataTableChartListView();
 		});
 		
 		btReturn_alt.setOnAction(e->{
@@ -370,7 +438,7 @@ public class Main extends Application {
 			File file = fs.showSaveDialog(stage);
 			dataSaveAndLoad.saveData(file);
 		});
-		
+		 
 		btBackToMenu3.setOnAction(e->{
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
@@ -378,7 +446,6 @@ public class Main extends Application {
 	}
 	
 	private void initDataFiltering() {	
-		
 		dataFilterData.getSelectionModel().selectedItemProperty().addListener(e->{
 			DataTable selectedDataTable = mapDataFilterTable.get(dataFilterData.getSelectionModel().getSelectedItem());
 		
@@ -515,7 +582,7 @@ public class Main extends Application {
 
 		listViewDataSetObj = new ListView<VBox>();
 		listViewDataSetObj.setItems(listViewDataSet);
-		listViewChartObj = new ListView<VBox>();
+		listViewChartObj = new ListView<String>();
 		listViewChartObj.setItems(listViewChart);
 		
 		HBox container = new HBox(20);
@@ -549,6 +616,8 @@ public class Main extends Application {
 		Label lbYaxis = new Label("Selected Y-axis");
 		
 		btPlotLine = new Button("Plot");
+		btPlotAnimationLine = new Button("Plot Animation Chart");
+
 		btReturn = new Button("Return");
 		
 		HBox topContainer = new HBox(20);
@@ -570,7 +639,7 @@ public class Main extends Application {
 		selectY.setAlignment(Pos.CENTER);
 		comboBox.getChildren().addAll(selectX, selectY);
 		comboBox.setAlignment(Pos.CENTER);
-		bottomContainer.getChildren().addAll(btPlotLine, btReturn);
+		bottomContainer.getChildren().addAll(btPlotLine, btPlotAnimationLine, btReturn);
 		bottomContainer.setAlignment(Pos.CENTER);
 		
 		BorderPane pane = new BorderPane();
@@ -817,14 +886,8 @@ public class Main extends Application {
 		
 		map.clear();
 		mapDataFilterTable.clear();
-		mapDataFilterCol.clear();
+		mapDataFilterCol.clear();	
 		
-		for(VBox chartBox: chartMap.keySet()) {
-			
-			listViewChart.add(chartBox);
-			
-		}
-
 		for(int i = 0; i < allDataSet.size(); i++) {
 			VBox dataVBox = new VBox();
 			VBox dataVBoxHandle = new VBox();
@@ -855,10 +918,8 @@ public class Main extends Application {
 		DataTable selectedDataTable = dataTableMap.get(listViewDataSetObj.getSelectionModel().getSelectedItem());
 		if(selectedDataTable != null) {
 			listViewChart.clear();
-			for(Entry<String, GeneralChart> key : selectedDataTable.getStoredChart().entrySet()) {
-				VBox chartBox = new VBox();
-				chartBox.getChildren().add(new Label(key.getValue().getTitle()));
-				listViewChart.add(chartBox);
+			for(GeneralChart c : selectedDataTable.getStoredChart()) {
+				listViewChart.add(c.getTitle());
 			}
 		}
 	}
@@ -924,7 +985,8 @@ public class Main extends Application {
 		} else {
 			return 0;
 		}
-	}	
+	}
+	
 
 	/**
 	 *  Alert Method - only use when Exception caught
@@ -934,6 +996,7 @@ public class Main extends Application {
 	 * 	@param 
 	 * 
 	 */
+	
 	public static void alertUser(String title, String errorType,String content) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(title);
