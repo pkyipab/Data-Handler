@@ -88,11 +88,14 @@ public class DataColumn implements Serializable {
 	
 	public double getMean() {
 		double mean = 0;
+		int counter = 0;
 		for(int i = 0; i < data.length; i++) {
-			if(data[i] != null)
-			mean += Double.valueOf(data[i].toString());
-		}
-		mean /= data.length;
+			if(data[i] != null) {
+				mean += Double.valueOf(data[i].toString());
+				counter++;
+			}
+		}	
+		mean /= counter;
 		return mean;
 	}
 	
@@ -121,7 +124,28 @@ public class DataColumn implements Serializable {
 		}
 		return false;
 	}
-
+	
+	//For the use of animation chart
+	public double getMax() {
+		double max = (double)data[0];
+		for(Object obj: data) {
+			if((double)obj > max) {
+				max = (double)obj;
+			}
+		}
+		return max;
+	}
+	
+	public double getMin() {
+		double min = (double)data[0];
+		for(Object obj: data) {
+			if((double)obj < min) {
+				min = (double)obj;
+			}
+		}
+		return min;
+	}
+	
 	// attributes
 	private Object[] data;
 	private String typeName;

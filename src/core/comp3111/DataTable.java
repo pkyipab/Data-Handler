@@ -26,7 +26,7 @@ public class DataTable implements Serializable {
 		// In this application, we use HashMap data structure defined in
 		// java.util.HashMap
 		dc = new LinkedHashMap<String, DataColumn>();
-		storedChart = new LinkedHashMap<String, GeneralChart>();
+		storedChart = new ArrayList<GeneralChart>();
 		this.fileName = fileName;
 	}
 
@@ -180,7 +180,7 @@ public class DataTable implements Serializable {
 		return fileName;
 	}
 	
-	public Map<String, GeneralChart> getStoredChart(){
+	public ArrayList<GeneralChart> getStoredChart(){
 		return this.storedChart;
 	}
 	
@@ -220,22 +220,8 @@ public class DataTable implements Serializable {
 		return list;
 	}
 	
-	public void handleEmptyNumericSpace(String action) {	
-		dc.forEach((name, col) -> {
-			if(col.hasNumericEmpty()) {
-			switch(action) {
-				case "Zero":
-					col.fillin(0);
-					break;
-				case "Mean":
-					col.fillin(col.getMean());
-					break;
-				case "Median":
-					col.fillin(col.getMedian());
-					break;
-				}
-			}
-		});
+	public Map<String, DataColumn> getMap() {	
+		return dc;
 	}
 	
 	// attribute: A java.util.Map interface
@@ -243,6 +229,6 @@ public class DataTable implements Serializable {
 	// ValueType: DataColumn
 	private Map<String, DataColumn> dc;
 	private String fileName;
-	private Map<String, GeneralChart> storedChart;
+	private ArrayList<GeneralChart> storedChart;
 
 }

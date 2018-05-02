@@ -2,36 +2,46 @@ package core.comp3111;
 
 import java.io.Serializable;
 
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
-
 public class LineChartObj extends GeneralChart implements Serializable{
 	private DataColumn xAxisColumn;
 	private DataColumn yAxisColumn;
-	private NumberAxis xAxis = new NumberAxis();
-    private NumberAxis yAxis = new NumberAxis();
-    XYChart.Series<Number, Number> series;
+	private String xAxisName;
+	private String yAxisName;
+	private boolean animated;
+
     
-	public LineChartObj(DataColumn xData, DataColumn yData, DataTable dt, String xAxisName, String yAxisName) {
-		this.chartName = "Chart " + (dt.getStoredChart().size() + 1) + " [Type = Line] [X-Axis: " + xAxisName + ", Y-Axis: " + yAxisName + "]";
+	public LineChartObj(DataColumn xData, DataColumn yData, DataTable dt, String xAxisName, String yAxisName, boolean animated) {
+		if(animated)
+			this.chartName = "Chart " + (dt.getStoredChart().size() + 1) + " [Animated Line] [X-Axis: " + xAxisName + 
+								", Y-Axis: " + yAxisName + "]";
+		else
+			this.chartName = "Chart " + (dt.getStoredChart().size() + 1) + " [Line] [X-Axis: " + xAxisName + 
+								", Y-Axis: " + yAxisName + "]";
 		this.xAxisColumn = xData;
 		this.yAxisColumn = yData;
-		LineChart<Number,Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
-		series = new Series<Number, Number>();
-		lineChart.setTitle(xAxisName + " versus " + yAxisName);
-		xAxis.setLabel(xAxisName);
-		yAxis.setLabel(yAxisName);
-		series.setName(xAxisName + " versus " + yAxisName);
-		for(int i = 0; i < xData.getSize(); i++) {
-			series.getData().add(new Data<Number, Number>((Number)xAxisColumn.getData()[i], (Number)yAxisColumn.getData()[i]));
-			System.out.println("Added " + ( i + 1 ) + " row data. [ X-Axis index = " + (Number)xAxisColumn.getData()[i] + " ] [ Y-Axis index = " + (Number)yAxisColumn.getData()[i] + " ]");
-		}
-		lineChart.getData().add(series);
-		this.chart = lineChart;
-		System.out.println("[ NEW Line Chart : " + this.chartName + " created ]");
+		this.xAxisName = xAxisName;
+		this.yAxisName = yAxisName;
+		this.animated = animated;
+	}
+	
+	public String getXAxisName() {
+		return xAxisName;
 	}
 
+	public String getYAxisName() {
+		return yAxisName;
+	}
+
+	public DataColumn getXAxisColumn() {
+		return xAxisColumn;
+	}
+	
+	public DataColumn getYAxisColumn() {
+		return yAxisColumn;
+	}
+
+	public boolean isAnimated() {
+		return animated;
+	}
+	
 }
