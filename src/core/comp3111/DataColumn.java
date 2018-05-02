@@ -137,6 +137,7 @@ public class DataColumn implements Serializable {
 	}
 	
 	public double getMin() {
+
 		double min = (double)data[0];
 		for(Object obj: data) {
 			if((double)obj < min) {
@@ -144,7 +145,7 @@ public class DataColumn implements Serializable {
 			}
 		}
 		return min;
-	}
+
 	
 	// attributes
 	private Object[] data;

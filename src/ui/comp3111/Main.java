@@ -15,6 +15,7 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
+import core.comp3111.SampleDataGenerator;
 import core.comp3111.GeneralChart;
 import core.comp3111.LineChartObj;
 import core.comp3111.PieChartObj;
