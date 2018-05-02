@@ -44,6 +44,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -127,20 +128,24 @@ public class Main extends Application {
 	
 	//Screen 5: paneDataFiltering
 	private ObservableList<VBox> dataFilterDataSet = FXCollections.observableArrayList();
-	private ObservableList<HBox> dataColumnDataSet = FXCollections.observableArrayList();
+	private ObservableList<VBox> dataColumnDataSet = FXCollections.observableArrayList();
 	private ListView<VBox> dataFilterData;
-	private ListView<HBox> dataColumnList;
+	private ListView<VBox> dataColumnList;
 	private final ToggleGroup groupRandom = new ToggleGroup();
-	private final ToggleGroup groupText = new ToggleGroup();
+	private final ToggleGroup groupNumeric = new ToggleGroup();
 	private RadioButton replaceRandom;
 	private RadioButton createNewRandom;
-	private RadioButton replaceText;
-	private RadioButton createNewText;
+	private RadioButton replaceNumeric;
+	private RadioButton createNewNumeric;
 	private Button btRandomPaneConfirm;
-	private Button btTextPaneConfirm;
+	private Button btNumericPaneConfirm;
 	private Button btDataFilter_BackToMenu;
-	private Map<VBox, DataTable> mapDataFilter = new LinkedHashMap<VBox, DataTable>();
-	private Map<CheckBox, DataColumn> dataFilterColumns = new LinkedHashMap<CheckBox, DataColumn>();
+	
+	private TextField compareNumText;
+	private ComboBox<String> compareSignChooser;
+	
+	private Map<VBox, DataTable> mapDataFilterTable = new LinkedHashMap<VBox, DataTable>();
+	private Map<VBox, DataColumn> mapDataFilterCol = new LinkedHashMap<VBox, DataColumn>();
 
 	//Screen 6: paneHandlePlotLineChart
 	private Button btPlotLine;
@@ -433,7 +438,7 @@ public class Main extends Application {
 			File file = fs.showSaveDialog(stage);
 			dataSaveAndLoad.saveData(file);
 		});
-		
+		 
 		btBackToMenu3.setOnAction(e->{
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});
@@ -441,25 +446,65 @@ public class Main extends Application {
 	}
 	
 	private void initDataFiltering() {	
-		
 		dataFilterData.getSelectionModel().selectedItemProperty().addListener(e->{
-			DataTable selectedDataTable = mapDataFilter.get(dataFilterData.getSelectionModel().getSelectedItem());
+			DataTable selectedDataTable = mapDataFilterTable.get(dataFilterData.getSelectionModel().getSelectedItem());
+		
 			
 			if( selectedDataTable != null) {
+				updateNumericDataColumnListView(selectedDataTable);
+			
 				btRandomPaneConfirm.setOnAction(e2 -> {
 					if(replaceRandom.isSelected()) {
 						dataFilter.RandomSplit("Replace", selectedDataTable.getFileName());
 					} else if (createNewRandom.isSelected()) {
 						dataFilter.RandomSplit("Create New", selectedDataTable.getFileName());
+					} else {
+						alertUser("Missing Action", "Cannot generate DataTable", "Please Select Replace current / Create new Data Table");
 					}
 					updateListView();
 				});
-			
-				updateDataColumnListView(selectedDataTable);
-			}
+				
+				dataColumnList.getSelectionModel().selectedItemProperty().addListener(e2->{
+					
+					DataColumn selectedCol = mapDataFilterCol.get(dataColumnList.getSelectionModel().getSelectedItem());
+					
+					if(selectedCol != null) {
+						btNumericPaneConfirm.setOnAction(e3 -> {
+							if(compareSignChooser.getValue() == null) {
+								alertUser("OPERATOR NOT FOUND","CANNOT FOUND OPERATOR","PLEASE SELECT AN OPERATOR");
+							} else {
+								
+								if(this.compareNumText.getText().trim().equals("")) {
+									alertUser("COMPARE NUM NOT FOUND", "NO COMPARE NUM", "PLEASE INPUT A NUM");
+								} else {
+									 try
+									   {
+									      double compareNum = Double.parseDouble(compareNumText.getText());
+									      
+									  	if(replaceNumeric.isSelected()) {
+									  		dataFilter.NumericSplit("Replace", selectedDataTable,selectedCol, compareSignChooser.getValue(), compareNum);
+										} else if (createNewNumeric.isSelected()) {
+											dataFilter.NumericSplit("Create New", selectedDataTable,selectedCol, compareSignChooser.getValue(), compareNum);
+										} else {
+											alertUser("Missing Action", "Cannot generate DataTable", "Please Select Replace current / Create new Data Table");
+										}
+										updateListView();
+									   }
+									   catch( Exception e1 )
+									   {
+										   System.out.println(e1.getMessage());
+									   }
+								}
+								
+							}
+						});
+					}
+				});
+			}		
 		});
 		
-		btDataFilter_BackToMenu.setOnAction(e->{
+		
+		btDataFilter_BackToMenu.setOnAction(e->{	
 			putSceneOnStage(SCENE_MAIN_SCREEN);
 		});		
 	}
@@ -674,16 +719,18 @@ public class Main extends Application {
 		createNewRandom.setToggleGroup(groupRandom);
 		btRandomPaneConfirm = new Button("Confirm");
 		
-		replaceText = new RadioButton(" Replace Current DataSet ");
-		replaceText.setToggleGroup(groupText);
-		createNewText = new RadioButton(" Create New DataSet ");
-		createNewText.setToggleGroup(groupText);
-		btTextPaneConfirm = new Button("Confirm");
+		compareNumText = new TextField();
+		compareSignChooser = new ComboBox<String>();
+		replaceNumeric = new RadioButton(" Replace Current DataSet ");
+		replaceNumeric.setToggleGroup(groupNumeric);
+		createNewNumeric = new RadioButton(" Create New DataSet ");
+		createNewNumeric.setToggleGroup(groupNumeric);
+		btNumericPaneConfirm = new Button("Confirm");
 		
 		btDataFilter_BackToMenu = new Button("Back to menu");
 		dataFilterData = new ListView<VBox>();
 		dataFilterData.setItems(dataFilterDataSet);
-		dataColumnList = new ListView<HBox>();
+		dataColumnList = new ListView<VBox>();
 		dataColumnList.setItems(dataColumnDataSet);
 		
 		
@@ -709,7 +756,7 @@ public class Main extends Application {
 		StackPane root = new StackPane();
 		
 		VBox randomVbox = new VBox();
-		randomVbox.getChildren().addAll(new Label("Please Select a SINGLE Dataset and choose following : "), replaceRandom, createNewRandom, btRandomPaneConfirm);
+		randomVbox.getChildren().addAll(new Label("* Please Select a SINGLE Dataset and choose following : "), replaceRandom, createNewRandom, btRandomPaneConfirm);
 		replaceRandom.setPadding(new Insets(20, 0, 0, 0));
 		createNewRandom.setPadding(new Insets(20, 0, 50, 0));
 		randomVbox.setAlignment(Pos.CENTER);
@@ -721,23 +768,33 @@ public class Main extends Application {
 		randomTab.closableProperty().setValue(false);
 		
 		VBox columnBox = new VBox();
-		Label colTitle = new Label(" The Columns of Current Dataset : ");
+		Label colTitle = new Label(" The Numeric Columns of Current Dataset : ");
 		colTitle.setPadding(new Insets(10, 0, 10, 0));
 		columnBox.getChildren().addAll(colTitle, dataColumnList);
 		columnBox.setPadding(new Insets(0, 25, 20, 10));
 		
 		
 		VBox textVBox = new VBox();
-		textVBox.getChildren().addAll(new Label("Please choose following : "), replaceText, createNewText, btTextPaneConfirm);
-		replaceText.setPadding(new Insets(20, 0, 0, 0));
-		createNewText.setPadding(new Insets(20, 0, 50, 0));
+		Label sign = new Label("* Comparsion Opeator :");
+		Label num = new Label("* Compares To : ");
+		Label alert = new Label(" * Please choose following : ");
+		
+		compareSignChooser.setPromptText("Select Operator");
+		compareSignChooser.getItems().addAll("Less than", "Greater than", "Less than or equals to", "Greater than or equals to", "Not equals to", "Equals to");
+		
+		textVBox.getChildren().addAll(sign, compareSignChooser, num, compareNumText, alert, replaceNumeric, createNewNumeric, btNumericPaneConfirm);
+		sign.setPadding(new Insets(20, 0, 20, 0));
+		num.setPadding(new Insets(20, 0, 20, 0));
+		alert.setPadding(new Insets(20, 0, 20, 0));
+		replaceNumeric.setPadding(new Insets(20, 0, 0, 0));
+		createNewNumeric.setPadding(new Insets(20, 0, 40, 0));
 		textVBox.setAlignment(Pos.CENTER);
 		
 		HBox textHBox = new HBox();
 		textHBox.getChildren().addAll(columnBox, textVBox);
 		
 		Tab textTab = new Tab();
-		textTab.setText("Text Filter");
+		textTab.setText("Numeric Filter");
 		textTab.setContent(textHBox);
 		textTab.closableProperty().setValue(false);
 		
@@ -760,7 +817,7 @@ public class Main extends Application {
 		pane.setPadding(new Insets(20, 20, 20, 20));
 		
 		
-		btTextPaneConfirm.getStyleClass().add("menu-button");
+		btNumericPaneConfirm.getStyleClass().add("menu-button");
 		btRandomPaneConfirm.getStyleClass().add("menu-button");
 		btDataFilter_BackToMenu.getStyleClass().add("menu-button");
 		tabPane.getStyleClass().add("tab-pane");
@@ -827,7 +884,8 @@ public class Main extends Application {
 		dataFilterDataSet.clear();
 		
 		map.clear();
-		mapDataFilter.clear();
+		mapDataFilterTable.clear();
+		mapDataFilterCol.clear();	
 		
 		for(int i = 0; i < allDataSet.size(); i++) {
 			VBox dataVBox = new VBox();
@@ -848,7 +906,7 @@ public class Main extends Application {
 			
             map.put(dataVBox, allDataSet.get(i));
 
-            mapDataFilter.put(dataFilterVBox, allDataSet.get(i));
+            mapDataFilterTable.put(dataFilterVBox, allDataSet.get(i));
 
             dataTableMap.put(dataVBoxHandle, allDataSet.get(i));
 		}
@@ -865,17 +923,21 @@ public class Main extends Application {
 		}
 	}
 	
-	private void updateDataColumnListView(DataTable data) {
+	private void updateNumericDataColumnListView(DataTable data) {
+		
 		dataColumnDataSet.clear();
+		mapDataFilterCol.clear();
 		
 		for(int i = 0; i < data.getNumCol(); i++) {
-			HBox dataHBox = new HBox();
-			CheckBox checkBox = new CheckBox();
-		
-			dataFilterColumns.put(checkBox, data.getColByNum(i));
-			
-			dataHBox.getChildren().addAll(checkBox,new Label(data.getColName(i)));
-			dataColumnDataSet.add(dataHBox);
+			if(data.getColByNum(i).getTypeName().equals(DataType.TYPE_NUMBER)) {
+				VBox dataCol = new VBox();
+				
+		        dataCol.getChildren().addAll(new Label(data.getColName(i)));
+		        
+		        dataColumnDataSet.add(dataCol);
+		        
+		        mapDataFilterCol.put(dataCol, data.getColByNum(i));
+			}
 		}
 	}
 	
