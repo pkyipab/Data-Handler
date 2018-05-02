@@ -16,7 +16,14 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.stage.Stage;
 
-public class ShowAnimatedLineChart {
+/**
+ * ShowAnimatedLineChart - A Helper class. This class will be used by show the animation. It
+ * stores the javafx Object and pop-up the animation line chart
+ * 
+ * @author tmtam
+ *
+ */
+public class ShowAnimatedLineChart { 
 	private LineChartObj chart;
 	private NumberAxis xAxis = new NumberAxis();
 	private NumberAxis yAxis = new NumberAxis();
@@ -30,7 +37,13 @@ public class ShowAnimatedLineChart {
     private ConcurrentLinkedQueue<Number> dataQY = new ConcurrentLinkedQueue<>();
 	private LineChart<Number,Number> animationLineChart;
 	private ExecutorService executor;
-
+	/**
+	 *  Show Animation Line Chart Method - to pop-up and new stage and play the animated line chart
+	 * 
+	 * 	@param chart
+	 * 			- the dataColumn would used to create the Chart Animation 	 
+	 * 
+	 */
 	public void showAnimation(GeneralChart chart){
 		this.chart = (LineChartObj) chart;
 		LineChart<Number,Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);	
@@ -67,7 +80,11 @@ public class ShowAnimatedLineChart {
         executor.execute(addToQueue);
         prepareTimeline();
 	}
-	
+
+	/**
+	 *  init Method - init the pop-up stage
+	 * 
+	 */
 	private void init(Stage primaryStage) {
 		xAxisAnimation = new NumberAxis();
 		xAxisAnimation.setForceZeroInRange(false);
@@ -94,6 +111,12 @@ public class ShowAnimatedLineChart {
 		primaryStage.setScene(new Scene(animationLineChart));
 	}
 		
+	/**
+	 * AddToQueue - A helper class to start the threading for make animation
+	 * 
+	 * @author cpkoaajack
+	 *
+	 */
 	private class AddToQueue implements Runnable {
 	    public void run() {
 	        try {
@@ -109,7 +132,11 @@ public class ShowAnimatedLineChart {
 	        }
 	    }
 	}
-	
+
+	/**
+	 *  prepareTimeline Method - to start AnimationTimer
+	 * 
+	 */
 	private void prepareTimeline() { 
 		new AnimationTimer() {
 	        @Override
@@ -118,7 +145,11 @@ public class ShowAnimatedLineChart {
 	        }
 	    }.start();
 	}
-	
+
+	/**
+	 *  update line chart data Method - to add the new data to the animation
+	 * 
+	 */
 	private void addDataToSeries() {
 	    for (int i = 0; i < chart.getXAxisColumn().getSize(); i++) {
 	        if (dataQX.isEmpty()) break;
