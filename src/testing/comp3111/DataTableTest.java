@@ -10,6 +10,7 @@ import core.comp3111.DataColumn;
 import core.comp3111.DataTable;
 import core.comp3111.DataTableException;
 import core.comp3111.DataType;
+import core.comp3111.LineChartObj;
 
 
 public class DataTableTest {
@@ -151,4 +152,55 @@ public class DataTableTest {
 		dataTable.addCol("TestGetColNum3", testDataColumn3);
 		assertEquals("TestGetColNum3", dataTable.getColName(2));
 	}
+	
+	@Test
+	void TestGetStoredChart() throws DataTableException{
+		DataColumn testDataColumn = new DataColumn(DataType.TYPE_NUMBER, new Number[] {1, 2, 3});
+		DataColumn testDataColumn2 = new DataColumn(DataType.TYPE_NUMBER, new Number[] {1, 2, 3});
+		DataTable testDataTable = new DataTable("DataTable Test");
+		testDataTable.addCol("Test x", testDataColumn);
+		testDataTable.addCol("Test y", testDataColumn2);
+		
+		LineChartObj testLineChartObj = new LineChartObj(testDataColumn, testDataColumn2, testDataTable, "Test x", "Test y", false);
+		testDataTable.getStoredChart().add(testLineChartObj);
+		
+		assertEquals(testDataTable.getStoredChart().get(0).getTitle(), "Chart 1 [Line] [X-Axis: " + "Test x" + ", Y-Axis: " + "Test y" + "]");
+	}
+	
+	@Test
+	void TestGetNumberAndNonNegativeTypeColnumName() throws DataTableException{
+		DataTable dataTable = new DataTable("Test");
+		dataTable.addCol("TestGetColNum", testDataColumn);
+		DataColumn testDataColumn2 = new DataColumn(DataType.TYPE_STRING, new String[] {"a", "b", "c"});
+		DataColumn testDataColumn3 = new DataColumn(DataType.TYPE_NUMBER, new Number[] {1, -2, 3});
+		dataTable.addCol("TestGetColNum2", testDataColumn2);
+		dataTable.addCol("TestGetColNum3", testDataColumn3);
+		
+		assertEquals(dataTable.getNumberTypeColnumName().size(), 2);
+		assertEquals(dataTable.getNonNegativeNumberTypeColnumName().size(), 1);
+	}
+	
+	@Test
+	void TestGetStringColumnName() throws DataTableException{
+		DataTable dataTable = new DataTable("Test");
+		DataColumn testDataColumn = new DataColumn(DataType.TYPE_STRING, new String[] {"a", "b", "c"});
+		dataTable.addCol("TestString", testDataColumn);
+		
+		assertEquals(dataTable.getStringTypeColnumName().get(0), "TestString");
+		
+	}
+	
+	@Test
+	void TestGetMap() throws DataTableException{
+		DataTable dataTable = new DataTable("Test");
+		dataTable.addCol("TestGetColNum", testDataColumn);
+		DataColumn testDataColumn2 = new DataColumn(DataType.TYPE_NUMBER, new Number[] {1, 2, 3});
+		DataColumn testDataColumn3 = new DataColumn(DataType.TYPE_NUMBER, new Number[] {1, 2, 3});
+		dataTable.addCol("TestGetColNum2", testDataColumn2);
+		dataTable.addCol("TestGetColNum3", testDataColumn3);
+		
+		assertEquals(dataTable.getMap().get("TestGetColNum").getData()[1], 2);
+	}
+	
+	
 }
