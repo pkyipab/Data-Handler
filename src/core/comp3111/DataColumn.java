@@ -10,7 +10,9 @@ import java.util.Arrays;
  * of type name are defined in DataType.
  * 
  * @author cspeter
- *
+ * @author pkyipab
+ * @author tmtam
+ * @author cpkoaajack
  */
 public class DataColumn implements Serializable {
 
@@ -78,6 +80,13 @@ public class DataColumn implements Serializable {
 		return data.length;
 	}
 	
+	
+	/**
+	 * Fill in all null space
+	 * 
+	 * @param num
+	 *          - the number that replace the null space
+	 */
 	public void fillin(double num) {
 
 		for(int i = 0; i < data.length; i++) {
@@ -86,6 +95,12 @@ public class DataColumn implements Serializable {
 		}
 	}
 	
+	/**
+	 * Get the mean
+	 * 
+	 * @return a mean of all numeric data
+	 *
+	 */
 	public double getMean() {
 		double mean = 0;
 		int counter = 0;
@@ -99,6 +114,12 @@ public class DataColumn implements Serializable {
 		return mean;
 	}
 	
+	/**
+	 * Get the median
+	 *          
+	 * @return a median of all numeric data
+	 *
+	 */
 	public double getMedian() {
 		ArrayList<Double> temp = new ArrayList<Double>();	
 		
@@ -116,6 +137,12 @@ public class DataColumn implements Serializable {
 			return temp.get(temp.size()/2);
 	}
 	
+	/**
+	 * Check whether the data array has empty space
+	 *          
+	 * @return true if there is empty space
+	 *
+	 */
 	public boolean hasNumericEmpty() {
 		for(int i = 0; i < data.length; i++) {
 			if(typeName.equals(DataType.TYPE_NUMBER) && data[i] == null) {
@@ -125,7 +152,13 @@ public class DataColumn implements Serializable {
 		return false;
 	}
 	
-	//For the use of animation chart
+
+	/**
+	 * Find the Maximum value
+	 *          
+	 * @return the max value
+	 *
+	 */
 	public double getMax() {
 		double max = (double)data[0];
 		for(Object obj: data) {
@@ -136,6 +169,12 @@ public class DataColumn implements Serializable {
 		return max;
 	}
 	
+	/**
+	 * Find the Minimum value
+	 *          
+	 * @return the min value
+	 *
+	 */
 	public double getMin() {
 
 		double min = (double)data[0];

@@ -25,18 +25,22 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
-/* TODO 
+/**
+ * DataImportExport - used to import and export CSV files
  * 
- *  1) Add pop-up window for user to choose fill in mean / zero / median
- * 
- *	2) change to core 
+ * @author pkyipab
+ *
  */
-
-
-
 public class DataImportExport {
 	
-	public void importData(Stage s) {
+	/**
+	 * Import Csv data. 								
+	 * 	
+	 * @param stage
+	 *            - stage to shown on the screen
+	 *            
+	 */
+	public void importData(Stage stage) {
 			FileChooser fc;
 			BufferedReader br = null;
 			String line = "";
@@ -50,7 +54,7 @@ public class DataImportExport {
 				 	fc.setTitle("Load CSV file");
 				 	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv*"));
 				 	
-				 	File file = fc.showOpenDialog(s);
+				 	File file = fc.showOpenDialog(stage);
 				 	
 					if(file != null) {
 					 		
@@ -132,7 +136,6 @@ public class DataImportExport {
 			            
 			            Main.allDataSet.add(dataTable);
 
-			            System.out.println("[ Import Success ]");
 					}
 		        }  catch (IOException ex) {
 		            ex.printStackTrace();
@@ -149,6 +152,19 @@ public class DataImportExport {
 		       }
 	}
 	
+	
+	/**
+	 * Export Csv data. 								
+	 * 	
+	 * @param stage
+	 *            - stage to shown on the screen
+	 *            
+	 * @param dataSet
+	 *            - dataSet to store all VBox Object
+	 *            
+	 * @param map
+	 *            - map the selected VBox to the specific DataTable            
+	 */
 	public void exportData(Stage stage, ListView<VBox> dataSet, Map<VBox, DataTable> map) {
 		
 		if(!dataSet.getSelectionModel().isEmpty()) {
@@ -197,7 +213,6 @@ public class DataImportExport {
                     
                     fileWriter.flush();
                     fileWriter.close();
-                    System.out.println("[ Export Success ]");
                 } catch (IOException ex) {
                    // ex.printStackTrace();
                 	Main.alertUser("Cannot Export File","The file going to reaplce is using by another program","");
@@ -206,6 +221,15 @@ public class DataImportExport {
 		} 
 	}
 	
+	
+	/**
+	 * Translate String type Object into Double Type							
+	 * 	
+	 * @param arrList
+	 *            - an ArrayList that store String type Object will be translate
+	 *            
+     * @return  ArrayList that store double or null
+	 */
 	private ArrayList<Object> strToDouble(ArrayList<String> arrList) {
 		ArrayList<Object> doubleList = new ArrayList<Object>();
 		
@@ -221,6 +245,14 @@ public class DataImportExport {
 	}
 	
 	
+	/**
+	 * Check the Column Type and Unable the Col is mixed by String and Number or other type							
+	 * 	
+	 * @param arrList
+	 *            - an ArrayList that store String type Object will be checked
+	 *            
+     * @return  String reference
+	 */
 	private String dataChecking(ArrayList<String> arrList) throws DataTableException{
 		String type = "null";
 		
@@ -238,6 +270,15 @@ public class DataImportExport {
 		return type;
 	}
 	
+	
+	/**
+	 * Check the type of String							
+	 * 	
+	 * @param str
+	 *            - pass in the string that going to check
+	 *            
+     * @return  return "empty", "Number" or "String"
+	 */
 	private String typeChecking(String str) {
 		
 		if(str.isEmpty()) {
@@ -250,6 +291,14 @@ public class DataImportExport {
 		
 	}
 	
+	/**
+	 * Check whether the string is an number					
+	 * 	
+	 * @param input
+	 *            - pass in the string that going to check
+	 *            
+     * @return  whether the string is an number
+	 */
 	private boolean isDouble(String input) {
 		   try
 		   {
@@ -262,6 +311,12 @@ public class DataImportExport {
 		   }
 	}
 	
+	
+	/**
+	 * Pop-up Window for user to select action					
+	 * 	           
+     * @return  user's choice
+	 */
 	private String selectAction() {
 		final ChoiceDialog<String> choiceDialog = new ChoiceDialog<String>("Zero", "Mean", "Median");
 		choiceDialog.setTitle("Fill in empty space");

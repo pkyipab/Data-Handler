@@ -18,13 +18,29 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
+
+/**
+ * DataFilter - used to transform into new data sets
+ * 
+ * @author pkyipab
+ *
+ */
 public class DataFilter {
 
 	private String firstDataSet = "";
 	private String secondDataSet = "";
 	private Boolean cancelAlert;
-
 	
+	
+	/**
+	 * Random Split. Method that randomly split one DataColumn object into two DataColumns
+	 * 
+	 * @param type
+	 *            - type is used to determine user action, either "Replace" or "Create New"
+	 *            
+	 * @param name
+	 *            - pass the name of DataTable object that used for searching that DataTable object
+	 */
 	public void RandomSplit(String type, String name) {
 		DataTable data1;
 		DataTable data2;
@@ -115,11 +131,27 @@ public class DataFilter {
 			Main.allDataSet.add(data1);
 			Main.allDataSet.add(data2);
 		} 
-		else {
-			System.out.println(" Random Split Method not found. ");
-		}
 	}
 	
+	/**
+	 * Numeric Split. Method that allows user to compare their data with specific number and
+	 * 						create a new DataTable Object									
+	 * 	
+	 * @param type
+	 *            - type is used to determine user action, either "Replace" or "Create New"
+	 *            
+	 * @param dataTable
+	 *            - pass the dataTable object that user selected
+	 * 
+	 * @param dataCol
+	 *            - pass the dataColumn object that user selected
+	 *
+	 * @param sign
+	 *            - the compare operator that user selected
+	 *            
+	 * @param compareNum
+	 *            - the number that users want to compare with
+	 */
 	public void NumericSplit(String type, DataTable dataTable,DataColumn dataCol, String sign, double compareNum) {
 		ArrayList<Object[]> dataRow = new ArrayList<Object[]>();
 		DataTable dataTableNew;
@@ -213,11 +245,20 @@ public class DataFilter {
 		else if (type == "Create New") {
 			Main.allDataSet.add(dataTableNew);
 		} 
-		else {
-			System.out.println(" Random Split Method not found. ");
-		}
 	};
 	
+	
+	/**
+	 * Add the data that lies in same row into a Array
+	 * 
+	 * @param dataTable
+	 *            - pass the DataTable into method for checking
+	 *            
+	 * @param index
+	 *            - indicate the position of row 
+	 * 
+	 * @return Object[] reference
+	 */
 	private Object[] addRow(DataTable dataTable, int index) {
 		Object[] row = new Object[dataTable.getNumCol()];
 		
@@ -228,6 +269,25 @@ public class DataFilter {
 		return row;
 	}
 	
+	
+	/**
+	 * Translate number of rows into a DataTable object.								
+	 * 	
+	 * @param dataList
+	 *            - pass in ArrayList that stores all rows data
+	 *            
+	 * @param typeName
+	 *            - an array that store all columns type
+	 * 
+	 * @param colName
+	 *            - an array that store all columns name
+	 *
+	 * @param tableName
+	 *            - the name of DataTable object
+	 *            
+	 * @return DataColumn reference or null
+	 *            
+	 */
 	private DataTable rowToTable(ArrayList<Object[]> dataList, String[] typeName, String[] colName, String tableName) {	
 		
 		DataTable dataTable = new DataTable(tableName);
@@ -244,14 +304,17 @@ public class DataFilter {
 				try {
 					dataTable.addCol(colName[col], dataCol);
 				} catch (DataTableException e) {
-					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
 			}		
 			return dataTable;
 	}
 	
-	/*
+	/**
 	 * Create a pop up window for user to input the name of DataSets
+	 * 
+	 *  @param type
+	 *           - determine the method is called by randomSplit or numericSplit method
 	 * 
 	 */
 	private void alertEnterName(String type) {
