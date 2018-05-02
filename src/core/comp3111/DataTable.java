@@ -13,7 +13,7 @@ import java.util.Map.Entry;
  * uniquely identified by its column name (5) add/remove a column is supported
  * (6) Suitable exception handling is implemented
  * 
- * @author cspeter
+ * @author cspeter, tmtam, cpkoaajack, pkyipab
  *
  */
 public class DataTable implements Serializable {
@@ -176,14 +176,28 @@ public class DataTable implements Serializable {
 		return dc.get(entry.getKey()).getSize();
 	}
 	
+	/**
+	 * get method
+	 * 
+	 * @return the fileName
+	 */
 	public String getFileName() {
 		return fileName;
 	}
-	
+	/**
+	 * get method
+	 * 
+	 * @return the storedChart
+	 */
 	public ArrayList<GeneralChart> getStoredChart(){
 		return this.storedChart;
 	}
-	
+
+	/**
+	 * Helper method for line chart creation
+	 * 
+	 * @return the list with just Number Type column
+	 */
 	public ArrayList<String> getNumberTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
 		for(String key: dc.keySet()) {
@@ -193,7 +207,12 @@ public class DataTable implements Serializable {
 		}
 		return list;
 	}
-	
+
+	/**
+	 * Helper method for pie chart creation
+	 * 
+	 * @return the list with non negative Number Type column
+	 */
 	public ArrayList<String> getNonNegativeNumberTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
 		for(String key: dc.keySet()) {
@@ -209,7 +228,12 @@ public class DataTable implements Serializable {
 		}
 		return list;
 	}
-	
+
+	/**
+	 * Helper method for pie chart creation
+	 * 
+	 * @return the list that just string Type column
+	 */
 	public ArrayList<String> getStringTypeColnumName(){
 		ArrayList<String> list = new ArrayList<String>();
 		for(String key: dc.keySet()) {
@@ -219,7 +243,32 @@ public class DataTable implements Serializable {
 		}
 		return list;
 	}
-	
+
+	/**
+	 * Helper method for Data Import. To fill in the empty row at the column
+	 * 
+	 */
+	public void handleEmptyNumericSpace(String action) {	
+		dc.forEach((name, col) -> {
+			if(col.hasNumericEmpty()) {
+			switch(action) {
+				case "Zero":
+					col.fillin(0);
+					break;
+				case "Mean":
+					col.fillin(col.getMean());
+					break;
+				case "Median":
+					col.fillin(col.getMedian());
+					break;
+				}
+			}
+		});
+	/**
+	 * get method
+	 * 
+	 * @return the Map dc
+	 */
 	public Map<String, DataColumn> getMap() {	
 		return dc;
 	}
