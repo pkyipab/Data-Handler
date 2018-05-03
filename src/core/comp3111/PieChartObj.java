@@ -20,24 +20,23 @@ public class PieChartObj extends GeneralChart {
 		this.chartName = "Chart " + (dt.getStoredChart().size() + 1) + " [Pie] [Items: " + stringItemsName + 
 				", Quantity: " + numItemsName + "]";
 		this.numItemsName = numItemsName;
-		Object[] numTemp = number.getData().clone();
-		Object[] stringTemp = string.getData().clone();
-		Arrays.sort(stringTemp);
-		Arrays.sort(numTemp);
 		ArrayList<Double> num = new ArrayList<>();
 		ArrayList<Object> stringName = new ArrayList<>();
 		num.add((Double)number.getData()[0]);
-		stringName.add(stringTemp[0]);
-		int counter = 0;
-		for(int i = 1; i < stringTemp.length; i++) {
-			if(stringTemp[i].equals(stringName.get(counter))) {
-				num.set(counter, num.get(counter)+(Double)numTemp[i]);
+		stringName.add(string.getData()[0]);
+
+		for(int i = 1; i < string.getData().length; i++) {
+			if(stringName.contains(string.getData()[i])) {
+				for(int j = 0; j < num.size(); j++) {
+					if(stringName.get(j).equals(string.getData()[i])) {
+						num.set(j, num.get(j) + (Double)number.getData()[i]);
+						break;
+					}
+				}
 			}
 			else {
-				stringName.add(stringTemp[i]);
 				num.add((Double)number.getData()[i]);
-				counter++;
-			}
+				stringName.add(string.getData()[i]);}
 		}
 		Object[] numDone = new Object[num.size()];
 		Object[] stringDone = new Object[stringName.size()];

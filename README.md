@@ -1,5 +1,4 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
-I love eclipse x3
 
 Team Name: Sun of the Beach
 //Team Leader
@@ -18,10 +17,11 @@ Name: Tam Tung Man
 ITSC: tmtam@connect.ust.hk
 Features: 3 & 4
 Best 3 commits:
-1.
-2.
-3.
+1.https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/commit/ef0d063106b196105e296daafdf724ee00e40c42
+2.https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/commit/a063c0b3b0493df36de25adf72ad08e91245ad0e
+3.https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/commit/95764ead5ba1571f70add9ffb7b6c7eea555fe2f
 Best pull request URL:
+https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/pull/44
 
 
 //Member 2
