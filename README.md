@@ -1,7 +1,7 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
-Team Name: Sun of the Beach
->
+<p align="center">Team 36: Sun of the Beach</p>
+
 # Team Leader
 >Name: Yip Pak Kin<br />
 >ITSC: pkyibab@connect.ust.hk<br />
