@@ -105,7 +105,10 @@ public class DataImportExport {
 			            			};
 			            			dataTable.addCol(row.get(0)[colNum], dataCol);
 			            			break;
-			            			
+			            		
+			            		case " Unmatch Datatype !": 
+			            			Main.alertUser(" Warning ", "Detected AT LEAST ONE Unmatch Datatype column ", " Unmatch Data Type Column will not be added. ");
+			            			break;
 			            		default:
 			            			dataCol = new DataColumn(DataType.TYPE_STRING, strData.toArray());
 			            			dataTable.addCol(row.get(0)[colNum], dataCol);
@@ -262,7 +265,7 @@ public class DataImportExport {
 			}
 			else if (!arrList.get(i).isEmpty() && type != "null" && type != "String") {
 				if(typeChecking(arrList.get(i)) != type) {
-					throw new DataTableException(" Unmatch Datatype !");
+					return " Unmatch Datatype !";
 				}
 			}
 		}
