@@ -1,18 +1,21 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
 Team Name: Sun of the Beach
-//Team Leader
+>
+# Team Leader
 Name: Yip Pak Kin
 ITSC: pkyibab@connect.ust.hk
 Features: 1 & 5
 Best 3 commits:
-1.
-2.
-3.
+1.  https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/commit/8c347eada3cff805f49e50cc2e046bb8d35765b7
+2.  https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/commit/0deffa8c28cef54d15ce1bbb655e37c662764a04
+3.  https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/commit/ec12836b6eb0eb39b42fc5a07a9038de46b6cd5b
+
 Best pull request URL:
-
-
-//Member 1
+https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/pull/29
+>
+>
+# Member 1
 Name: Tam Tung Man
 ITSC: tmtam@connect.ust.hk
 Features: 3 & 4
@@ -24,8 +27,8 @@ Best 3 commits:
 Best pull request URL:
 https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/pull/44
 
-
-//Member 2
+>
+# Member 2
 Name: Ko Chung Pong
 ITSC: cpkoaa@connect.ust.hk
 Features: 2 & 6
