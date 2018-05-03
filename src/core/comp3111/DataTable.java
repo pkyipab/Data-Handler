@@ -245,27 +245,6 @@ public class DataTable implements Serializable {
 	}
 
 	/**
-	 * Helper method for Data Import. To fill in the empty row at the column
-	 * 
-	 */
-	public void handleEmptyNumericSpace(String action) {	
-		dc.forEach((name, col) -> {
-			if(col.hasNumericEmpty()) {
-			switch(action) {
-				case "Zero":
-					col.fillin(0);
-					break;
-				case "Mean":
-					col.fillin(col.getMean());
-					break;
-				case "Median":
-					col.fillin(col.getMedian());
-					break;
-				}
-			}
-		});
-	}
-	/**
 	 * get method
 	 * 
 	 * @return the Map dc
