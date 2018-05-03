@@ -22,5 +22,5 @@ Best pull request URL:
 Name: Ko Chung Pong
 ITSC: cpkoaa@connect.ust.hk
 Features: 2 & 6
-Best 3 commits:
-Best pull request URL:
+Best 3 commits: 
+Best pull request URL: https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/pull/36
