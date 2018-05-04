@@ -88,9 +88,10 @@ public class ShowAnimatedLineChart {
 	private void init(Stage primaryStage) {
 		xAxisAnimation = new NumberAxis();
 		xAxisAnimation.setForceZeroInRange(false);
-		xAxisAnimation.setAutoRanging(false);
+		
 		yAxisAnimation = new NumberAxis();
 		yAxisAnimation.setForceZeroInRange(false);
+		yAxisAnimation.setAutoRanging(false);
 		
 		xAxisAnimation.setLabel(chart.getXAxisName());
 		yAxisAnimation.setLabel(chart.getYAxisName());
@@ -158,8 +159,8 @@ public class ShowAnimatedLineChart {
 	    if (animationSeries.getData().size() > maxDataPoints) {
 	    	animationSeries.getData().remove(0, animationSeries.getData().size() - maxDataPoints);
 	    }
-	    xAxisAnimation.setLowerBound(chart.getXAxisColumn().getMin());
-	    xAxisAnimation.setUpperBound(chart.getXAxisColumn().getMax());
+	    yAxisAnimation.setLowerBound(chart.getYAxisColumn().getMin());
+	    yAxisAnimation.setUpperBound(chart.getYAxisColumn().getMax());
 	}
 	
 		
