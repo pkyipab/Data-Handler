@@ -37,7 +37,8 @@ Guideline of this project : https://course.cse.ust.hk/comp3111/Project/comp3111-
 
 ### Youtube Demonstration
 ```
-Please click on the video below. 
+Please click on the video below 
+Remember to open the english subtitle :)
 If the speed is too fast for you. Please adjust the speed to x0.75 or x0.5 :)
 ```
 
