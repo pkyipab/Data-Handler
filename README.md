@@ -1,11 +1,11 @@
 # HKUST COMP3111 Software Engineering (Spring 2018)
 
-### Intro
+## Intro
 Data analysis is important for any business. This software application is developed to analyze data 
 generated from its users. It integrates the data and generates graphical source that makes data analysis easiler. 
 This App also allows user to filter the imported data and recieve a transformed output. 
 
-### Features
+## Features
 
 ```
 1.  Import / Export .csv file
@@ -31,11 +31,11 @@ This App also allows user to filter the imported data and recieve a transformed 
 ![alt text](https://user-images.githubusercontent.com/28923318/39878310-9bbef026-54aa-11e8-86b8-e1856cf09ead.jpg)
 <br />
 
-### Project Description
+## Project Description
 Guideline of this project : https://course.cse.ust.hk/comp3111/Project/comp3111-project-s2018.pdf
 
 
-### Youtube Demonstration
+## Youtube Demonstration
 ```
 Please click on the video below 
 Remember to open the english subtitle :)
@@ -45,7 +45,7 @@ If the speed is too fast for you. Please adjust the speed to x0.75 or x0.5 :)
 [![Data Handler](http://img.youtube.com/vi/Xqaq8ThBvmA/0.jpg)](http://www.youtube.com/watch?v=Xqaq8ThBvmA "Data Handler")
 
 
-
+## Team Members
 ### Team Leader
 >Name: Yip Pak Kin<br />
 >ITSC: pkyibab@connect.ust.hk<br />
@@ -58,7 +58,7 @@ If the speed is too fast for you. Please adjust the speed to x0.75 or x0.5 :)
 >Best pull request URL:
 >https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/pull/29
 >
->
+
 ### Member 1
 >Name: Tam Tung Man<br />
 >ITSC: tmtam@connect.ust.hk<br />
@@ -71,7 +71,7 @@ If the speed is too fast for you. Please adjust the speed to x0.75 or x0.5 :)
 >Best pull request URL:
 >https://github.com/pkyipab/COMP3111-Group-36-Sun-of-the-Bench/pull/44
 >
->
+
 ### Member 2
 >Name: Ko Chung Pong<br />
 >ITSC: cpkoaa@connect.ust.hk<br />
