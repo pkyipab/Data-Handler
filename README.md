@@ -6,20 +6,30 @@ generated from its users. It integrates the data and generates graphical source 
 This App also allows user to filter the imported data and recieve a transformed output. 
 
 # Features
->1.  Import / Export .csv file
->![Import / Export .csv file](https://user-images.githubusercontent.com/28923318/39878302-9adb1036-54aa-11e8-8d82-2e8c501e6202.jpg)
-> <br />
 
->2.  Handle multiple datasets and generate observable data
->![Handle multiple datasets and generate observable data](https://user-images.githubusercontent.com/28923318/39878304-9b0fa7f6-54aa-11e8-96ac-b1b9214ca228.jpg)
-> <br/ >
->3.  Save / Load .comp3111 file
->![alt text](https://user-images.githubusercontent.com/28923318/39878307-9b6a4a3a-54aa-11e8-83ab-41da3d58f982.jpg)
-><br />
+```
+1.  Import / Export .csv file
+```
+![Import / Export .csv file](https://user-images.githubusercontent.com/28923318/39878302-9adb1036-54aa-11e8-8d82-2e8c501e6202.jpg)
+ <br />
+ 
+```
+2.  Handle multiple datasets and generate observable data
+```
+![Handle multiple datasets and generate observable data](https://user-images.githubusercontent.com/28923318/39878304-9b0fa7f6-54aa-11e8-96ac-b1b9214ca228.jpg)
 
->4.  Data Filtering
->![alt text](https://user-images.githubusercontent.com/28923318/39878310-9bbef026-54aa-11e8-86b8-e1856cf09ead.jpg)
-> <br />
+```
+3.  Save / Load .comp3111 file
+```
+![alt text](https://user-images.githubusercontent.com/28923318/39878307-9b6a4a3a-54aa-11e8-83ab-41da3d58f982.jpg)
+<br />
+
+```
+4.  Data Filtering
+```
+![alt text](https://user-images.githubusercontent.com/28923318/39878310-9bbef026-54aa-11e8-86b8-e1856cf09ead.jpg)
+<br />
+
 # Project Description
 Guideline of this project : https://course.cse.ust.hk/comp3111/Project/comp3111-project-s2018.pdf
 
